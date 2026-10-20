@@ -1,10 +1,10 @@
 /* Project Sales Tracker · service worker
    เมื่ออัปเดตแอป ให้เปลี่ยนเลข CACHE ทุกครั้ง (เช่น v1.0.1) */
-var CACHE = 'ps-tracker-v1.1.0';
+var CACHE = 'ps-tracker-v1.2.0';
 var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
-  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ASSETS); }).then(function () { return self.skipWaiting(); }));
+  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ASSETS.map(function (u) { return new Request(u, { cache: 'reload' }); })); }).then(function () { return self.skipWaiting(); }));
 });
 
 self.addEventListener('activate', function (e) {
@@ -23,7 +23,7 @@ self.addEventListener('fetch', function (e) {
 
   // หน้าแอป: ดึงเวอร์ชันใหม่จากเน็ตก่อน ถ้าไม่มีเน็ตใช้ฉบับในเครื่อง
   if (req.mode === 'navigate' || (sameOrigin && /\.html$|\/$/.test(url.pathname))) {
-    e.respondWith(fetch(req).then(function (res) {
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(function (res) {
       var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put('./index.html', copy); });
       return res;
     }).catch(function () { return caches.match('./index.html'); }));

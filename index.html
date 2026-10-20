@@ -116,6 +116,8 @@ legend{padding:0;margin-bottom:8px}
 .hero img{width:100%;height:100%;object-fit:cover;display:block}
 .seg{display:grid;background:#f1f1f1;border-radius:10px;padding:3px}
 .seg button{min-height:40px;border:0;border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:15px}
+.segl{min-height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:15px}
+.segl[aria-current="page"]{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:700;color:var(--text-strong)}
 .seg button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:700;color:var(--text-strong)}
 .switch{width:52px;height:32px;border:0;border-radius:16px;background:#9e9e9e;position:relative;flex-shrink:0;cursor:pointer;padding:0}
 .switch::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
@@ -183,7 +185,7 @@ table.x th{background:#f6f6f6;font-size:13px;color:var(--text-strong)}
    Replace Store.* persistence to add server sync later.
    ========================================================= */
 
-var APP_VERSION = '1.1.0';
+var APP_VERSION = '1.2.0';
 var SCHEMA_VERSION = 1;
 var DB_NAME = 'ps-tracker';
 var KDF_ITER = 250000;
@@ -350,6 +352,7 @@ function migrateState(s) {
   s.settings.targets = s.settings.targets || {};
   s.settings.autolock = s.settings.autolock || 5;
   s.counter = s.counter || 0;
+  s.onb = s.onb || {};
   s.schema = SCHEMA_VERSION;
   return s;
 }
@@ -418,9 +421,9 @@ function shell(opt, body) {
     (opt.back ? '<a class="iconbtn" href="' + esc(opt.back) + '" aria-label="' + (opt.close ? 'ปิด' : 'ย้อนกลับ') + '">' + icon(opt.close ? 'close' : 'back') + '</a>' : '<span style="width:8px"></span>') +
     '<h1>' + esc(opt.title) + '</h1>' + (opt.right || '') +
     (opt.nav !== false ? '<a class="setbtn" href="#/settings">' + icon('gear', 20) + '<span>ตั้งค่า</span></a>' : '') + '</header>';
-  var navHtml = opt.nav === false ? '' : '<nav class="bottomnav" aria-label="เมนูหลัก"><div class="brand"><i>PS</i>Project Sales Tracker</div>' + nav.map(function (n) {
+  var navHtml = opt.nav === false ? '' : '<nav class="bottomnav" aria-label="เมนูหลัก"><div class="brand"><i>PS</i><span>Project Sales Tracker<br><small style="font-weight:400">เวอร์ชัน ' + APP_VERSION + '</small></span></div>' + nav.map(function (n) {
     return '<a href="' + n[0] + '"' + (cur === n[0] ? ' aria-current="page"' : '') + '><span>' + icon(n[2]) + '</span>' + n[1] + '</a>';
-  }).join('') + '<a href="#/months"' + (cur === '#/months' || cur === '#/month' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('chart') + '</span>รายเดือน · ปิดงวด</a><a href="#/setup"' + (cur === '#/setup' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('gear') + '</span>Setup ทีม</a><a href="#/data"' + (cur === '#/data' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('lock') + '</span>ส่งข้อมูล/สำรอง</a></nav>';
+  }).join('') + '<a href="#/guide/staff"' + (cur === '#/guide' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('check') + '</span>คู่มือใช้งาน</a><a href="#/months"' + (cur === '#/months' || cur === '#/month' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('chart') + '</span>รายเดือน · ปิดงวด</a><a href="#/setup"' + (cur === '#/setup' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('gear') + '</span>Setup ทีม</a><a href="#/data"' + (cur === '#/data' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('lock') + '</span>ส่งข้อมูล/สำรอง</a></nav>';
   return '<div class="shell">' + navHtml + '<div class="content">' + top + '<main class="main' + (opt.nav === false ? ' noNav' : '') + '" id="main">' + body + '</main></div></div>' + (opt.action ? '<div class="actionbar"><div class="inner">' + opt.action + '</div></div>' : '');
 }
 
@@ -434,21 +437,23 @@ function vToday() {
   var near = act.filter(function (p) { if (!p.completion) return false; var m = diffDays(t, p.completion + '-01'); return m >= -31 && m <= 183; }).sort(function (a, b) { return a.completion.localeCompare(b.completion); }).slice(0, 5);
   var st = Store.state, lastExp = st.lastExport ? diffDays(st.lastExport.slice(0, 10), t) : null, lastBak = st.lastBackup ? diffDays(st.lastBackup.slice(0, 10), t) : null;
   var warn = '';
+  if (S.updateReady) warn += '<button class="card warn link" style="text-align:left;width:100%;border:1.5px solid var(--accent);cursor:pointer;font:inherit" data-act="reload"><b class="strong">มีเวอร์ชันใหม่ของแอป</b><br><span class="small">แตะเพื่อโหลดเวอร์ชันใหม่ ข้อมูลในเครื่องยังอยู่ครบ</span></button>';
   var pm = addMonths(curMonth(), -1); if (!isClosed(pm) && monthHasData(pm)) warn += '<a class="card warn link" href="#/month/' + pm + '" style="border:1.5px solid var(--accent)"><b class="strong">ยังไม่ได้ปิดงวด ' + monthName(pm) + '</b><br><span class="small">แตะเพื่อตรวจข้อมูลและปิดงวด</span></a>';
-  if (O().version === 'default') warn += '<a class="card warn link" href="#/setup" style="border:1.5px solid var(--accent)"><b class="strong">ยังไม่ได้นำเข้าชุดตัวเลือกของทีม</b><br><span class="small">แตะเพื่อไปหน้า Setup แล้ววางรหัสที่หัวหน้าส่งใน Teams</span></a>';
+  var ck = checklistCard();
+  if (O().version === 'default' && !ck) warn += '<a class="card warn link" href="#/setup" style="border:1.5px solid var(--accent)"><b class="strong">ยังไม่ได้นำเข้าชุดตัวเลือกของทีม</b><br><span class="small">แตะเพื่อไปหน้า Setup แล้ววางรหัสที่หัวหน้าส่งใน Teams</span></a>';
   if (lastExp === null || lastExp >= 7 || d.getDay() === 5) warn += '<a class="card warn link" href="#/data"><b class="strong">ส่งข้อมูลให้ทีม' + (d.getDay() === 5 ? 'วันนี้ (วันศุกร์)' : '') + '</b><br><span class="small">ส่งล่าสุด ' + (st.lastExport ? be(st.lastExport) : 'ยังไม่เคยส่ง') + ' · แตะเพื่อส่งออก Excel</span></a>';
   if (lastBak === null || lastBak >= 7) warn += '<a class="card warn link" href="#/data"><b class="strong">ควรสำรองข้อมูล</b><br><span class="small">สำรองล่าสุด ' + (st.lastBackup ? be(st.lastBackup) : 'ยังไม่เคยสำรอง') + '</span></a>';
-  if (!isStandalone()) warn += '<div class="card warn"><b class="strong">ติดตั้งแอปลงหน้าจอหลัก</b><br><span class="small">iPhone: กดปุ่มแชร์ แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" · Android: เมนู ⋮ แล้วเลือก "ติดตั้งแอป" เพื่อป้องกันมือถือลบข้อมูลเอง</span></div>';
+  if (!isStandalone() && !ck) warn += '<div class="card warn"><b class="strong">ติดตั้งแอปลงหน้าจอหลัก</b><br><span class="small">iPhone: กดปุ่มแชร์ แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" · Android: เมนู ⋮ แล้วเลือก "ติดตั้งแอป" เพื่อป้องกันมือถือลบข้อมูลเอง</span></div>';
   function item(p, late) {
     return '<a class="card link' + (late ? ' alert' : '') + '" href="#/project/' + esc(p.id) + '"><span class="small ' + (late ? 'dangerText' : 'muted') + '" style="font-weight:700">' + (late ? 'เกินกำหนด ' + diffDays(p.nextDate, t) + ' วัน · นัด ' + be(p.nextDate) : 'นัดติดตามวันนี้') + '</span><div class="between"><b class="strong">' + esc(p.name) + '</b>' + badge(p.status) + '</div><span class="small">' + esc(p.contactName) + ' · ' + esc(p.contactRole) + ' · ' + esc(p.ptype) + '</span></a>';
   }
   var body = '<div class="stack">' +
     '<div><div class="small">' + 'วัน' + TH_DAY[d.getDay()] + 'ที่ ' + be(t) + ' · ' + esc(P().empId) + ' · ' + esc(P().branch) + '</div><h2 style="font-size:22px">สวัสดี คุณ' + esc((P().name || '').split(' ')[0]) + '</h2></div>' +
     '<div class="grid3"><div class="stat"><b>' + due.length + '</b><span>นัดวันนี้</span></div><div class="stat"' + (overdue.length ? ' style="border:1.5px solid var(--danger)"' : '') + '><b' + (overdue.length ? ' class="dangerText"' : '') + '>' + overdue.length + '</b><span>เกินกำหนด</span></div><div class="stat"><b>' + doneToday + '</b><span>บันทึกแล้ววันนี้</span></div></div>' +
-    '<div class="grid2"><a class="btn primary" href="#/new">+ โครงการใหม่</a><a class="btn" href="#/pick">+ บันทึกการติดตาม</a></div>' + warn +
+    '<div class="grid2"><a class="btn primary" href="#/new">+ โครงการใหม่</a><a class="btn" href="#/pick">+ บันทึกการติดตาม</a></div>' + ck + warn +
     '<h2 class="h2">นัดติดตาม</h2>' + (overdue.length + due.length ? overdue.map(function (p) { return item(p, true); }).join('') + due.map(function (p) { return item(p, false); }).join('') : '<div class="card muted">ไม่มีนัดติดตามวันนี้</div>') +
     (near.length ? '<h2 class="h2">หน้างานใกล้สร้างเสร็จ (ภายใน 6 เดือน)</h2>' + near.map(function (p) { return '<a class="card warn link" href="#/project/' + esc(p.id) + '"><b class="strong">' + esc(p.name) + '</b><br><span class="small">สร้างเสร็จ ' + beMonth(p.completion) + ' · ประมาณการ ' + fmt(p.estimate) + ' บาท</span></a>'; }).join('') : '') +
-    '</div>';
+    '<p class="small muted" style="text-align:center;margin:8px 0 0">เวอร์ชัน ' + APP_VERSION + '</p></div>';
   return shell({ title: 'Project Sales Tracker', yellow: true }, body);
 }
 
@@ -686,6 +691,21 @@ function vData() {
   return shell({ title: 'ส่งข้อมูลและสำรองข้อมูล', back: '#/today' }, body);
 }
 
+function targetCard() {
+  var yr = S.ui.ty || new Date().getFullYear(), total = 0, locked = 0;
+  var rows = [];
+  for (var m = 1; m <= 12; m++) {
+    var ym = yr + '-' + pad(m), tg = targetFor(ym); if (tg) total += tg.amount; if (tg && tg.leader) locked++;
+    rows.push('<div class="field"><label for="tg-' + ym + '" class="small strong">' + TH_MONTH[m - 1] + (ym === curMonth() ? ' (เดือนนี้)' : '') + '</label><input id="tg-' + ym + '" class="inp" inputmode="numeric" data-num="1" data-tgm="' + ym + '" value="' + (tg ? fmt(tg.amount) : '') + '"' + (tg && tg.leader ? ' disabled title="หัวหน้าทีมกำหนด"' : '') + ' placeholder="ไม่มีเป้า"></div>');
+  }
+  return '<div class="card stack" style="gap:10px"><b class="strong">เป้ายอดขายรายเดือน (บาท ก่อน VAT)</b>' +
+    '<div class="between"><button class="btn small" data-act="tyear" data-d="-1" aria-label="ปีก่อนหน้า">‹</button><b class="strong" style="font-size:17px">ปี ' + (yr + 543) + '</b><button class="btn small" data-act="tyear" data-d="1" aria-label="ปีถัดไป">›</button></div>' +
+    '<div class="row" style="align-items:flex-end"><div class="field" style="flex:1"><label for="t-all" class="small">ใส่ค่าเดียวกันทุกเดือน</label><input id="t-all" class="inp" inputmode="numeric" data-num="1" placeholder="เช่น 3,000,000"></div><button class="btn small" style="min-height:48px" data-act="fillall">ใส่ทุกเดือน</button></div>' +
+    '<div class="grid2">' + rows.join('') + '</div>' +
+    '<div class="between small"><span>รวมทั้งปี</span><b class="strong">' + fmt(total) + ' บาท</b></div>' +
+    (locked ? '<span class="hint">' + locked + ' เดือนกำหนดโดยหัวหน้าทีม แก้ไขไม่ได้</span>' : '') +
+    '<button class="btn small primary" data-act="savetargets">บันทึกเป้าทั้งปี</button></div>';
+}
 function vSettings() {
   var p = P(), o = O(), st = Store.state, ym = S.ui.tm || monthOf(todayISO()), tg = targetFor(ym);
   var body = '<div class="stack">' +
@@ -693,7 +713,8 @@ function vSettings() {
     '<div class="grid2"><div class="field"><label for="p-emp">Emp ID</label><input id="p-emp" class="inp" data-pf="empId" value="' + esc(p.empId) + '" maxlength="20"></div><div class="field"><label for="p-name">ชื่อ-นามสกุล</label><input id="p-name" class="inp" data-pf="name" value="' + esc(p.name) + '" maxlength="80"></div></div>' +
     '<div class="grid2"><div class="field"><label for="p-br">สาขา</label><input id="p-br" class="inp" data-pf="branch" value="' + esc(p.branch) + '" maxlength="60"></div><div class="field"><label for="p-tm">ทีม</label><input id="p-tm" class="inp" data-pf="team" value="' + esc(p.team) + '" maxlength="60"></div></div>' +
     '<button class="btn small" data-act="saveprofile">บันทึกข้อมูลพนักงาน</button></div>' +
-    '<div class="card stack" style="gap:10px"><b class="strong">เป้ายอดขายรายเดือน (ก่อน VAT)</b><div class="grid2"><div class="field"><label for="t-m">เดือน</label><input id="t-m" class="inp" type="month" data-live="tm" value="' + ym + '"></div><div class="field"><label for="t-a">เป้า (บาท)</label><input id="t-a" class="inp" inputmode="numeric" data-tgt="1" value="' + (tg ? fmt(tg.amount) : '') + '"' + (tg && tg.leader ? ' disabled' : '') + '></div></div>' + (tg && tg.leader ? '<span class="hint">เป้าเดือนนี้กำหนดโดยหัวหน้าทีม แก้ไขไม่ได้</span>' : '<button class="btn small" data-act="savetarget">บันทึกเป้า</button>') + '</div>' +
+    targetCard() +
+    '<a class="card link between" href="#/guide/staff"><span><b class="strong">คู่มือใช้งาน</b><br><span class="small">ขั้นตอนสำหรับพนักงานและหัวหน้าทีม</span></span><b aria-hidden="true">›</b></a>' + (Store.state.onb.hidden || Store.state.onb.doneAt ? '<button class="btn small" data-act="showcheck">แสดงเช็กลิสต์เริ่มต้นใช้งานอีกครั้ง</button>' : '') +
     '<a class="card link between" href="#/setup" style="border:1.5px solid var(--accent)"><span><b class="strong">Setup ชุดตัวเลือกของทีม</b><br><span class="small">นำเข้ารหัสจากหัวหน้า · หัวหน้าทีมสร้างรหัส</span></span><b aria-hidden="true">›</b></a>' +
     '<div class="card stack" style="gap:10px"><b class="strong">ความปลอดภัย</b><div class="field"><label for="al">ล็อกอัตโนมัติเมื่อไม่ใช้งาน</label><select id="al" class="inp" data-act-change="autolock">' + [1, 3, 5, 10, 15].map(function (m) { return '<option value="' + m + '"' + (st.settings.autolock === m ? ' selected' : '') + '>' + m + ' นาที</option>'; }).join('') + '</select></div>' +
     '<div class="grid2"><div class="field"><label for="np1">PIN ใหม่ 6 หลัก</label><input id="np1" class="inp" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div><div class="field"><label for="np2">ยืนยัน PIN ใหม่</label><input id="np2" class="inp" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div></div><button class="btn small" data-act="changepin">เปลี่ยน PIN</button>' +
@@ -720,6 +741,67 @@ function vSetup() {
   return shell({ title: 'Setup ชุดตัวเลือกของทีม', back: '#/settings' }, body);
 }
 function vNotFound() { return shell({ title: 'ไม่พบข้อมูล', back: '#/today' }, '<div class="card">ไม่พบรายการนี้ อาจถูกลบไปแล้ว</div>'); }
+
+
+/* ---------------- onboarding checklist & guide ---------------- */
+function checklist() {
+  var st = Store.state, o = st.onb;
+  if (isStandalone() && !o.installed) { o.installed = true; Store.saveState(); }
+  return [
+    ['setup', 'นำเข้าชุดตัวเลือกของทีม', O().version !== 'default', '#/setup'],
+    ['install', 'ติดตั้งแอปลงหน้าจอหลัก', !!o.installed, '#/guide/staff'],
+    ['project', 'สร้างโครงการแรก', liveProjects().length > 0, '#/new'],
+    ['follow', 'บันทึกการติดตามครั้งแรก', liveFollows().some(function (f) { return f.ctype !== FIRST_CTYPE; }), '#/pick'],
+    ['teams', 'คัดลอกสรุปส่ง Teams ครั้งแรก', !!o.copied, '#/summary'],
+    ['excel', 'ส่งออก Excel ให้ทีมครั้งแรก', !!st.lastExport, '#/data']
+  ];
+}
+function checklistCard() {
+  var o = Store.state.onb; if (o.hidden || o.doneAt) return '';
+  var c = checklist(), done = c.filter(function (x) { return x[2]; }).length;
+  if (done === c.length) { o.doneAt = nowISO(); Store.saveState(); setTimeout(function () { toast('เริ่มต้นใช้งานครบทุกขั้นแล้ว'); }, 300); return ''; }
+  var next = c.find(function (x) { return !x[2]; });
+  return '<section class="card stack" style="gap:10px;border:1.5px solid var(--accent)" aria-labelledby="ck-h"><div class="between"><h2 id="ck-h" class="h2" style="margin:0">เริ่มต้นใช้งาน ' + done + '/' + c.length + '</h2><button class="btn small" style="border:0;min-height:36px;text-decoration:underline" data-act="hidecheck">ซ่อน</button></div>' +
+    '<div class="progress" role="img" aria-label="ทำแล้ว ' + done + ' จาก ' + c.length + ' ขั้น"><div style="width:' + Math.round(done / c.length * 100) + '%"></div></div>' +
+    c.map(function (x, i) {
+      var isNext = x === next;
+      return '<div class="between" style="min-height:44px"><span class="row" style="gap:10px"><span aria-hidden="true" style="width:26px;height:26px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;' + (x[2] ? 'background:var(--ok);color:#fff' : isNext ? 'background:var(--accent);color:#3a3a3a' : 'border:2px solid #bdbdbd;color:#6b6b6b') + '">' + (x[2] ? icon('check', 14, '#fff') : (i + 1)) + '</span><span' + (x[2] ? ' class="muted" style="text-decoration:line-through"' : isNext ? ' class="strong"' : '') + '>' + x[1] + (x[2] ? '<span class="sr"> (ทำแล้ว)</span>' : '') + '</span></span>' + (x[2] ? '' : '<a class="btn small' + (isNext ? ' primary' : '') + '" href="' + x[3] + '">' + (isNext ? 'ทำเลย' : 'ไป') + '</a>') + '</div>';
+    }).join('') + '<a href="#/guide/staff" class="small" style="font-weight:700">ดูคู่มือใช้งานทั้งหมด</a></section>';
+}
+var GUIDE = {
+  staff: [
+    ['ติดตั้งแอปลงหน้าจอหลัก', 'iPhone: เปิดลิงก์ด้วย Safari กดปุ่มแชร์ แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" · Android: เปิดด้วย Chrome กดเมนู ⋮ แล้วเลือก "ติดตั้งแอป" จากนั้นเปิดแอปจากไอคอนทุกครั้ง เพื่อป้องกันมือถือลบข้อมูลเอง', ''],
+    ['นำเข้าชุดตัวเลือกจากหัวหน้าทีม', 'คัดลอกรหัสที่ขึ้นต้นด้วย PSOPT1. ที่หัวหน้าส่งใน Teams แล้ววางในหน้า Setup กดนำเข้า ระบบจะเติมชื่อ สาขา และเป้าที่หัวหน้ากำหนดให้', '#/setup'],
+    ['ตั้งเป้ายอดขาย', 'ถ้าหัวหน้ายังไม่ได้กำหนดเป้าให้ ตั้งเป้าของตัวเองทั้งปีได้ในหน้าตั้งค่า ใส่ค่าเดียวกันทุกเดือนแล้วแก้เฉพาะเดือนที่ต่าง', '#/settings'],
+    ['สร้างโครงการใหม่', 'กด + โครงการใหม่ กรอก 3 ขั้น: ข้อมูลโครงการ → ที่ตั้งและรูปหน้างาน → ผู้ติดต่อและยอดที่คาดว่าจะได้ ต้องได้รับความยินยอมจากผู้ติดต่อก่อนบันทึก', '#/new'],
+    ['บันทึกการติดตามทุกครั้งที่ติดต่อ', 'กด + บันทึกการติดตาม เลือกโครงการ แล้วแตะเลือกช่องทาง ประเภทการติดต่อ สถานะ และวันนัดครั้งถัดไป ถ้าเข้าพบหน้างาน ระบบบันทึกพิกัดให้', '#/pick'],
+    ['เมื่อได้งาน บันทึก SO และ DP', 'ในบันทึกการติดตาม เลือกสถานะ "ได้งาน" ระบบจะเปิดหน้าบันทึกเลขที่ SO มูลค่า SO เงินมัดจำ และวันที่จัดส่งต่อทันที', '#/projects'],
+    ['ส่งสรุปเข้า Teams ทุกเย็น', 'หน้าสรุป เลือกรายวัน กดคัดลอกข้อความ แล้ววางในแชทของทีม ข้อความไม่มีชื่อและเบอร์ผู้ติดต่อ', '#/summary'],
+    ['ทุกวันศุกร์: ส่งออก Excel และสำรองข้อมูล', 'หน้าส่งข้อมูล กดส่งออก Excel แล้วอัปโหลดไฟล์ไปที่โฟลเดอร์ SharePoint ของทีม จากนั้นกดสำรองข้อมูลด้วยรหัสผ่านของตัวเอง และเก็บไฟล์ไว้ใน OneDrive ของบริษัท', '#/data'],
+    ['ต้นเดือน: ปิดงวดเดือนก่อน', 'หน้าวันนี้จะแสดงแถบ "ยังไม่ได้ปิดงวด" ตรวจว่าบันทึกครบ กดปิดงวด แล้วส่งออก Excel ของเดือนนั้นให้ทีม', '#/months'],
+    ['เปลี่ยนเครื่องหรือลืม PIN', 'ตั้งค่าแอปในเครื่องใหม่ แล้วกู้คืนจากไฟล์สำรองล่าสุดในหน้าส่งข้อมูล ถ้าลืม PIN ต้องล้างข้อมูลก่อน แล้วจึงกู้คืน', '#/data']
+  ],
+  leader: [
+    ['Setup ชุดตัวเลือกของทีม', 'หน้า Setup ส่วนที่ 2: แก้รายการตัวเลือก ใส่ Staff Master (Emp ID,ชื่อ,สาขา,ทีม) และเป้ารายคน (Emp ID,YYYY-MM,จำนวนเงิน) แล้วกดบันทึกและคัดลอกรหัส', '#/setup'],
+    ['ส่งลิงก์แอปและรหัสให้ลูกทีม', 'ส่งลิงก์แอปและรหัส PSOPT1. ใน Teams พร้อมแจ้งให้ทำเช็กลิสต์เริ่มต้นใช้งานในหน้าวันนี้ให้ครบ', ''],
+    ['ติดตามสรุปรายวันใน Teams', 'ลูกทีมส่งข้อความที่ขึ้นต้นด้วย #PSLOG ทุกเย็น ใช้ Copilot สรุปทั้งทีมด้วย prompt ด้านล่าง', ''],
+    ['ทุกวันศุกร์: รวมไฟล์ Excel ของทีม', 'Excel → Data → Get Data → From Folder เลือกโฟลเดอร์ SharePoint ของทีม → Combine ใช้ sheet Projects, FollowUps และ Sales ตัดรายการซ้ำด้วย Project ID โดยเก็บแถวที่วันที่แก้ไขล่าสุดใหม่ที่สุด', ''],
+    ['ต้นเดือน: ตรวจการปิดงวด', 'ตรวจว่าลูกทีมทุกคนปิดงวดและส่งไฟล์ Excel ของเดือนก่อนครบ sheet MonthlySnapshot ใช้ทำ Funnel เทียบเดือน', ''],
+    ['เปลี่ยนรายการตัวเลือกหรือเป้า', 'แก้ในหน้า Setup แล้วส่งรหัสใหม่ให้ลูกทีมนำเข้าอีกครั้ง ข้อมูลที่บันทึกไว้เดิมไม่หาย', '#/setup']
+  ]
+};
+var COPILOT_PROMPT = 'สรุปข้อความทั้งหมดที่ขึ้นต้นด้วย #PSLOG ในแชทนี้ ช่วง [วันที่เริ่ม] ถึง [วันที่สิ้นสุด]\n1) ตารางรายคน: การติดตาม, โครงการใหม่, SO ใหม่, มูลค่า SO\n2) รายชื่อคนที่ไม่ได้ส่ง #PSLOG ในวันทำงานใด\n3) SO ทั้งหมด แยกตามโครงการ\nใช้เฉพาะตัวเลขในข้อความ ห้ามประมาณค่า';
+function vGuide(tab) {
+  tab = tab === 'leader' ? 'leader' : 'staff';
+  var steps = GUIDE[tab];
+  var body = '<div class="stack"><div class="seg" style="grid-template-columns:repeat(2,1fr)" role="group" aria-label="คู่มือสำหรับ"><a class="segl" href="#/guide/staff"' + (tab === 'staff' ? ' aria-current="page"' : '') + '>สำหรับพนักงาน</a><a class="segl" href="#/guide/leader"' + (tab === 'leader' ? ' aria-current="page"' : '') + '>สำหรับหัวหน้าทีม</a></div>' +
+    steps.map(function (x, i) {
+      return '<section class="card stack" style="gap:8px"><div class="row" style="align-items:flex-start;gap:12px"><span aria-hidden="true" style="width:30px;height:30px;border-radius:15px;background:var(--accent);color:#3a3a3a;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + (i + 1) + '</span><div class="stack" style="gap:4px;flex:1"><h2 style="font-size:16px">' + esc(x[0]) + '</h2><p style="margin:0">' + esc(x[1]) + '</p>' +
+        (tab === 'leader' && i === 2 ? '<pre class="pre" style="font-size:13px">' + esc(COPILOT_PROMPT) + '</pre><button class="btn small" data-act="copyprompt">คัดลอก prompt</button>' : '') +
+        (x[2] ? '<a class="btn small" style="align-self:flex-start" href="' + x[2] + '">ไปที่หน้านี้ ›</a>' : '') + '</div></div></section>';
+    }).join('') + '<p class="small muted" style="text-align:center;margin:0">เวอร์ชัน ' + APP_VERSION + '</p></div>';
+  return shell({ title: 'คู่มือใช้งาน', back: '#/today' }, body);
+}
 
 /* ---------------- monthly close / history / archive ---------------- */
 function curMonth() { return monthOf(todayISO()); }
@@ -1132,6 +1214,7 @@ function render() {
     case 'settings': html = vSettings(); break;
     case 'setup': html = vSetup(); break;
     case 'months': html = vMonths(); break;
+    case 'guide': html = vGuide(parts[1]); break;
     case 'month': html = vMonth(parts[1]); break;
     default: html = vToday();
   }
@@ -1219,13 +1302,16 @@ var H = {
       Promise.all(jobs).then(function () { toast('ลบโครงการแล้ว'); location.hash = '#/projects'; });
     });
   },
-  copy: function () { var txt = $('#sumtext').textContent; copyText(txt).then(function (ok) { toast(ok ? 'คัดลอกแล้ว วางในแชท Teams ได้ทันที' : 'คัดลอกไม่สำเร็จ กดค้างที่ข้อความเพื่อคัดลอก'); }); },
+  copy: function () { var txt = $('#sumtext').textContent; copyText(txt).then(function (ok) { if (ok && !Store.state.onb.copied) { Store.state.onb.copied = true; Store.saveState(); } toast(ok ? 'คัดลอกแล้ว วางในแชท Teams ได้ทันที' : 'คัดลอกไม่สำเร็จ กดค้างที่ข้อความเพื่อคัดลอก'); }); },
   export: function () { exportExcel(); },
   backup: function () { makeBackup(); },
   wipe: function () {
     confirmBox('ล้างข้อมูลทั้งหมด', 'ข้อมูลโครงการ การติดตาม SO และรูปทั้งหมดในเครื่องนี้จะถูกลบถาวร ควรสำรองข้อมูลก่อน ต้องการล้างใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (!ok) return; wipeAll(); });
   },
   saveprofile: function () { var p = P(); $all('[data-pf]').forEach(function (i) { p[i.dataset.pf] = clean(i.value, 80); }); Store.saveState().then(function () { toast('บันทึกข้อมูลพนักงานแล้ว'); }); },
+  tyear: function (t) { S.ui.ty = (S.ui.ty || new Date().getFullYear()) + Number(t.dataset.d); rerender(); },
+  fillall: function () { var v = parseNum($('#t-all').value); if (v == null) { toast('ใส่จำนวนเงินก่อน'); return; } $all('[data-tgm]').forEach(function (i) { if (!i.disabled) i.value = fmt(v); }); toast('ใส่ครบทุกเดือนแล้ว กดบันทึกเป้าทั้งปี'); },
+  savetargets: function () { var tg = Store.state.settings.targets; $all('[data-tgm]').forEach(function (i) { if (i.disabled) return; var v = parseNum(i.value); if (v == null) delete tg[i.dataset.tgm]; else tg[i.dataset.tgm] = v; }); Store.saveState().then(function () { toast('บันทึกเป้าทั้งปีแล้ว'); rerender(); }); },
   savetarget: function () { var ym = S.ui.tm || monthOf(todayISO()), v = parseNum($('[data-tgt]').value); if (v == null) delete Store.state.settings.targets[ym]; else Store.state.settings.targets[ym] = v; Store.saveState().then(function () { toast('บันทึกเป้าแล้ว'); rerender(); }); },
   importopt: function () { importOptions(S.ui.imp || ''); },
   makecode: function () { makeOptionsCode(); },
@@ -1236,6 +1322,10 @@ var H = {
     confirmBox('ลืม PIN', 'ระบบกู้ PIN ไม่ได้เพราะข้อมูลถูกเข้ารหัสด้วย PIN ทางเดียวคือล้างข้อมูลในเครื่อง แล้วตั้งค่าใหม่และกู้คืนจากไฟล์สำรอง ต้องการล้างข้อมูลใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (ok) wipeAll(); });
   },
   onboard: function () { onboard(); },
+  reload: function () { location.reload(); },
+  hidecheck: function () { Store.state.onb.hidden = true; Store.saveState().then(function () { toast('ซ่อนแล้ว เปิดคู่มือได้จากหน้าตั้งค่า'); rerender(); }); },
+  showcheck: function () { Store.state.onb.hidden = false; Store.state.onb.doneAt = null; Store.saveState().then(function () { location.hash = '#/today'; }); },
+  copyprompt: function () { copyText(COPILOT_PROMPT).then(function (ok) { toast(ok ? 'คัดลอก prompt แล้ว' : 'คัดลอกไม่สำเร็จ'); }); },
   closemonth: function (t) { var ym = t.dataset.m; confirmBox('ปิดงวด ' + monthName(ym), 'ระบบจะบันทึกสถานะทุกโครงการ ณ วันที่ ' + be(monthEnd(ym)) + ' และล็อกการติดตามและ SO ที่ลงวันที่ในเดือนนี้ ควรตรวจว่าบันทึกครบแล้ว ต้องการปิดงวดใช่หรือไม่', 'ปิดงวด').then(function (ok) { if (!ok) return; closeMonth(ym).then(function () { toast('ปิดงวดแล้ว ขั้นต่อไปคือส่งออก Excel เดือนนี้'); rerender(); }); }); },
   reopenmonth: function (t) { var ym = t.dataset.m; confirmBox('เปิดงวดใหม่', 'ข้อมูลเดือนนี้จะแก้ไขได้อีกครั้ง หลังแก้เสร็จต้องปิดงวดและส่งออก Excel ใหม่ ต้องการเปิดงวดใช่หรือไม่', 'เปิดงวด').then(function (ok) { if (!ok) return; reopenMonth(ym).then(function () { toast('เปิดงวดแล้ว'); rerender(); }); }); },
   exportmonth: function (t) { exportExcel(t.dataset.m); },
@@ -1566,7 +1656,11 @@ if (!window.crypto || !crypto.subtle || !window.indexedDB) {
 DB.open().then(function () { return DB.get('meta', 'auth'); }).then(function (a) { S.hasAuth = !!a; render(); }).catch(function () {
   app.innerHTML = '<div class="lock"><h1>เปิดฐานข้อมูลไม่ได้</h1><p>หากใช้โหมดไม่ระบุตัวตน (Private) ให้ปิดโหมดนั้นก่อน หรือปิดแท็บอื่นของแอปนี้แล้วลองใหม่</p></div>';
 });
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function () { });
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  var hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) { reg.update(); }).catch(function () { });
+  navigator.serviceWorker.addEventListener('controllerchange', function () { if (hadController) { S.updateReady = true; if (Cx.key) rerender(); } });
+}
 
 window.__PST = { version: APP_VERSION };
 })();
