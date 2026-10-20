@@ -241,7 +241,7 @@ table.fx{table-layout:fixed;font-size:13px}table.fx th,table.fx td{padding:8px 4
    Replace Store.* persistence to add server sync later.
    ========================================================= */
 
-var APP_VERSION = '1.5.0';
+var APP_VERSION = '1.6.0';
 var SCHEMA_VERSION = 1;
 var DB_NAME = 'ps-tracker';
 var KDF_ITER = 250000;
@@ -320,6 +320,7 @@ function inThailand(lat, lng) { return lat >= 5 && lat <= 21 && lng >= 97 && lng
 var DB = {
   db: null,
   open: function () {
+    if (DB.db) { try { DB.db.close(); } catch (e) { } DB.db = null; }
     return new Promise(function (res, rej) {
       var r = indexedDB.open(DB_NAME, 1);
       r.onupgradeneeded = function () {
@@ -348,6 +349,41 @@ var DB = {
   all: function (st) { return DB.tx(st, 'readonly', function (s) { return s.getAll(); }); },
   destroy: function () { return new Promise(function (res) { if (DB.db) DB.db.close(); var r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = r.onerror = r.onblocked = function () { res(); }; }); }
 };
+
+/* ---------------- users on this device (directory) ----------------
+   เก็บเฉพาะ Emp ID และชื่อเล่น/ชื่อต้น เพื่อให้เลือกผู้ใช้ได้ ข้อมูลงานของแต่ละคนแยกฐานข้อมูลและเข้ารหัสด้วย PIN ของคนนั้น */
+var DIR = {
+  db: null,
+  open: function () { return new Promise(function (res, rej) { var r = indexedDB.open('ps-tracker-users', 1); r.onupgradeneeded = function () { if (!r.result.objectStoreNames.contains('users')) r.result.createObjectStore('users', { keyPath: 'id' }); }; r.onsuccess = function () { DIR.db = r.result; res(); }; r.onerror = function () { rej(r.error); }; }); },
+  tx: function (mode, fn) { return new Promise(function (res, rej) { var t = DIR.db.transaction('users', mode), req = fn(t.objectStore('users')), out; if (req) req.onsuccess = function () { out = req.result; }; t.oncomplete = function () { res(out); }; t.onerror = function () { rej(t.error); }; }); },
+  all: function () { return DIR.tx('readonly', function (s) { return s.getAll(); }); },
+  put: function (u) { return DIR.tx('readwrite', function (s) { return s.put(u); }); },
+  del: function (id) { return DIR.tx('readwrite', function (s) { return s.delete(id); }); }
+};
+function normEmp(x) { return String(x || '').trim().toUpperCase(); }
+function empTaken(emp, exceptId) { var n = normEmp(emp); return (S.users || []).find(function (u) { return u.id !== exceptId && u.empId && normEmp(u.empId) === n; }); }
+function firstName(n) { return String(n || '').trim().split(/\s+/)[0].slice(0, 30); }
+function selectUser(u) {
+  S.user = u; DB_NAME = u.db; S.failed = 0;
+  return DB.open().then(function () { return DB.get('meta', 'auth'); }).then(function (a) {
+    if (!a) { return DIR.del(u.id).then(function () { S.users = S.users.filter(function (x) { return x.id !== u.id; }); S.user = null; render(); }); }
+    S.hasAuth = true; render();
+  });
+}
+function syncUserEntry() {
+  var u = S.user, pf = P(); if (!u || !pf) return Promise.resolve();
+  if (u.empId === pf.empId && u.label === firstName(pf.name)) return Promise.resolve();
+  u.empId = pf.empId; u.label = firstName(pf.name); return DIR.put(u).catch(function () { });
+}
+function vUsers() {
+  var list = (S.users || []).slice().sort(function (a, b) { return (a.label || '').localeCompare(b.label || ''); });
+  return '<div class="lock" style="justify-content:flex-start;padding-top:48px"><div class="logo">PS</div><h1 style="font-size:22px">Project Sales Tracker</h1><p style="margin:0">เลือกผู้ใช้</p>' +
+    '<div class="stack" style="width:100%;max-width:420px;gap:10px">' + list.map(function (u) {
+      return '<button type="button" class="lrow" style="border:1px solid var(--line);border-radius:12px;background:#fff" data-act="pickuser" data-id="' + esc(u.id) + '"><span class="li" style="background:var(--accent);font-weight:700">' + esc((u.label || '?').slice(0, 2)) + '</span><span class="lt"><b>' + esc(u.label || 'ผู้ใช้เดิม') + '</b><small>' + esc(u.empId || 'ยังไม่ทราบ Emp ID (เข้าสู่ระบบครั้งแรกหลังอัปเดต)') + '</small></span>' + icon('chev', 18, '#9a9a9a') + '</button>';
+    }).join('') +
+    '<button class="btn block" data-act="newuser">+ เพิ่มผู้ใช้ในเครื่องนี้</button>' +
+    '<span class="hint" style="text-align:center">เครื่องที่ใช้ร่วมกัน แต่ละคนมี PIN และข้อมูลแยกกัน มองไม่เห็นข้อมูลของคนอื่น</span></div></div>';
+}
 
 /* ---------------- Crypto (AES-GCM, PBKDF2) ---------------- */
 var Cx = {
@@ -666,7 +702,7 @@ function chipsG(field, list, grp, det) {
 function searchText(p) {
   var f = followsOf(p.id).map(function (x) { return x.note; }).join(' ');
   var s = salesOf(p.id).map(function (x) { return x.soNo; }).join(' ');
-  return [p.name, p.code, p.developer, p.contactName, digits(p.phone), p.line, p.province, p.address, p.info, p.ptype, p.ptypeDetail, p.channel, p.channelDetail, p.contactRole, p.contactRoleDetail, f, s].join(' ').toLowerCase();
+  return [p.name, p.code, p.codeOld, p.developer, p.contactName, digits(p.phone), p.line, p.province, p.address, p.info, p.ptype, p.ptypeDetail, p.channel, p.channelDetail, p.contactRole, p.contactRoleDetail, f, s].join(' ').toLowerCase();
 }
 function vProjects() {
   var u = S.ui; u.pf = u.pf || 'active';
@@ -744,7 +780,7 @@ function vProject(id) {
   var pipe = '<div class="pipe" aria-label="ขั้นการขาย: ' + esc(p.status) + '">' + PIPE.map(function (s, i) { return '<div class="' + (i < idx ? 'done' : i === idx ? 'cur' : '') + '"><span></span><small' + (i === idx ? ' class="strong"' : '') + '>' + esc(s.replace('แล้ว', '')) + '</small></div>'; }).join('') + '</div>';
   var info = [['ยอดที่คาดว่าจะได้', fmt(p.estimate) + ' บาท'], ['คาดว่าจะปิดได้', be(p.closingDate)], ['หน้างานสร้างเสร็จ', beMonth(p.completion)], ['สินค้าที่เสนอ', (p.products || []).join(', ') || '-'], ['ช่องทางการติดต่อ', dv(p, 'channel') || '-'], ['นัดติดตามครั้งถัดไป', be(p.nextDate)]];
   var body = '<div class="stack">' + hero +
-    '<div class="between" style="align-items:flex-start"><div><span class="small">' + esc(p.code) + ' · ติดต่อ ' + be(p.recordDate) + (lagDays(p.recordDate, p.createdAt, p.importFile) ? ' · บันทึกในระบบ ' + be(isoOf(new Date(p.createdAt))) : '') + '</span><h2 style="font-size:21px">' + esc(p.name) + '</h2><span class="small">' + esc(dv(p, 'ptype')) + (p.developer ? ' · ' + esc(p.developer) : '') + '</span></div>' + badge(p.status) + '</div>' +
+    '<div class="between" style="align-items:flex-start"><div><span class="small">' + esc(p.code) + (p.codeOld ? ' (เดิม ' + esc(p.codeOld) + ')' : '') + ' · ติดต่อ ' + be(p.recordDate) + (lagDays(p.recordDate, p.createdAt, p.importFile) ? ' · บันทึกในระบบ ' + be(isoOf(new Date(p.createdAt))) : '') + '</span><h2 style="font-size:21px">' + esc(p.name) + '</h2><span class="small">' + esc(dv(p, 'ptype')) + (p.developer ? ' · ' + esc(p.developer) : '') + '</span></div>' + badge(p.status) + '</div>' +
     (!p.consent ? '<div class="card warn stack" style="gap:8px"><b class="strong">ยังไม่มีหลักฐานความยินยอมของผู้ติดต่อ</b><span class="small">' + (p.consentSource === 'ข้อมูลเดิม' ? 'โครงการนี้นำเข้าจากไฟล์เดิม ' : '') + 'ขอความยินยอมเมื่อติดต่อครั้งถัดไป แล้วกดยืนยัน</span><button class="btn small" data-act="confirmconsent" data-id="' + esc(p.id) + '">ผู้ติดต่อยินยอมแล้ว</button></div>' : '') +
     (idx >= 0 ? pipe : (p.status === ST.LOST ? '<div class="card"><b>ไม่ได้งาน</b> · เหตุผล: ' + esc(p.lostReason || '-') + '</div>' : '')) +
     '<div class="wide2"><div class="stack"><div class="grid2">' + info.map(function (x) { return '<div class="card" style="padding:10px 12px"><div class="small">' + x[0] + '</div><b class="strong">' + esc(x[1]) + '</b></div>'; }).join('') + '</div>' +
@@ -902,7 +938,7 @@ function vData() {
     '<button class="btn" data-act="template">ดาวน์โหลดไฟล์ต้นแบบสำหรับกรอกข้อมูลเดิม</button><label class="btn" style="position:relative">เลือกไฟล์ Excel / CSV<input type="file" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" data-import="1" style="position:absolute;inset:0;opacity:0" aria-label="เลือกไฟล์ข้อมูลเดิม"></label>' + importPreview() +
     (st.imports || []).map(function (b) { return '<div class="between small" style="border-top:1px solid #f0f0f0;padding-top:8px"><span>' + esc(b.file) + ' · ' + be(b.at) + ' · ' + b.projects + ' โครงการ</span><button class="btn small danger" data-act="undoimport" data-id="' + esc(b.id) + '">ยกเลิกการนำเข้า</button></div>'; }).join('') + '</div>' +
     '<a class="card link between" href="#/months"><span><b class="strong">ประวัติรายเดือน · ปิดงวด · ล้างข้อมูลเก่า</b></span><b aria-hidden="true">›</b></a>' +
-    '<button class="btn danger block" data-act="wipe">ล้างข้อมูลทั้งหมดในเครื่องนี้</button></div>';
+    '<button class="btn danger block" data-act="wipe">ล้างข้อมูลทั้งหมดของผู้ใช้นี้</button></div>';
   return shell({ title: 'ข้อมูลและสำรองข้อมูล', back: '#/today' }, body);
 }
 
@@ -931,7 +967,7 @@ function vSettings() {
   var body = '<div class="stack" style="gap:0">' +
     (pend.length ? grp('งานที่ควรทำ (' + pend.length + ')', pend.map(function (x) { return lrow(x[2], 'alert', esc(x[0]), esc(x[1]), '', 'warnrow'); })) : '') +
     grp('การขาย', [lrow('#/setup', 'sliders', '<b>รายการตัวเลือก (Setup)</b>', 'ประเภทโครงการ ช่องทาง ประเภทการติดต่อ สินค้า', '', 'hl'), lrow('#/target', 'target', 'เป้ายอดขาย', 'ตั้งเป้ารายเดือนทั้งปี', tg ? fmt(tg.amount) : 'ยังไม่ตั้ง')]) +
-    grp('บัญชีของฉัน', [lrow('#/profile', 'user', 'ข้อมูลพนักงาน', esc(p.name), esc(p.empId))]) +
+    grp('บัญชีของฉัน', [lrow('#/profile', 'user', 'ข้อมูลพนักงาน', esc(p.name), esc(p.empId)), lrow('switchacct', 'logout', 'เปลี่ยนผู้ใช้', 'สำหรับเครื่องที่ใช้ร่วมกัน · ผู้ใช้ในเครื่องนี้ ' + (S.users || []).length + ' คน', '')]) +
     grp('ข้อมูล', [lrow('#/data', 'db', 'ส่งออก Excel · สำรอง · กู้คืน', 'สำรองล่าสุด ' + (st.lastBackup ? be(st.lastBackup) : 'ยังไม่เคยสำรอง'), ''), lrow('#/data', 'upload', 'นำเข้าข้อมูลเดิมจาก Excel', 'มีไฟล์ต้นแบบให้ดาวน์โหลด', ''), lrow('#/months', 'cal', 'ประวัติรายเดือน · ปิดงวด', '', !isClosed(addMonths(curMonth(), -1)) && monthHasData(addMonths(curMonth(), -1)) ? '<b class="dangerText">ค้างปิดงวด</b>' : '')]) +
     grp('ความปลอดภัย', [lrow('#/security', 'shield', 'ล็อกอัตโนมัติและเปลี่ยน PIN', '', st.settings.autolock + ' นาที')]) +
     grp('ช่วยเหลือ', [lrow('#/guide/staff', 'help', 'คู่มือใช้งาน', '', '')].concat(st.onb.hidden || st.onb.doneAt ? [lrow('showcheck', 'list', 'แสดงเช็กลิสต์เริ่มต้นใช้งาน', '', '')] : [])) +
@@ -945,8 +981,22 @@ function vProfile() {
     '<div class="grid2"><div class="field"><label for="p-emp">Emp ID</label><input id="p-emp" class="inp" data-pf="empId" value="' + esc(p.empId) + '" maxlength="20"></div><div class="field"><label for="p-name">ชื่อ-นามสกุล</label><input id="p-name" class="inp" data-pf="name" value="' + esc(p.name) + '" maxlength="80"></div></div>' +
     '<div class="grid2"><div class="field"><label for="p-br">สาขา</label><input id="p-br" class="inp" data-pf="branch" value="' + esc(p.branch) + '" maxlength="60"></div><div class="field"><label for="p-tm">ทีม</label><input id="p-tm" class="inp" data-pf="team" value="' + esc(p.team) + '" maxlength="60"></div></div>' +
     '<span class="hint">เมื่อแก้ไข ระบบจะถามว่าต้องการปรับข้อมูลโครงการ การติดตาม และ SO เดิมให้เป็นข้อมูลใหม่ด้วยหรือไม่</span>' +
-    '<button class="btn small primary" data-act="saveprofile">บันทึกข้อมูลพนักงาน</button></div></div>';
+    '<button class="btn small primary" data-act="saveprofile">บันทึกข้อมูลพนักงาน</button></div>' +
+    (function () { var n = codeMismatch().length; return n ? '<div class="card warn stack" style="gap:8px"><b class="strong">มีโครงการ ' + n + ' รายการที่รหัสยังใช้ Emp ID เดิม</b><span class="small">เปลี่ยนเป็น PS-' + esc(p.empId) + '-xxxx ได้ รหัสเดิมยังค้นหาได้</span><button class="btn small" data-act="renamecodes">เปลี่ยนรหัสโครงการ</button></div>' : ''; })() + '</div>';
   return shell({ title: 'ข้อมูลพนักงาน', back: '#/settings' }, body);
+}
+function codeMismatch() { var pre = 'PS-' + (P().empId || 'X') + '-'; return liveProjects().filter(function (p) { return /^PS-.+-\d+$/.test(p.code || '') && p.code.indexOf(pre) !== 0; }); }
+function askRenameCodes(manual) {
+  var list = codeMismatch(); if (!list.length) { if (manual) toast('รหัสโครงการตรงกับ Emp ID ปัจจุบันแล้ว'); return Promise.resolve(); }
+  var pre = 'PS-' + P().empId + '-', ex = list[0];
+  return confirmBox('เปลี่ยนรหัสโครงการด้วยหรือไม่', 'มีโครงการ ' + list.length + ' รายการที่รหัสยังใช้ Emp ID เดิม เช่น ' + ex.code + ' จะเปลี่ยนเป็น ' + pre + ex.code.split('-').pop() + ' รหัสเดิมเก็บไว้ในช่องรหัสโครงการเดิม ค้นหาได้และอยู่ในไฟล์ Excel ส่วนข้อความที่ส่งเข้า Teams ไปแล้วยังแสดงรหัสเดิม', 'เปลี่ยนรหัส').then(function (ok) {
+    if (!ok) return;
+    var used = {}, map = {}; liveProjects().forEach(function (p) { used[p.code] = 1; });
+    list.forEach(function (p) { var nc = pre + p.code.split('-').pop(); while (used[nc]) { Store.state.counter++; nc = pre + String(Store.state.counter).padStart(4, '0'); } used[nc] = 1; p.codeOld = (p.codeOld ? p.codeOld + ', ' : '') + p.code; map[p.id] = nc; p.code = nc; });
+    var ms = Store.months.filter(function (m) { return !m.deleted && (m.items || []).some(function (i) { return map[i.projectId]; }); });
+    ms.forEach(function (m) { m.items.forEach(function (i) { if (map[i.projectId]) i.code = map[i.projectId]; }); });
+    return Promise.all(list.concat(ms).map(function (r) { return Store.save(r); })).then(function () { return Store.saveState(); }).then(function () { toast('เปลี่ยนรหัสโครงการ ' + list.length + ' รายการแล้ว'); rerender(); });
+  });
 }
 function vTarget() { return shell({ title: 'เป้ายอดขาย', back: '#/settings' }, '<div class="stack">' + targetCard() + '</div>'); }
 function vSecurity() {
@@ -1381,15 +1431,17 @@ function undoImport(id) {
 /* ---------------- lock / onboarding ---------------- */
 function vLock() {
   var wait = S.lockUntil > Date.now();
-  return '<div class="lock"><div class="logo">PS</div><h1 style="font-size:22px">Project Sales Tracker</h1><p style="margin:0">ใส่ PIN 6 หลักเพื่อปลดล็อก</p>' +
+  var u = S.user || {};
+  return '<div class="lock"><div class="logo">PS</div><h1 style="font-size:22px">' + esc(u.label || 'Project Sales Tracker') + '</h1>' + (u.empId ? '<span class="small">' + esc(u.empId) + '</span>' : '') + '<p style="margin:0">ใส่ PIN 6 หลักเพื่อปลดล็อก</p>' +
     '<label for="pin" class="sr">PIN</label><input id="pin" class="inp pin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password"' + (wait ? ' disabled' : '') + '>' +
     '<button class="btn primary" style="min-width:220px" data-act="unlock"' + (wait ? ' disabled' : '') + '>ปลดล็อก</button><span id="lockmsg" class="errmsg" role="alert">' + (wait ? 'ใส่ PIN ผิดหลายครั้ง กรุณารอ 30 วินาที' : '') + '</span>' +
-    '<button class="btn small" style="border:0;text-decoration:underline" data-act="forgot">ลืม PIN</button></div>';
+    '<div class="row" style="gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn small" style="border:0;text-decoration:underline" data-act="forgot">ลืม PIN</button><button class="btn small" style="border:0;text-decoration:underline" data-act="switchuser">เปลี่ยนผู้ใช้ / เพิ่มผู้ใช้</button></div></div>';
 }
 function vOnboard() {
   var d = S.draft || (S.draft = { empId: '', name: '', branch: '', team: '' });
   return '<div class="shell"><div class="content"><header class="topbar yellow"><span style="width:8px"></span><h1>ตั้งค่าเริ่มต้น</h1></header><main class="main noNav"><div class="stack">' +
     '<p style="margin:0">ทำครั้งเดียว ข้อมูลทั้งหมดเก็บและเข้ารหัสในเครื่องนี้ ไม่ส่งขึ้นอินเทอร์เน็ต</p>' +
+    ((S.users || []).length ? '<div class="card warn"><b class="strong">เพิ่มผู้ใช้ในเครื่องที่ใช้ร่วมกัน</b><br><span class="small">เครื่องนี้มีผู้ใช้แล้ว ' + S.users.length + ' คน แต่ละคนมี PIN และข้อมูลแยกกัน Emp ID ซ้ำกับคนที่มีอยู่ไม่ได้</span><br><button class="btn small" style="margin-top:8px" data-act="cancelnew">กลับไปหน้าเลือกผู้ใช้</button></div>' : '') +
     '<div class="card stack" style="gap:10px"><b class="strong">1 · ข้อมูลพนักงาน</b>' +
     '<div class="field"><label for="o-emp">Emp ID <span class="req">*</span></label><input id="o-emp" class="inp' + errCls('empId') + '" data-bind="empId" value="' + esc(d.empId) + '" maxlength="20" autocomplete="off">' + err('empId') + '</div>' +
     '<div class="field"><label for="o-name">ชื่อ-นามสกุล <span class="req">*</span></label><input id="o-name" class="inp' + errCls('name') + '" data-bind="name" value="' + esc(d.name) + '" maxlength="80">' + err('name') + '</div>' +
@@ -1402,7 +1454,7 @@ function vOnboard() {
 
 /* ---------------- router ---------------- */
 function render() {
-  if (!Cx.key) { app.innerHTML = S.hasAuth ? vLock() : vOnboard(); var pi = $('#pin'); if (pi) pi.focus(); return; }
+  if (!Cx.key) { app.innerHTML = (S.newUser || !(S.users || []).length) ? vOnboard() : !S.user ? vUsers() : vLock(); var pi = $('#pin'); if (pi) pi.focus(); return; }
   var h = location.hash || '#/today', parts = h.slice(2).split('/');
   if (S.route !== h) {
     var base = parts[0];
@@ -1489,6 +1541,8 @@ var H = {
   tf: function (t) { S.ui.tf = t.dataset.v; rerender(); setTimeout(function () { var el = $('#tlist'); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); },
   jump: function (t) { var el = document.getElementById(t.dataset.v); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
   template: function () { exportTemplate(); },
+  renamecodes: function () { askRenameCodes(true); },
+  switchacct: function () { lockApp(); S.user = null; render(); },
   consent: function () { S.draft.consent = !S.draft.consent; if (S.ui.errors) delete S.ui.errors.consent; rerender(); },
   geotoggle: function () { S.draft.geo = !S.draft.geo; rerender(); },
   detail: function () { S.ui.detail = !S.ui.detail; rerender(); },
@@ -1537,21 +1591,22 @@ var H = {
   export: function () { exportExcel(); },
   backup: function () { makeBackup(); },
   wipe: function () {
-    confirmBox('ล้างข้อมูลทั้งหมด', 'ข้อมูลโครงการ การติดตาม SO และรูปทั้งหมดในเครื่องนี้จะถูกลบถาวร ควรสำรองข้อมูลก่อน ต้องการล้างใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (!ok) return; wipeAll(); });
+    confirmBox('ล้างข้อมูลทั้งหมด', 'ข้อมูลโครงการ การติดตาม SO และรูปทั้งหมดของผู้ใช้นี้ในเครื่องนี้จะถูกลบถาวร (ข้อมูลของผู้ใช้อื่นในเครื่องไม่ถูกลบ) ควรสำรองข้อมูลก่อน ต้องการล้างใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (!ok) return; wipeAll(); });
   },
   saveprofile: function () {
     var p = P(), old = { empId: p.empId, name: p.name, branch: p.branch, team: p.team }, nv = {};
     $all('[data-pf]').forEach(function (i) { nv[i.dataset.pf] = clean(i.value, 80); });
     if (!nv.empId || !nv.name) { toast('กรุณาใส่ Emp ID และชื่อ'); return; }
+    var taken = empTaken(nv.empId, S.user && S.user.id); if (taken) { toast('Emp ID ' + nv.empId + ' เป็นของผู้ใช้ ' + (taken.label || '') + ' ในเครื่องนี้แล้ว ใช้ซ้ำไม่ได้'); return; }
     Object.keys(nv).forEach(function (k) { p[k] = nv[k]; });
     var changed = ['empId', 'name', 'branch', 'team'].some(function (k) { return (old[k] || '') !== (p[k] || ''); });
-    Store.saveState().then(function () {
+    Store.saveState().then(syncUserEntry).then(function () {
       var recs = [].concat(Store.projects, Store.follows, Store.sales, Store.months).filter(function (r) { return r && !r.deleted && (r.empId !== p.empId || r.empName !== p.name || (r.branch || '') !== (p.branch || '') || (r.team || '') !== (p.team || '')); });
-      if (!changed || !recs.length) { toast('บันทึกข้อมูลพนักงานแล้ว'); return; }
-      return confirmBox('ปรับข้อมูลเดิมให้ตรงกันหรือไม่', 'มีข้อมูลเดิม ' + recs.length + ' รายการ (โครงการ การติดตาม SO และงวดที่ปิดแล้ว) ที่ยังใช้ Emp ID ชื่อ สาขา หรือทีมเดิม ต้องการเปลี่ยนเป็นข้อมูลใหม่ทั้งหมดหรือไม่ รหัสโครงการเดิม เช่น PS-' + esc(old.empId || '') + '-0001 จะคงเดิมเพื่อให้อ้างอิงข้อความที่ส่งไปแล้วได้', 'ปรับทั้งหมด').then(function (ok) {
-        if (!ok) { toast('บันทึกแล้ว ข้อมูลเดิมคงไว้ตามเดิม'); return; }
+      if (!changed || !recs.length) { toast('บันทึกข้อมูลพนักงานแล้ว'); return askRenameCodes(); }
+      return confirmBox('ปรับข้อมูลเดิมให้ตรงกันหรือไม่', 'มีข้อมูลเดิม ' + recs.length + ' รายการ (โครงการ การติดตาม SO และงวดที่ปิดแล้ว) ที่ยังใช้ Emp ID ชื่อ สาขา หรือทีมเดิม ต้องการเปลี่ยนเป็นข้อมูลใหม่ทั้งหมดหรือไม่', 'ปรับทั้งหมด').then(function (ok) {
+        if (!ok) { toast('บันทึกแล้ว ข้อมูลเดิมคงไว้ตามเดิม'); return askRenameCodes(); }
         recs.forEach(function (r) { r.empId = p.empId; r.empName = p.name; r.branch = p.branch; r.team = p.team; });
-        return Promise.all(recs.map(function (r) { return Store.save(r); })).then(function () { toast('ปรับข้อมูลเดิม ' + recs.length + ' รายการแล้ว'); rerender(); });
+        return Promise.all(recs.map(function (r) { return Store.save(r); })).then(function () { toast('ปรับข้อมูลเดิม ' + recs.length + ' รายการแล้ว'); rerender(); return askRenameCodes(); });
       });
     }).catch(function () { toast('บันทึกไม่สำเร็จ ลองอีกครั้ง'); });
   },
@@ -1568,6 +1623,10 @@ var H = {
     confirmBox('ลืม PIN', 'ระบบกู้ PIN ไม่ได้เพราะข้อมูลถูกเข้ารหัสด้วย PIN ทางเดียวคือล้างข้อมูลในเครื่อง แล้วตั้งค่าใหม่และกู้คืนจากไฟล์สำรอง ต้องการล้างข้อมูลใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (ok) wipeAll(); });
   },
   onboard: function () { onboard(); },
+  pickuser: function (t) { var u = S.users.find(function (x) { return x.id === t.dataset.id; }); if (u) selectUser(u); },
+  switchuser: function () { S.user = null; S.newUser = false; render(); },
+  newuser: function () { S.newUser = true; S.draft = null; S.ui = {}; render(); },
+  cancelnew: function () { S.newUser = false; S.draft = null; S.ui = {}; if (S.users.length === 1) selectUser(S.users[0]); else { S.user = null; render(); } },
   reload: function () { location.reload(); },
   skipsetup: function () { Store.state.onb.skipSetup = true; Store.saveState().then(function () { toast('ข้ามแล้ว นำเข้าภายหลังได้ที่ ตั้งค่า → Setup'); rerender(); }); },
   hidecheck: function () { Store.state.onb.hidden = true; Store.saveState().then(function () { toast('ซ่อนแล้ว เปิดคู่มือได้จากหน้าตั้งค่า'); rerender(); }); },
@@ -1783,12 +1842,12 @@ function exportExcel(ym) {
   liveFollows().slice().sort(function (a, b) { return (a.date + a.createdAt).localeCompare(b.date + b.createdAt); }).forEach(function (f) { lastF[f.projectId] = f; if (f.note) lastN[f.projectId] = f.note; cntF[f.projectId] = (cntF[f.projectId] || 0) + 1; });
   liveSales().filter(validSale).slice().sort(function (a, b) { return (a.soDate || '').localeCompare(b.soDate || ''); }).forEach(function (s) { lastS[s.projectId] = s; });
   var H1 = ['Emp ID', 'Staff Name', 'Date', 'ช่องทางการติดต่อ', 'Project Type ประเภทโครงการ', 'ประเภทการติดต่อ', 'ชื่อโครงการ', 'ชื่อผู้ติดต่อ', 'เบอร์ติดต่อ', 'Address', 'Location (ละติจูด,ลองจิจูด)', 'รูปหน้างาน 1', 'รูปหน้างาน 2', 'Project information รายละเอียดโครงการ', 'Note', 'สถานะที่ติดตามโครงการ', 'กำหนดการหน้างานสร้างเสร็จ', 'ยอดที่คาดว่าจะได้ Estimate Sale', 'คาดว่าจะปิดได้ วันไหน Closing Date', 'เลขที่ใบสั่งขาย (SO.)', 'DP (Ex Vat)', 'วันที่ จัดส่ง',
-    'Project ID', 'รหัสโครงการ', 'สาขา', 'ทีม', 'จังหวัด', 'บริษัทเจ้าของโครงการ / Developer', 'ช่องทางการติดต่อ (รายการย่อย)', 'Project Type (รายการย่อย)', 'ประเภทการติดต่อ (รายการย่อย)', 'LINE', 'ความยินยอมของผู้ติดต่อ', 'วันที่ให้ความยินยอม', 'หมวดสินค้าที่เสนอ', 'เหตุผลที่ไม่ได้งาน', 'นัดติดตามครั้งถัดไป', 'มูลค่า SO (Ex Vat)', 'วันที่ SO', 'สถานะ SO', 'จำนวนครั้งที่ติดตาม', 'วันที่ติดต่อโครงการ', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด', 'วันที่ส่งออก'];
+    'Project ID', 'รหัสโครงการ', 'รหัสโครงการเดิม', 'สาขา', 'ทีม', 'จังหวัด', 'บริษัทเจ้าของโครงการ / Developer', 'ช่องทางการติดต่อ (รายการย่อย)', 'Project Type (รายการย่อย)', 'ประเภทการติดต่อ (รายการย่อย)', 'LINE', 'ความยินยอมของผู้ติดต่อ', 'วันที่ให้ความยินยอม', 'หมวดสินค้าที่เสนอ', 'เหตุผลที่ไม่ได้งาน', 'นัดติดตามครั้งถัดไป', 'มูลค่า SO (Ex Vat)', 'วันที่ SO', 'สถานะ SO', 'จำนวนครั้งที่ติดตาม', 'วันที่ติดต่อโครงการ', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด', 'วันที่ส่งออก'];
   var mrec = ym ? monthRec(ym) : null, snapIds = {}; if (mrec && mrec.closed) mrec.items.forEach(function (i) { snapIds[i.projectId] = 1; });
   var R1 = liveProjects().filter(function (p) { return !ym || (p.recordDate <= end && (snapIds[p.id] || inM(p.recordDate) || liveFollows().some(function (f) { return f.projectId === p.id && inM(f.date); }) || liveSales().some(function (s) { return s.projectId === p.id && inM(s.soDate); }))); }).map(function (p) {
     var f = lastF[p.id] || {}, s = lastS[p.id] || {};
     return [p.empId, p.empName, p.recordDate, p.channel || f.channel || '', p.ptype, p.contactRole || '', p.name, p.contactName, fmtPhone(p.phone), p.address, p.lat != null ? p.lat.toFixed(6) + ',' + p.lng.toFixed(6) : '', p.photos && p.photos[0] ? 'มี' : '', p.photos && p.photos[1] ? 'มี' : '', p.info, lastN[p.id] || '', p.status, p.completion, p.estimate || 0, p.closingDate, s.soNo || '', s.dp != null ? s.dp : '', s.deliveryDate || '',
-      p.id, p.code, p.branch, p.team, p.province, p.developer, p.channelDetail || '', p.ptypeDetail || '', p.contactRoleDetail || '', p.line, p.consent ? 'ยินยอม' : 'ไม่ยินยอม', p.consentAt ? p.consentAt.slice(0, 10) : '', (p.products || []).join(', '), p.lostReason || '', p.nextDate || '', s.soValue != null ? s.soValue : '', s.soDate || '', s.soStatus || '', cntF[p.id] || 0, p.recordDate || '', localTs(p.createdAt), lagDays(p.recordDate, p.createdAt, p.importFile), (p.updatedAt || '').slice(0, 19), exp.slice(0, 19)];
+      p.id, p.code, p.codeOld || '', p.branch, p.team, p.province, p.developer, p.channelDetail || '', p.ptypeDetail || '', p.contactRoleDetail || '', p.line, p.consent ? 'ยินยอม' : 'ไม่ยินยอม', p.consentAt ? p.consentAt.slice(0, 10) : '', (p.products || []).join(', '), p.lostReason || '', p.nextDate || '', s.soValue != null ? s.soValue : '', s.soDate || '', s.soStatus || '', cntF[p.id] || 0, p.recordDate || '', localTs(p.createdAt), lagDays(p.recordDate, p.createdAt, p.importFile), (p.updatedAt || '').slice(0, 19), exp.slice(0, 19)];
   });
   var H2 = ['Follow ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'Staff Name', 'สาขา', 'ทีม', 'วันที่ติดต่อ', 'ชื่อโครงการ', 'Project Type', 'สถานะก่อน', 'สถานะหลัง', 'เหตุผลที่ไม่ได้งาน', 'Note', 'นัดครั้งถัดไป', 'ละติจูด', 'ลองจิจูด', 'ระยะห่างจากโครงการ (เมตร)', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด'];
   var R2 = liveFollows().filter(function (f) { return inM(f.date); }).map(function (f) { var p = projById(f.projectId) || {}; return [f.id, f.projectId, p.code || '', f.empId, f.empName, f.branch, f.team, f.date, p.name || '', p.ptype || '', f.statusBefore, f.statusAfter, f.lostReason, f.note, f.nextDate, f.lat != null ? +f.lat.toFixed(6) : '', f.lng != null ? +f.lng.toFixed(6) : '', f.distance != null ? f.distance : '', localTs(f.createdAt), lagDays(f.date, f.createdAt, f.importFile), (f.updatedAt || '').slice(0, 19)]; });
@@ -1830,6 +1889,12 @@ function restoreBackup(file) {
     if (f.format !== 'ps-tracker-backup') throw new Error('format');
     return Cx.derive(pw, unb64(f.kdf.salt), f.kdf.iter).then(function (k) { return Cx.decJSON(k, unb64(f.iv), unb64(f.ct)); });
   }).then(function (data) {
+    var bid = data && ((data.state && data.state.profile && data.state.profile.empId) || (data.profile && data.profile.empId) || ((data.records || []).filter(function (r) { return r && r.empId; })[0] || {}).empId);
+    if (!bid || normEmp(bid) === normEmp(P().empId)) return data;
+    var other = empTaken(bid, S.user && S.user.id);
+    if (other) { toast('ไฟล์นี้เป็นของ Emp ID ' + bid + ' (' + (other.label || '') + ') ซึ่งมีบัญชีในเครื่องนี้แล้ว ให้กู้คืนในบัญชีของคนนั้น'); throw 'skip'; }
+    return confirmBox('ไฟล์สำรองเป็นของคนอื่น', 'ไฟล์นี้เป็นของ Emp ID ' + bid + ' แต่ผู้ใช้ปัจจุบันคือ ' + P().empId + ' ถ้ากู้คืน ข้อมูลจะรวมเข้ากับบัญชีนี้ ควรเพิ่มผู้ใช้ใหม่ในเครื่อง แล้วกู้คืนในบัญชีนั้นแทน ต้องการกู้คืนเข้าบัญชีนี้หรือไม่', 'กู้คืนเข้าบัญชีนี้').then(function (ok) { if (!ok) throw 'skip'; return data; });
+  }).then(function (data) {
     var added = 0, jobs = [];
     (data.photos || []).forEach(function (ph) { jobs.push(DB.get('photos', ph.id).then(function (ex) { if (ex) return; var bytes = unb64(ph.b64); return Cx.enc(Cx.key, bytes).then(function (e) { return DB.put('photos', { id: ph.id, mime: ph.mime, iv: e.iv, ct: e.ct }); }); })); });
     return Promise.all(jobs).then(function () {
@@ -1847,25 +1912,30 @@ function restoreBackup(file) {
       st.counter = Math.max(st.counter || 0, b.counter || 0);
       return Store.saveState();
     }).then(migrateRecords).then(function () { toast('กู้คืนแล้ว ' + added + ' รายการ'); S.ui.bpass = ''; rerender(); });
-  }).catch(function () { toast('กู้คืนไม่สำเร็จ รหัสผ่านไม่ถูกต้องหรือไฟล์ไม่ถูกต้อง'); });
+  }).catch(function (e) { if (e === 'skip') return; toast('กู้คืนไม่สำเร็จ รหัสผ่านไม่ถูกต้องหรือไฟล์ไม่ถูกต้อง'); });
 }
-function wipeAll() { Cx.key = null; Store.reset(); DB.destroy().then(function () { location.hash = ''; location.reload(); }); }
+function wipeAll() { Cx.key = null; Store.reset(); var u = S.user; (u ? DIR.del(u.id) : Promise.resolve()).catch(function () { }).then(function () { return DB.destroy(); }).then(function () { location.hash = ''; location.reload(); }); }
 
 /* ---------------- auth ---------------- */
 function onboard() {
   var d = S.draft, e = {}, p1 = $('#o-p1').value, p2 = $('#o-p2').value;
-  if (!clean(d.empId)) e.empId = 'กรุณาใส่ Emp ID'; if (!clean(d.name)) e.name = 'กรุณาใส่ชื่อ'; if (!clean(d.branch)) e.branch = 'กรุณาใส่สาขา';
+  if (!clean(d.empId)) e.empId = 'กรุณาใส่ Emp ID'; else if (empTaken(d.empId)) e.empId = 'Emp ID นี้มีผู้ใช้ในเครื่องนี้แล้ว ให้กลับไปเลือกชื่อของตัวเองแล้วใส่ PIN'; if (!clean(d.name)) e.name = 'กรุณาใส่ชื่อ'; if (!clean(d.branch)) e.branch = 'กรุณาใส่สาขา';
   if (!/^\d{6}$/.test(p1)) e.pin = 'PIN ต้องเป็นตัวเลข 6 หลัก'; else if (p1 !== p2) e.pin = 'PIN ทั้งสองช่องไม่ตรงกัน'; else if (/^(\d)\1{5}$/.test(p1) || p1 === '123456' || p1 === '654321') e.pin = 'PIN นี้เดาง่ายเกินไป';
   S.ui.errors = e; if (Object.keys(e).length) { S.ui.focusErr = true; app.innerHTML = vOnboard(); return; }
   var btn = $('[data-act="onboard"]'); btn.disabled = true; btn.textContent = 'กำลังตั้งค่า…';
-  var salt = crypto.getRandomValues(new Uint8Array(16));
-  Cx.derive(p1, salt, KDF_ITER).then(function (k) {
+  var salt = crypto.getRandomValues(new Uint8Array(16)), nu = { id: uid(), empId: clean(d.empId, 20), label: firstName(d.name), createdAt: nowISO() };
+  nu.db = 'ps-tracker-' + nu.id;
+  DB_NAME = nu.db;
+  DB.open().then(function () { return Cx.derive(p1, salt, KDF_ITER); }).then(function (k) {
     Cx.key = k;
     return Cx.encJSON(k, { ok: 'ps-tracker' }).then(function (v) { return DB.put('meta', { salt: salt, iter: KDF_ITER, iv: v.iv, ct: v.ct, createdAt: nowISO() }, 'auth'); });
   }).then(function () {
     Store.state = migrateState({ profile: { empId: clean(d.empId, 20), name: clean(d.name, 80), branch: clean(d.branch, 60), team: clean(d.team, 60) } });
     return Store.saveState();
   }).then(function () {
+    return DIR.put(nu);
+  }).then(function () {
+    S.users = (S.users || []).concat([nu]); S.user = nu; S.newUser = false;
     S.hasAuth = true; S.draft = null; S.ui = {};
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     location.hash = '#/today'; render(); toast('ตั้งค่าเรียบร้อย เริ่มใช้งานได้เลย');
@@ -1880,7 +1950,7 @@ function tryUnlock() {
     return Cx.derive(pin, a.salt, a.iter).then(function (k) { return Cx.decJSON(k, a.iv, a.ct).then(function () { return k; }); });
   }).then(function (k) {
     Cx.key = k; S.failed = 0; return Store.load();
-  }).then(function () { touch(); S.route = ''; if (!location.hash || location.hash === '#') location.hash = '#/today'; render(); }).catch(function () {
+  }).then(syncUserEntry).then(function () { touch(); S.route = ''; if (!location.hash || location.hash === '#') location.hash = '#/today'; render(); }).catch(function () {
     Cx.key = null; Store.reset(); S.failed++;
     if (S.failed >= 5) { S.lockUntil = Date.now() + 30000; S.failed = 0; setTimeout(render, 30500); }
     render(); var m = $('#lockmsg'); if (m && S.lockUntil <= Date.now()) m.textContent = 'PIN ไม่ถูกต้อง';
@@ -1925,7 +1995,19 @@ if (!window.crypto || !crypto.subtle || !window.indexedDB) {
   app.innerHTML = '<div class="lock"><h1>เบราว์เซอร์นี้ไม่รองรับ</h1><p>กรุณาเปิดผ่าน Safari หรือ Chrome รุ่นล่าสุด และเปิดผ่านลิงก์ https เท่านั้น</p></div>';
   return;
 }
-DB.open().then(function () { return DB.get('meta', 'auth'); }).then(function (a) { S.hasAuth = !!a; render(); }).catch(function () {
+DIR.open().then(function () { return DIR.all(); }).then(function (users) {
+  S.users = users || [];
+  if (S.users.length) return;
+  DB_NAME = 'ps-tracker';
+  return DB.open().then(function () { return DB.get('meta', 'auth'); }).then(function (a) {
+    if (!a) return;
+    var legacy = { id: 'u0', db: 'ps-tracker', empId: '', label: 'ผู้ใช้เดิม', createdAt: nowISO() };
+    return DIR.put(legacy).then(function () { S.users = [legacy]; });
+  });
+}).then(function () {
+  if (S.users.length === 1) return selectUser(S.users[0]);
+  render();
+}).catch(function () {
   app.innerHTML = '<div class="lock"><h1>เปิดฐานข้อมูลไม่ได้</h1><p>หากใช้โหมดไม่ระบุตัวตน (Private) ให้ปิดโหมดนั้นก่อน หรือปิดแท็บอื่นของแอปนี้แล้วลองใหม่</p></div>';
 });
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
