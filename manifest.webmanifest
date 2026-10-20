@@ -1,0 +1,17 @@
+{
+  "name": "Project Sales Tracker",
+  "short_name": "PS Tracker",
+  "description": "บันทึกและติดตามโครงการสำหรับทีม Project Sales",
+  "lang": "th",
+  "start_url": "./#/today",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbfbfb",
+  "theme_color": "#ffbf0f",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
