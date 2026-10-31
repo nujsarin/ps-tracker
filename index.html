@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zU4yq8+4U9/rsb6eWxDzrRURCDDsl7Dqe1z9UVhb30A='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-mFl6xQ87/KDEGCP6iOcqOUyeTppnYHw1HpwLd/lh2cs='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#ffbf0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -316,7 +316,7 @@ table.fx{table-layout:fixed;font-size:13px}table.fx th,table.fx td{padding:8px 4
    Replace Store.* persistence to add server sync later.
    ========================================================= */
 
-var APP_VERSION = '1.13.0';
+var APP_VERSION = '1.14.0';
 var SCHEMA_VERSION = 2;
 var DB_NAME = 'ps-tracker';
 var KDF_ITER = 250000;
@@ -3164,31 +3164,42 @@ function zipStore(files) {
 }
 function xesc(s) { return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function colName(i) { var s = ''; i++; while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+var MONEY_COL = /^(ยอดที่คาดว่าจะได้|มูลค่า|DP \(|รับชำระแล้ว$|คงเหลือ$|ยอดรับชำระ$|SO \S|ใบเสนอราคา \S)/;
 function sheetXml(sh) {
-  var header = sh.header, rows = sh.rows, all = [header].concat(rows);
-  var x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>' +
+  var header = sh.header, rows = sh.rows, all = [header].concat(rows), money = header.map(function (h) { return MONEY_COL.test(String(h)); });
+  var x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' + (sh.fitPage ? '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>' : '') + '<sheetViews>' + (sh.noFreeze ? '<sheetView workbookViewId="0"' + (sh.active ? ' tabSelected="1"' : '') + '/>' : '<sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView>') + '</sheetViews><cols>' +
     header.map(function (h, i) { return '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + (sh.widths && sh.widths[i] ? sh.widths[i] : Math.min(40, Math.max(12, String(h).length + 4))) + '" customWidth="1"/>'; }).join('') + '</cols><sheetData>';
   all.forEach(function (r, ri) {
     x += '<row r="' + (ri + 1) + '">';
     r.forEach(function (v, ci) {
       var ref = colName(ci) + (ri + 1);
       if (v === null || v === undefined || v === '') return;
-      if (typeof v === 'number' && isFinite(v)) x += '<c r="' + ref + '"' + (ri === 0 ? ' s="1"' : '') + '><v>' + v + '</v></c>';
+      if (typeof v === 'object') {
+        var st = v.s != null ? ' s="' + v.s + '"' : '', cv = v.v;
+        if (v.f) x += '<c r="' + ref + '"' + st + (typeof cv === 'number' ? '' : ' t="str"') + '><f>' + xesc(v.f) + '</f><v>' + (typeof cv === 'number' && isFinite(cv) ? cv : xesc(cv == null ? '' : cv)) + '</v></c>';
+        else if (typeof cv === 'number' && isFinite(cv)) x += '<c r="' + ref + '"' + st + '><v>' + cv + '</v></c>';
+        else if (cv === '' || cv == null) x += '<c r="' + ref + '"' + st + '/>';
+        else x += '<c r="' + ref + '" t="inlineStr"' + st + '><is><t xml:space="preserve">' + xesc(cv) + '</t></is></c>';
+        return;
+      }
+      if (typeof v === 'number' && isFinite(v)) x += '<c r="' + ref + '"' + (ri === 0 ? ' s="1"' : money[ci] ? ' s="2"' : '') + '><v>' + v + '</v></c>';
       else x += '<c r="' + ref + '" t="inlineStr"' + (ri === 0 ? ' s="1"' : '') + '><is><t xml:space="preserve">' + xesc(v) + '</t></is></c>';
     });
     x += '</row>';
   });
   x += '</sheetData>' + (sh.noFilter ? '' : '<autoFilter ref="A1:' + colName(header.length - 1) + Math.max(1, all.length) + '"/>');
+  if (sh.dataBars && sh.dataBars.length) x += sh.dataBars.map(function (q, i) { return '<conditionalFormatting sqref="' + q + '"><cfRule type="dataBar" priority="' + (i + 1) + '"><dataBar><cfvo type="min"/><cfvo type="max"/><color rgb="FFFFBF0F"/></dataBar></cfRule></conditionalFormatting>'; }).join('');
   if (sh.validations && sh.validations.length) x += '<dataValidations count="' + sh.validations.length + '">' + sh.validations.map(function (v) { return '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="warning" errorTitle="ไม่อยู่ในรายการ" error="ค่านี้ไม่อยู่ในรายการตัวเลือก ระบบจะนำเข้าตามที่พิมพ์" sqref="' + v.sqref + '"><formula1>' + xesc(v.list) + '</formula1></dataValidation>'; }).join('') + '</dataValidations>';
+  if (sh.fitPage) x += '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0"/>';
   return x + '</worksheet>';
 }
 function buildXlsx(sheets, filesOnly) {
   var files = [
     { name: '[Content_Types].xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' + sheets.map(function (s, i) { return '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join('') + '</Types>' },
     { name: '_rels/.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
-    { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets.map(function (s, i) { return '<sheet name="' + xesc(s.name) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join('') + '</sheets>' + '<definedNames>' + sheets.map(function (s, i) { return '<definedName name="_xlnm._FilterDatabase" localSheetId="' + i + '" hidden="1">\'' + xesc(s.name) + '\'!$A$1:$' + colName(s.header.length - 1) + '$' + (s.rows.length + 1) + '</definedName>'; }).join('') + '</definedNames></workbook>' },
+    { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' + (function () { var a = sheets.map(function (s) { return !!s.active; }).indexOf(true); return a > 0 ? '<bookViews><workbookView activeTab="' + a + '"/></bookViews>' : ''; })() + '<sheets>' + sheets.map(function (s, i) { return '<sheet name="' + xesc(s.name) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join('') + '</sheets>' + '<definedNames>' + sheets.map(function (s, i) { return '<definedName name="_xlnm._FilterDatabase" localSheetId="' + i + '" hidden="1">\'' + xesc(s.name) + '\'!$A$1:$' + colName(s.header.length - 1) + '$' + (s.rows.length + 1) + '</definedName>'; }).join('') + '</definedNames><calcPr calcId="0" fullCalcOnLoad="1"/></workbook>' },
     { name: 'xl/_rels/workbook.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + sheets.map(function (s, i) { return '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>'; }).join('') + '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>' },
-    { name: 'xl/styles.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFBF0F"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>' }
+    { name: 'xl/styles.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="0.0"/></numFmts><fonts count="4"><font><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="11"/><name val="Tahoma"/></font><font><b/><sz val="14"/><name val="Tahoma"/></font><font><sz val="10"/><color rgb="FF6B6B6B"/><name val="Tahoma"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFBF0F"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF0EFEC"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="8"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>' }
   ];
   sheets.forEach(function (s, i) { files.push({ name: 'xl/worksheets/sheet' + (i + 1) + '.xml', data: sheetXml(s) }); });
   return filesOnly ? files : zipStore(files);
@@ -3261,6 +3272,94 @@ function anonSheets(sheets) {
   out.push({ name: 'คำอธิบายคอลัมน์', header: ['Sheet', 'คอลัมน์', 'ความหมาย'], rows: desc, widths: [18, 36, 90], noFilter: true });
   return out;
 }
+/* ---------- หน้าวิเคราะห์ในไฟล์ Excel: สูตรจริง + ค่าที่คำนวณไว้ (ให้แอปดูไฟล์บนมือถือที่ไม่คำนวณสูตรยังเห็นตัวเลข) ---------- */
+function xcmp(a, b) {
+  var ta = a === '' || a == null ? 'b' : typeof a === 'number' ? 'n' : 's', tb = typeof b === 'number' ? 'n' : 's';
+  if (ta === 'b') { a = tb === 'n' ? 0 : ''; ta = tb; }
+  if (ta !== tb) return ta === 'n' ? -1 : 1;
+  if (ta === 's') { a = String(a).toLowerCase(); b = String(b).toLowerCase(); }
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+function anaSheet(sheets, ym, anon) {
+  var by = {}; sheets.forEach(function (x) { by[x.name] = x; });
+  var col = function (sn, h) { var x = by[sn]; if (!x) return null; var i = x.header.indexOf(h); return i < 0 ? null : i; };
+  var rng = function (sn, ci) { var n = Math.max(2, by[sn].rows.length + 1), c = colName(ci); return "'" + sn + "'!$" + c + '$2:$' + c + '$' + n; };
+  var lit = function (x) { return typeof x === 'number' ? String(x) : '"' + String(x).replace(/"/g, '""') + '"'; };
+  function term(sn, cd) {
+    var ci = col(sn, cd[0]); if (ci == null) return null;
+    var r = rng(sn, ci), op = cd[1], v = cd[2], R = cd[3] || (op === 'in' ? '' : lit(v));
+    var f = op === 'pre' ? '(LEFT(' + r + ',LEN(' + R + '))=' + R + ')' : op === 'eq' ? '(' + r + '=' + R + ')' : op === 'ne' ? '(' + r + '<>' + R + ')' : op === 'blank' ? '(' + r + '="")' : op === 'ge' ? '(' + r + '>=' + R + ')' : op === 'le' ? '(' + r + '<=' + R + ')' : op === 'gt' ? '(' + r + '>' + R + ')' : op === 'tlt' ? '(' + r + '>="2000")*(' + r + '<' + R + ')' : '(' + v.map(function (y) { return '(' + r + '=' + lit(y) + ')'; }).join('+') + ')';
+    var t = function (x) { return op === 'pre' ? typeof x === 'string' && x.slice(0, String(v).length) === String(v) : op === 'eq' ? xcmp(x, v) === 0 : op === 'ne' ? xcmp(x, v) !== 0 : op === 'blank' ? (x === '' || x == null) : op === 'ge' ? xcmp(x, v) >= 0 : op === 'le' ? xcmp(x, v) <= 0 : op === 'gt' ? xcmp(x, v) > 0 : op === 'tlt' ? xcmp(x, '2000') >= 0 && xcmp(x, v) < 0 : v.some(function (y) { return xcmp(x, y) === 0; }); };
+    return { f: f, test: function (row) { return t(row[ci]); } };
+  }
+  function F(sn, conds, sumH, st) {
+    var z = { f: '0', v: 0, s: st }; if (!by[sn]) return z;
+    var ts = conds.map(function (c) { return term(sn, c); }); if (!ts.length || ts.some(function (t) { return !t; })) return z;
+    var sci = sumH ? col(sn, sumH) : null; if (sumH && sci == null) return z;
+    var v = 0; by[sn].rows.forEach(function (r) { if (ts.every(function (t) { return t.test(r); })) v += sumH ? (typeof r[sci] === 'number' ? r[sci] : 0) : 1; });
+    return { f: 'SUMPRODUCT(1*' + ts.map(function (t) { return t.f; }).join('*') + (sumH ? '*' + rng(sn, sci) : '') + ')', v: v, s: st };
+  }
+  var pct = function (f, v) { return { f: f, v: v, s: 5 }; };
+  var M = ym || curMonth(), T = todayISO(), tg = targetFor(M), ACT = [ST.NEW, ST.PRES, ST.QUOTE], pf = P();
+  var STc = 'สถานะที่ติดตามโครงการ', EST = 'ยอดที่คาดว่าจะได้ Estimate Sale', SOV = 'มูลค่า SO (ก่อน VAT)', SOK = ['สถานะ SO', 'ne', 'ยกเลิก SO'];
+  var rows = [], bars = [], rn = function () { return rows.length + 2; };
+  var sec = function (t) { rows.push([]); rows.push([{ v: t, s: 4 }, { v: '', s: 4 }, { v: '', s: 4 }, { v: '', s: 4 }, { v: '', s: 4 }, { v: '', s: 4 }]); };
+  var hd = function (a) { rows.push(a.map(function (x) { return { v: x, s: 6 }; })); };
+  var note = function (t) { rows.push([{ v: t, s: 7 }]); };
+  note('สรุปจากข้อมูลใน sheet อื่นของไฟล์นี้ด้วยสูตร Excel แก้หรือเพิ่มข้อมูลในช่วงเดิมแล้วตัวเลขคำนวณใหม่ · ยอดเงินก่อน VAT · ร้อยละแสดงเป็นเลข 0–100');
+  rows.push(['เดือนที่วิเคราะห์', { v: M, s: 6 }, { v: 'แก้เป็นเดือนอื่นได้ รูปแบบ ปปปป-ดด (ค.ศ.)', s: 7 }]);
+  rows.push(['วันที่ข้อมูล', { v: T, s: 6 }, { v: 'ใช้คำนวณนัดที่เลยกำหนดและการชำระที่เลยกำหนด', s: 7 }]);
+  rows.push(['เป้ายอด SO ของเดือน (บาท)', tg && tg.amount ? { v: tg.amount, s: 2 } : '', { v: tg && tg.amount ? '' : 'ยังไม่ได้ตั้งเป้าในแอป', s: 7 }]);
+  // ก
+  sec('ก. ตัวเลขหลัก');
+  var newL = F('Projects', [['Date', 'pre', M, '$B$3'], ['รหัสโครงการหลัก', 'blank']]);
+  rows.push(['Lead ใหม่ในเดือน', newL, { v: 'ราย ไม่นับเฟสซื้อเพิ่ม', s: 7 }]);
+  var pipe = F('Projects', [[STc, 'in', ACT]], EST, 2); rows.push(['ยอดคาดการณ์ที่กำลังติดตาม', pipe, { v: 'บาท ขั้น Lead/Visit, Contact, Opportunity', s: 7 }]);
+  var soR = rn(), soM = F('Sales', [['วันที่ SO', 'pre', M, '$B$3'], SOK], SOV, 2); rows.push(['ยอด SO ในเดือน', soM, { v: 'บาท ไม่นับ SO ที่ยกเลิก', s: 7 }]);
+  rows.push(['ยอด SO เทียบเป้า', pct('IF(N($B$5)>0,B' + soR + '/$B$5*100,"")', tg && tg.amount ? soM.v / tg.amount * 100 : ''), { v: 'ร้อยละ', s: 7 }]);
+  var won = F('Projects', [[STc, 'eq', ST.WON]]), lost = F('Projects', [[STc, 'eq', ST.LOST]]);
+  rows.push(['อัตราปิดการขาย', pct('IF((' + won.f + '+' + lost.f + ')=0,"",' + won.f + '/(' + won.f + '+' + lost.f + ')*100)', won.v + lost.v ? won.v / (won.v + lost.v) * 100 : ''), { v: 'ร้อยละ Close Sale ÷ (Close Sale + ไม่ได้งาน) ของ Lead ในไฟล์', s: 7 }]);
+  rows.push(['ยอดค้างชำระ', F('Sales', [SOK], 'คงเหลือ', 2), { v: 'บาท', s: 7 }]);
+  // ข
+  sec('ข. สถานะการขาย (Funnel)'); hd(['สถานะ', 'จำนวน (ราย)', 'ร้อยละของทั้งหมด', 'ยอดคาดการณ์ (บาท)']);
+  var r0 = rn(), tot = r0 + STATUSES.length, cnts = STATUSES.map(function (x) { return F('Projects', [[STc, 'eq', x]]); }), all = cnts.reduce(function (a, c) { return a + c.v; }, 0);
+  STATUSES.forEach(function (x, i) { var r = r0 + i; rows.push([x, cnts[i], pct('IF($B$' + tot + '=0,"",B' + r + '/$B$' + tot + '*100)', all ? cnts[i].v / all * 100 : ''), F('Projects', [[STc, 'eq', x]], EST, 2)]); });
+  rows.push([{ v: 'รวม', s: 6 }, { f: 'SUM(B' + r0 + ':B' + (tot - 1) + ')', v: all, s: 6 }]); bars.push('B' + r0 + ':B' + (tot - 1));
+  // ค
+  sec('ค. ช่องทางการติดต่อ'); hd(['ช่องทาง', 'Lead (ราย)', 'Close Sale (ราย)', 'ไม่ได้งาน (ราย)', 'อัตราปิดการขาย (ร้อยละ)', 'ยอด SO (บาท)']);
+  var c0 = rn();
+  groupNames(O().channel).forEach(function (g) { var r = rn(), w = F('Projects', [['ช่องทางการติดต่อ', 'eq', g], [STc, 'eq', ST.WON]]), l = F('Projects', [['ช่องทางการติดต่อ', 'eq', g], [STc, 'eq', ST.LOST]]);
+    rows.push([g, F('Projects', [['ช่องทางการติดต่อ', 'eq', g]]), w, l, pct('IF((C' + r + '+D' + r + ')=0,"",C' + r + '/(C' + r + '+D' + r + ')*100)', w.v + l.v ? w.v / (w.v + l.v) * 100 : ''), F('Sales', [['ช่องทางการติดต่อ', 'eq', g], SOK], SOV, 2)]); });
+  bars.push('B' + c0 + ':B' + (rn() - 1));
+  // ง
+  sec('ง. ประเภทอาคาร'); hd(['ประเภทอาคาร', 'Lead (ราย)', 'กำลังติดตาม (ราย)', 'ยอดคาดการณ์กำลังติดตาม (บาท)', 'Close Sale (ราย)', 'ยอด SO (บาท)']);
+  var p0 = rn(), PT = 'Project Type ประเภทอาคาร';
+  groupNames(O().ptype).forEach(function (g) { rows.push([g, F('Projects', [[PT, 'eq', g]]), F('Projects', [[PT, 'eq', g], [STc, 'in', ACT]]), F('Projects', [[PT, 'eq', g], [STc, 'in', ACT]], EST, 2), F('Projects', [[PT, 'eq', g], [STc, 'eq', ST.WON]]), F('Sales', [['ประเภทอาคาร', 'eq', g], SOK], SOV, 2)]); });
+  bars.push('D' + p0 + ':D' + (rn() - 1));
+  // จ
+  sec('จ. อายุ Lead ที่กำลังติดตาม'); hd(['ช่วง', 'จำนวน (ราย)']);
+  var a0 = rn(), DY = 'จำนวนวันในขั้นปัจจุบัน', ac = [STc, 'in', ACT];
+  rows.push(['อยู่ขั้นเดิม 0–30 วัน', F('Projects', [ac, [DY, 'ge', 0], [DY, 'le', 30]])]);
+  rows.push(['อยู่ขั้นเดิม 31–60 วัน', F('Projects', [ac, [DY, 'ge', 31], [DY, 'le', 60]])]);
+  rows.push(['อยู่ขั้นเดิมเกิน 60 วัน', F('Projects', [ac, [DY, 'gt', 60]])]);
+  rows.push(['เลยนัด (นัดก่อนวันที่ข้อมูล)', F('Projects', [ac, ['นัดติดตามครั้งถัดไป', 'tlt', T, '$B$4']])]);
+  bars.push('B' + a0 + ':B' + (rn() - 1));
+  // ฉ
+  sec('ฉ. แนวโน้ม 12 เดือน'); hd(['เดือน', 'Lead ใหม่ (ราย)', 'ใบเสนอราคา (ใบ)', 'ยอด SO (บาท)', 'เป้า (บาท)', 'ยอด SO เทียบเป้า (ร้อยละ)']);
+  var m0 = rn();
+  for (var k = 11; k >= 0; k--) { var m = addMonths(M, -k), r = rn(), t2 = targetFor(m), so = F('Sales', [['วันที่ SO', 'pre', m, '$A' + r], SOK], SOV, 2);
+    rows.push([{ v: m }, F('Projects', [['Date', 'pre', m, '$A' + r], ['รหัสโครงการหลัก', 'blank']]), F('Quotations', [['วันที่', 'pre', m, '$A' + r]]), so, t2 && t2.amount ? { v: t2.amount, s: 2 } : '', pct('IF(N(E' + r + ')>0,D' + r + '/E' + r + '*100,"")', t2 && t2.amount ? so.v / t2.amount * 100 : '')]); }
+  bars.push('D' + m0 + ':D' + (rn() - 1));
+  if (ym) note('ไฟล์ปิดงวดรายเดือนมีข้อมูลการติดตาม SO และใบเสนอราคาเฉพาะเดือนนั้น เดือนอื่นจึงเป็นศูนย์ ใช้ไฟล์ส่งออกทั้งหมดเพื่อดูแนวโน้ม');
+  // ช
+  sec('ช. การเก็บเงิน'); hd(['รายการ', 'ยอด']);
+  rows.push(['มูลค่า SO รวม (บาท)', F('Sales', [SOK], SOV, 2)]);
+  rows.push(['รับชำระแล้ว (บาท)', F('Sales', [SOK], 'รับชำระแล้ว', 2)]);
+  rows.push(['คงเหลือ (บาท)', F('Sales', [SOK], 'คงเหลือ', 2)]);
+  rows.push(['SO ที่เลยกำหนดชำระ (ใบ)', F('Sales', [SOK, ['กำหนดชำระ', 'tlt', T, '$B$4'], ['คงเหลือ', 'gt', 0]])]);
+  var who = anon ? 'Emp ID ' + (pf.empId || '-') : (pf.name || '') + ' · ' + (pf.empId || '');
+  return { name: 'วิเคราะห์', header: [{ v: 'ผลการวิเคราะห์ Pipeline · ' + who + (pf.branch ? ' · ' + pf.branch : '') + (ym ? ' · ' + monthName(ym) : ''), s: 3 }, '', '', '', '', ''], rows: rows, widths: [38, 18, 18, 22, 20, 18], noFilter: true, noFreeze: true, active: true, fitPage: true, dataBars: bars };
+}
 function exportName(ym) { return 'PS_' + (P().empId || 'EMP').replace(/[^\w-]/g, '') + '_' + (ym || todayISO()) + '.xlsx'; }
 function exportExcel(ym, anon) {
   var dvx = anon ? function (p, f) { return p && p[f + 'Other'] ? 'อื่น ๆ' : dv(p, f); } : dv;
@@ -3281,8 +3380,8 @@ function exportExcel(ym, anon) {
   });
   var H2 = ['Follow ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'Staff Name', 'สาขา', 'ทีม', 'วันที่ติดต่อ', 'ชื่อโครงการ', 'ประเภทอาคาร', 'สถานะก่อน', 'สถานะหลัง', 'เหตุผลที่ไม่ได้งาน', 'Note รายละเอียดที่คุย', 'นัดครั้งถัดไป', 'ละติจูด', 'ลองจิจูด', 'ระยะห่างจากโครงการ (เมตร)', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด', 'วาระนัด', 'สิ่งที่ต้องเตรียม', 'สถานะหน้างาน', 'ประเภทการบันทึก', 'ผลการโทร', 'เวลานัด', 'แก้ไขหลังบันทึก'];
   var R2 = liveFollows().filter(function (f) { return inM(f.date); }).map(function (f) { var p = projById(f.projectId) || {}; return [f.id, f.projectId, p.code || '', f.empId, f.empName, f.branch, f.team, f.date, p.name || '', p.ptype || '', f.statusBefore, f.statusAfter, f.lostReason, f.note, f.nextDate, f.lat != null ? +f.lat.toFixed(6) : '', f.lng != null ? +f.lng.toFixed(6) : '', f.distance != null ? f.distance : '', localTs(f.createdAt), lagDays(f.date, f.createdAt, f.importFile), (f.updatedAt || '').slice(0, 19), agendaText(f.agenda, anon ? '' : f.agendaOther), f.prep || '', f.site ? siteLabel(f.site) : '', f.ctype === FIRST_CTYPE ? 'สร้างโครงการ' : f.ctype === 'โทร' ? 'โทร' : 'ติดตาม', f.callResult || '', f.nextTime || '', f.editedAt ? localTs(f.editedAt) : '']; });
-  var H3 = ['Sale ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'Staff Name', 'สาขา', 'ทีม', 'ชื่อโครงการ', 'ประเภทอาคาร', 'ประเภทการติดต่อ', 'เลขที่ใบสั่งขาย (SO No.)', 'วันที่ SO', 'มูลค่า SO (ก่อน VAT)', 'DP (ก่อน VAT)', 'วันที่ จัดส่ง', 'สถานะ SO', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด'].concat(O().product.map(function (k) { return 'SO ' + k; }), ['SO อื่น ๆ', 'อื่น ๆ (ระบุ)', 'ลูกค้าเดิม / เฟสซื้อเพิ่ม', 'รับชำระแล้ว', 'คงเหลือ', 'กำหนดชำระ', 'จำนวนครั้งที่เลื่อนจัดส่ง', 'เหตุผลเลื่อนจัดส่งล่าสุด']);
-  var R3 = liveSales().filter(function (s) { return inM(s.soDate); }).map(function (s) { var p = projById(s.projectId) || {}; return [s.id, s.projectId, p.code || '', s.empId, s.empName, s.branch, s.team, p.name || '', p.ptype || '', p.contactRole || '', s.soNo, s.soDate, s.soValue || 0, s.dp || 0, s.deliveryDate, s.soStatus, localTs(s.createdAt), lagDays(s.soDate, s.createdAt, s.importFile), (s.updatedAt || '').slice(0, 19)].concat(O().product.map(function (k) { return s.lines && s.lines[k] ? s.lines[k] : ''; }), [s.lines && s.lines[OTHER] ? s.lines[OTHER] : '', s.linesOther || '', isRepeat(p) ? 'ใช่' : '', paidOf(s), Math.max(0, (s.soValue || 0) - paidOf(s)), dueOf(s), moveCount(s.moves, 'delivery'), (s.moves || []).length ? s.moves[s.moves.length - 1].why : '']); });
+  var H3 = ['Sale ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'Staff Name', 'สาขา', 'ทีม', 'ชื่อโครงการ', 'ประเภทอาคาร', 'ประเภทการติดต่อ', 'เลขที่ใบสั่งขาย (SO No.)', 'วันที่ SO', 'มูลค่า SO (ก่อน VAT)', 'DP (ก่อน VAT)', 'วันที่ จัดส่ง', 'สถานะ SO', 'วันที่บันทึกในระบบ', 'บันทึกย้อนหลัง (วัน)', 'วันที่แก้ไขล่าสุด'].concat(O().product.map(function (k) { return 'SO ' + k; }), ['SO อื่น ๆ', 'อื่น ๆ (ระบุ)', 'ลูกค้าเดิม / เฟสซื้อเพิ่ม', 'รับชำระแล้ว', 'คงเหลือ', 'กำหนดชำระ', 'จำนวนครั้งที่เลื่อนจัดส่ง', 'เหตุผลเลื่อนจัดส่งล่าสุด', 'ช่องทางการติดต่อ']);
+  var R3 = liveSales().filter(function (s) { return inM(s.soDate); }).map(function (s) { var p = projById(s.projectId) || {}; return [s.id, s.projectId, p.code || '', s.empId, s.empName, s.branch, s.team, p.name || '', p.ptype || '', p.contactRole || '', s.soNo, s.soDate, s.soValue || 0, s.dp || 0, s.deliveryDate, s.soStatus, localTs(s.createdAt), lagDays(s.soDate, s.createdAt, s.importFile), (s.updatedAt || '').slice(0, 19)].concat(O().product.map(function (k) { return s.lines && s.lines[k] ? s.lines[k] : ''; }), [s.lines && s.lines[OTHER] ? s.lines[OTHER] : '', s.linesOther || '', isRepeat(p) ? 'ใช่' : '', paidOf(s), Math.max(0, (s.soValue || 0) - paidOf(s)), dueOf(s), moveCount(s.moves, 'delivery'), (s.moves || []).length ? s.moves[s.moves.length - 1].why : '', p.channel || '']); });
   try {
     var H4 = ['Month', 'Emp ID', 'Staff Name', 'สาขา', 'ทีม', 'Project ID', 'รหัสโครงการ', 'ชื่อโครงการ', 'ประเภทอาคาร', 'ช่องทางการติดต่อ', 'จังหวัด', 'ประเภทการติดต่อ', 'สถานะ ณ สิ้นเดือน', 'ยอดที่คาดว่าจะได้ Estimate Sale', 'วันที่คาดว่าจะปิด Closing Date', 'กำหนดการหน้างานสร้างเสร็จ (ข้อมูลเดิม)', 'วันที่ปิดงวด', 'รูปแบบโครงการ', 'สถานะหน้างาน'];
     var R4 = []; Store.months.filter(function (m) { return !m.deleted && m.closed && (!ym || m.month === ym); }).sort(function (a, b) { return a.month.localeCompare(b.month); }).forEach(function (m) { (m.items || []).forEach(function (i) { R4.push([m.month, m.empId, m.empName, m.branch, m.team, i.projectId, i.code, i.name, i.ptype, i.channel || '', i.province, i.contactRole, i.status, i.estimate || 0, i.closingDate, i.completion, (m.closedAt || '').slice(0, 19), i.pform || '', i.site ? siteLabel(i.site) : '']); }); });
@@ -3290,6 +3389,7 @@ function exportExcel(ym, anon) {
     var R5 = []; R1.forEach(function (r) { var p = projById(r[22]); if (!p) return; contactsOf(p).forEach(function (c) { R5.push([p.id, p.code, p.name, c.name, c.role || '', c.roleOther ? 'อื่น ๆ: ' + c.roleOther : (c.roleDetail && c.roleDetail !== c.role ? c.roleDetail : ''), fmtPhone(c.phone), c.line || '', c.primary ? 'ใช่' : '', c.consent ? 'ยินยอม' : 'ไม่ยินยอม', c.primary ? (p.consentAt || '').slice(0, 10) : (c.consentAt || '').slice(0, 10)]); }); });
     var sheetsX0 = [{ name: 'Projects', header: H1, rows: R1 }, { name: 'FollowUps', header: H2, rows: R2 }, { name: 'Sales', header: H3, rows: R3 }, { name: 'Payments', header: ['Sale ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'เลขที่ใบสั่งขาย (SO No.)', 'ประเภทการรับชำระ', 'วันที่รับชำระ', 'ยอดรับชำระ', 'สถานะใบเสร็จ', 'เลขที่ใบเสร็จ'], rows: (function () { var out = []; liveSales().forEach(function (s) { var p = projById(s.projectId) || {}; paymentsOf(s).forEach(function (x) { if (inM(x.date)) out.push([s.id, s.projectId, p.code || '', s.empId, s.soNo, x.type, x.date, Number(x.amount) || 0, x.rc || 'ไม่ระบุ', x.rcNo || '']); }); }); return out; })() }, { name: 'MonthlySnapshot', header: H4, rows: R4 }, { name: 'Contacts', header: H5, rows: R5 }, { name: 'Quotations', header: ['Quote ID', 'Project ID', 'รหัสโครงการ', 'Emp ID', 'ชื่อโครงการ', 'เลขที่ใบเสนอราคา (Quotation No.)', 'ครั้งที่', 'วันที่', 'มูลค่า (ก่อน VAT)', 'ยืนราคาถึง', 'รูปแบบราคา', 'แพ็กเกจ', 'หมายเหตุ'].concat(O().product.map(function (k) { return 'ใบเสนอราคา ' + k; }).concat(['ใบเสนอราคา อื่น ๆ', 'อื่น ๆ (ระบุ)'])), rows: liveQuotes().filter(function (q) { return inM(q.date); }).map(function (q) { var p = projById(q.projectId) || {}; return [q.id, q.projectId, p.code || '', q.empId, p.name || '', q.qtNo, q.rev || 1, q.date, q.value || 0, q.validUntil || '', q.priceMode === 'package' ? 'แพ็กเกจรายยูนิต' : 'ราคารวม', (q.packages || []).map(function (r) { return r.type + ' ' + r.price + '×' + r.units; }).join('; '), q.note || ''].concat(O().product.map(function (k) { return q.lines && q.lines[k] ? q.lines[k] : ''; }).concat([q.lines && q.lines[OTHER] ? q.lines[OTHER] : '', q.linesOther || ''])); }) }];
     var sheetsX = anon ? anonSheets(sheetsX0) : sheetsX0;
+    sheetsX.push(anaSheet(sheetsX, ym, anon));
     toast('กำลังสร้างไฟล์ Excel…');
     buildXlsxZ(sheetsX).then(function (blob) {
       download(blob, exportName(ym).replace(/\.xlsx$/, anon ? '_ANALYSIS.xlsx' : '.xlsx'));
