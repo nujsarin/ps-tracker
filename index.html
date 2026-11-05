@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-kq40aA1U7NX0I08LvS58JqZVzeKwE71fHd6DXB2oWVM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-+Nknln6CWLk5cZQxZz7V/Kx9M8qssXBehLplFj7/Pzw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#ffbf0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -337,7 +337,7 @@ table.fx{table-layout:fixed;font-size:13px}table.fx th,table.fx td{padding:8px 4
    Replace Store.* persistence to add server sync later.
    ========================================================= */
 
-var APP_VERSION = '1.18.0';
+var APP_VERSION = '1.18.1';
 var SCHEMA_VERSION = 2;
 var DB_NAME = 'ps-tracker';
 var KDF_ITER = 250000;
@@ -1689,23 +1689,6 @@ function perfExtras(ym) {
   out += '<section class="card stack" style="gap:8px" aria-labelledby="lr-h"><h2 id="lr-h" class="h2" style="margin:0">เหตุผลที่ไม่ได้งาน (3 เดือนล่าสุด)</h2>' + bar(lrr.map(function (r, i) { return [r[0], r[1], i === 0 && r[1] ? 'var(--danger)' : null]; }), Math.max.apply(null, lrr.map(function (r) { return r[1]; }).concat([1]))) + '<span class="small">มูลค่าที่ไม่ได้งานรวม ' + fmt(lv) + ' บาท' + (top ? ' · ' + esc(top) + 'เป็นเหตุผลลำดับที่ 1' : '') + '</span></section>';
   return out;
 }
-function buildReadable(period, anchor) {
-  var t = todayISO(), from, to, ttl;
-  if (period === 'day') { from = to = anchor; ttl = 'วัน' + TH_DAY[parseISO(anchor).getDay()] + ' ' + be(anchor); }
-  else if (period === 'week') { var w = weekRange(anchor); from = w[0]; to = w[1]; ttl = 'สัปดาห์ ' + be(from) + ' – ' + be(to); }
-  else { var ym0 = monthOf(anchor); from = ym0 + '-01'; to = monthEnd(ym0); ttl = 'เดือน' + monthName(ym0); }
-  var inR = function (d) { return d && d >= from && d <= to; };
-  var F = liveFollows().filter(function (f) { return inR(f.date) && f.ctype !== FIRST_CTYPE && f.ctype !== 'ระบบ'; }), N = liveProjects().filter(function (p) { return inR(p.recordDate) && !p.parentId; });
-  var QT = liveQuotes().filter(function (q) { return inR(q.date); }), SO = liveSales().filter(function (x) { return inR(x.soDate) && validSale(x); });
-  var soSum = SO.reduce(function (a, x) { return a + (x.soValue || 0); }, 0), cm = monthOf(to < t ? to : t), tg = targetFor(cm), cum = liveSales().filter(function (x) { return monthOf(x.soDate) === cm && validSale(x); }).reduce(function (a, x) { return a + (x.soValue || 0); }, 0);
-  var act = liveProjects().filter(function (p) { return ACTIVE.indexOf(p.status) >= 0; });
- var L = ['สรุปงาน ' + (P().name || '') + ' · ' + ttl, '• บันทึกการติดตาม ' + F.length + ' ครั้ง', '• Lead ใหม่ ' + N.length + ' ราย', '• ใบเสนอราคา ' + QT.length + ' ใบ มูลค่า ' + fmt(QT.reduce(function (a, q) { return a + (q.value || 0); }, 0)) + ' บาท', '• SO ' + SO.length + ' ใบ มูลค่า ' + fmt(soSum) + ' บาท'];
-  if (tg && tg.amount) L.push('• ยอด SO ' + monthName(cm) + ' ' + fmt(cum) + ' / เป้า ' + fmt(tg.amount) + ' บาท (ร้อยละ ' + Math.round(cum / tg.amount * 1000) / 10 + ')');
-  if (period === 'day') L.push('• นัดพรุ่งนี้ ' + act.filter(function (p) { return p.nextDate === addDays(anchor, 1); }).length + ' · เลยนัด ' + act.filter(function (p) { return p.nextDate && p.nextDate < anchor; }).length);
-  var top = SO.slice().sort(function (a, b) { return (b.soValue || 0) - (a.soValue || 0); }).slice(0, 3);
-  if (top.length) L.push('ปิดการขาย: ' + top.map(function (x) { return ((projById(x.projectId) || {}).name || '-') + ' ' + fmt(x.soValue); }).join(' · '));
-  return L.join('\n');
-}
 function buildSummary(period, anchor, detail) {
   var pf = P(), t = todayISO(), from, to, head, ym = monthOf(anchor);
   if (period === 'day') { from = to = anchor; head = '#PSLOG | รายวัน | ' + anchor; }
@@ -1721,7 +1704,7 @@ function buildSummary(period, anchor, detail) {
   function dist(list, field, opts) { var c = {}; list.forEach(function (p) { var v = p[field] || 'ไม่ระบุ'; c[v] = (c[v] || 0) + 1; }); var keys = opts.filter(function (o) { return c[o]; }).concat(Object.keys(c).filter(function (k) { return opts.indexOf(k) < 0; })); return keys.map(function (k) { return pipeSafe(k) + '=' + c[k]; }).join('; ') || '-'; }
   var L = [head, 'รหัสพนักงาน: ' + pipeSafe(pf.empId), 'พนักงาน: ' + pipeSafe(pf.name), 'สาขา: ' + pipeSafe(pf.branch), 'ทีม: ' + pipeSafe(pf.team),
     'Lead/Visit: ' + sc[ST.NEW], 'Contact: ' + sc[ST.PRES], 'Opportunity: ' + sc[ST.QUOTE], 'Close Sale: ' + sc[ST.WON],
-    'โครงการใหม่: ' + N.length, 'เฟสซื้อเพิ่มใหม่: ' + NP.length, 'การติดตาม: ' + F.length, 'QT เสนอ: ' + QT.length + ' ใบ · ' + QT.reduce(function (a, q) { return a + (q.value || 0); }, 0), 'มูลค่า SO(บาท): ' + soSum, 'DP(บาท): ' + dpSum];
+    'โครงการใหม่: ' + N.length, 'เฟสซื้อเพิ่มใหม่: ' + NP.length, 'การติดตาม: ' + F.length, 'QT เสนอ: ' + QT.length + ' ใบ · ' + QT.reduce(function (a, q) { return a + (q.value || 0); }, 0), 'SO: ' + SO.length + ' ใบ', 'มูลค่า SO(บาท): ' + soSum, 'DP(บาท): ' + dpSum];
   if (period !== 'day') {
     var cm = monthOf(to < t ? to : t), cum = liveSales().filter(function (s) { return monthOf(s.soDate) === cm && validSale(s); }).reduce(function (a, s) { return a + (s.soValue || 0); }, 0), tg = targetFor(cm);
     L.push('ยอด SO สะสมเดือน ' + cm + '(บาท): ' + cum + '/' + (tg ? tg.amount : '-') + (tg && tg.amount ? ' (ร้อยละ ' + Math.round(cum / tg.amount * 1000) / 10 + ')' : ''));
@@ -1729,6 +1712,12 @@ function buildSummary(period, anchor, detail) {
     L.push('ประเภทอาคาร (โครงการใหม่): ' + dist(N, 'ptype', groupNames(O().ptype)));
     L.push('รูปแบบโครงการ (โครงการใหม่): ' + dist(N, 'pform', O().pform));
     L.push('ประเภทการติดต่อ (โครงการใหม่): ' + dist(N, 'contactRole', groupNames(O().role)));
+    var pl = {}; SO.forEach(function (x) { var l = x.lines || {}, ks = Object.keys(l).filter(function (k) { return l[k]; }); if (!ks.length) { pl['ไม่ระบุ'] = (pl['ไม่ระบุ'] || 0) + (x.soValue || 0); return; } ks.forEach(function (k) { var n = k === OTHER ? 'อื่น ๆ' : k; pl[n] = (pl[n] || 0) + l[k]; }); });
+    var plk = O().product.filter(function (k) { return pl[k]; }).concat(Object.keys(pl).filter(function (k) { return O().product.indexOf(k) < 0; }));
+    L.push('SO ตามประเภทสินค้า(บาท): ' + (plk.map(function (k) { return pipeSafe(k) + '=' + pl[k]; }).join('; ') || '-'));
+    var lsn = {}, lrc = {}; liveFollows().filter(function (f) { return f.statusAfter === ST.LOST && inR(f.date); }).forEach(function (f) { if (lsn[f.projectId]) return; lsn[f.projectId] = 1; var k = f.lostReason || 'ไม่ระบุ'; lrc[k] = (lrc[k] || 0) + 1; });
+    var lrk = Object.keys(lrc).sort(function (a, b) { return lrc[b] - lrc[a]; });
+    L.push('ไม่ได้งาน: ' + Object.keys(lsn).length + ' ราย' + (lrk.length ? ' · ' + lrk.map(function (k) { return pipeSafe(k) + '=' + lrc[k]; }).join('; ') : ''));
   } else {
     var act = liveProjects().filter(function (p) { return ACTIVE.indexOf(p.status) >= 0; });
     L.push('นัดติดตามพรุ่งนี้: ' + act.filter(function (p) { return p.nextDate === addDays(anchor, 1); }).length, 'เลยนัด: ' + act.filter(function (p) { return p.nextDate && p.nextDate < anchor; }).length);
@@ -1741,6 +1730,8 @@ function buildSummary(period, anchor, detail) {
     L.push('ยอดจากลูกค้าเดิม(บาท): ' + repS);
     L.push('อัตราปิดการขาย 3 เดือน: ลูกค้าใหม่ ' + (wr.n.rate == null ? '-' : 'ร้อยละ ' + wr.n.rate) + '; ซื้อซ้ำ ' + (wr.r.rate == null ? '-' : 'ร้อยละ ' + wr.r.rate));
     L.push('โครงการรอกรอกต่อ: ' + quickPending().length);
+    L.push('Lead ค้างในขั้นเกิน 60 วัน: ' + liveProjects().filter(function (p) { return ACTIVE.indexOf(p.status) >= 0 && stageDays(p) > 60; }).length);
+    L.push('ยอดค้างรับชำระ(บาท): ' + liveSales().filter(validSale).reduce(function (a, x) { return a + Math.max(0, (x.soValue || 0) - paidOf(x)); }, 0));
     L.push('ยอดคาดการณ์กำลังติดตาม(บาท): ' + liveProjects().filter(function (p) { return ACTIVE.indexOf(p.status) >= 0; }).reduce(function (a, p) { return a + (p.estimate || 0); }, 0));
   }
   if (detail) {
@@ -1757,14 +1748,13 @@ function buildSummary(period, anchor, detail) {
   return L.join('\n');
 }
 function vSummary() {
-  var u = S.ui; u.period = u.period || 'day'; u.anchor = u.anchor || todayISO(); if (u.detail == null) u.detail = true;
+  var u = S.ui; u.period = u.period || 'day'; u.anchor = u.anchor || todayISO(); if (u.detail == null) u.detail = false;
   var text = buildSummary(u.period, u.anchor, u.detail);
   var body = '<div class="stack"><div class="seg" style="grid-template-columns:repeat(3,1fr)" role="group" aria-label="ช่วงเวลา">' + [['day', 'รายวัน'], ['week', 'รายสัปดาห์'], ['month', 'รายเดือน']].map(function (x) { return '<button type="button" data-act="period" data-v="' + x[0] + '" aria-pressed="' + (u.period === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
     '<div class="field"><label for="sa">วันที่อ้างอิง</label><input id="sa" class="inp" type="date" data-live="anchor" value="' + esc(u.anchor) + '" max="' + todayISO() + '"></div>' +
- '<div class="card between"><div><span id="dl" class="strong">แสดงรายการราย Lead </span><br><span class="small">ไม่รวมชื่อและเบอร์ผู้ติดต่อทุกกรณี</span></div><button type="button" class="switch" role="switch" aria-labelledby="dl" aria-checked="' + !!u.detail + '" data-act="detail"></button></div>' +
-    '<div class="card stack" style="gap:8px;border:1.5px solid var(--accent)"><b class="strong">สรุปสำหรับหัวหน้า (อ่านง่าย)</b><pre class="pre" id="sumread" style="margin:0">' + esc(buildReadable(u.period, u.anchor)) + '</pre><button class="btn" data-act="copyread">คัดลอกสรุปอ่านง่าย</button></div>' +
-    '<span class="small" style="font-weight:600">ข้อความสำหรับ Power Automate · รูปแบบเดิม ห้ามแก้ไข</span><pre class="pre" id="sumtext">' + esc(text) + '</pre></div>';
-  return shell({ title: 'สรุปส่ง Teams', action: '<button class="btn primary" data-act="copy">คัดลอกข้อความ (Power Automate)</button>' }, body);
+ '<div class="card between"><div><span id="dl" class="strong">แสดงรายการราย Lead </span><br><span class="small">รายการนี้มีชื่อ Lead ซึ่งอาจเป็นชื่อลูกค้า</span></div><button type="button" class="switch" role="switch" aria-labelledby="dl" aria-checked="' + !!u.detail + '" data-act="detail"></button></div>' +
+    '<span class="small" style="font-weight:600">ข้อความที่จะส่ง · ห้ามแก้ไข</span><pre class="pre" id="sumtext">' + esc(text) + '</pre></div>';
+  return shell({ title: 'สรุปส่ง Teams', action: '<button class="btn primary" data-act="copy">คัดลอกข้อความส่ง Teams</button>' }, body);
 }
 
 function vData(sub) {
@@ -2216,7 +2206,7 @@ var GUIDE = [
   ['เมื่อปิดการขายได้ บันทึก SO และ DP', 'เลือกสถานะ Close Sale ระบบจะเปิดหน้าบันทึกเลขที่ SO มูลค่า SO เงินมัดจำ และวันที่จัดส่งต่อทันที', '#/projects'],
  ['บันทึกใบเสนอราคาและซื้อเพิ่ม', 'หน้าแรก → ใบเสนอราคา หรือหน้า Lead → + ใบเสนอราคา ใส่มูลค่าแยกตามประเภทสินค้า หรือแพ็กเกจรายยูนิต แก้ไขราคาเป็นครั้งที่ 2, 3 ได้ ลูกค้าเดิมซื้อเพิ่มให้กด "+ ซื้อเพิ่ม / เฟสถัดไป" ในหน้า Lead เดิม ห้ามสร้าง Lead ใหม่', '#/pick/so'],
  ['ดูผลงานและ Pipeline coverage', 'หน้าผลงานแสดงจำนวน Lead แต่ละขั้นเทียบเดือนก่อน ยอด SO เทียบเป้า พยากรณ์ยอดเดือนนี้ และ coverage ถ้าต่ำกว่า 3 เท่า ควรหา Lead เพิ่ม', '#/perf'],
-  ['ส่งสรุปเข้า Teams ทุกเย็น', 'หน้าสรุป เลือกรายวัน กดคัดลอกข้อความ แล้ววางในแชทของทีม ข้อความไม่มีชื่อและเบอร์ผู้ติดต่อ', '#/summary'],
+  ['ส่งสรุปเข้า Teams ทุกเย็น', 'หน้าสรุปส่ง Teams เลือกรายวัน กดปุ่มคัดลอกข้อความส่ง Teams ด้านล่าง แล้ววางในแชทของทีม', '#/summary'],
   ['สำรองข้อมูลทุกสัปดาห์', 'หน้าข้อมูล/สำรอง ตั้งรหัสผ่านไฟล์สำรอง แล้วกดสำรองตอนนี้ เก็บไฟล์ไว้ใน OneDrive ของบริษัท', '#/data'],
   ['ต้นเดือน: ปิดงวดเดือนก่อน', 'หน้าวันนี้จะแสดงแถบ "ยังไม่ได้ปิดงวด" ตรวจว่าบันทึกครบ แล้วกดปิดงวด', '#/months'],
   ['เปลี่ยนเครื่องหรือลืม PIN', 'ตั้งค่าแอปในเครื่องใหม่ แล้วกู้คืนจากไฟล์สำรองล่าสุด ถ้าลืม PIN ต้องล้างข้อมูลก่อน แล้วจึงกู้คืน', '#/data']
@@ -2946,7 +2936,6 @@ var H = {
   shareappt: function (t) { var p = projById(t.dataset.id); if (p) shareAppt(p); },
   teamok: function (t) { var p = projById(t.dataset.id); if (!p) return; p.nextTeamOk = 'ทีมยืนยันแล้ว'; Store.save(p).then(function () { toast('บันทึกว่าทีมยืนยันแล้ว'); rerender(); }); },
   lineall: function (t) { var d = S.draft; if (!d) return; d['L_' + t.dataset.i] = Number(d.soValue) || 0; delete S.ui.errors.lines; rerender(); },
-  copyread: function () { var el = $('#sumread'); copyText(el ? el.textContent : '').then(function (ok) { toast(ok ? 'คัดลอกสรุปอ่านง่ายแล้ว' : 'คัดลอกไม่สำเร็จ'); }); },
   siteopen: function () { S.ui.siteOpen = true; rerender(); },
   plmore: function (t) { var m = S.ui.plimT = S.ui.plimT || {}; m[t.dataset.t] = (m[t.dataset.t] || 20) + 20; rerender(); },
   holdsel: function (t) { var m = S.ui.holdSel = S.ui.holdSel || {}; if (t.dataset.all) { var ids = holdList().map(function (x) { return x.p.id; }), allOn = ids.every(function (i) { return m[i]; }); ids.forEach(function (i) { m[i] = !allOn; }); } else m[t.dataset.id] = !m[t.dataset.id]; rerender(); },
