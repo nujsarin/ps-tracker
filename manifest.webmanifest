@@ -3,6 +3,7 @@
   "short_name": "PS Tracker",
   "description": "บันทึกและติดตามโครงการสำหรับทีม Project Sales",
   "lang": "th",
+  "id": "./",
   "start_url": "./#/today",
   "scope": "./",
   "display": "standalone",

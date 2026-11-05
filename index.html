@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-mFl6xQ87/KDEGCP6iOcqOUyeTppnYHw1HpwLd/lh2cs='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-kq40aA1U7NX0I08LvS58JqZVzeKwE71fHd6DXB2oWVM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#ffbf0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -62,7 +62,22 @@ button.stat[aria-pressed="true"]{border:2px solid var(--accent);background:#fff8
 .cgrps>.cgh:first-child{margin-top:0}
 .chips.col{display:grid;grid-template-columns:minmax(0,1fr)}
 .chips.col .chip{text-align:left;border-radius:12px;padding:8px 14px}
+.sabar{flex:none;height:env(safe-area-inset-top,0px);background:var(--accent)}
+.pcard{background:#fff;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--text)}
+.pcard .pso{font-size:28px;font-weight:700;color:var(--text-strong);line-height:1.15}.pcard .pso small{font-size:14px;font-weight:600}
+.pcard .pmsg{font-size:14px;font-weight:600;color:var(--text-strong)}
+.mbar{position:relative;height:56px;margin:0 10px}.mbar .tr{position:absolute;left:0;right:0;top:8px;height:12px;background:#f1f1f1;border-radius:6px;overflow:hidden}.mbar .tr>i{display:block;height:100%;background:var(--accent);border-radius:6px}.mbar .tr.full>i{background:var(--ok)}.mbar .tr.none{background:transparent;border:2px dashed #7f7f7f;box-sizing:border-box}
+.mbar .mk{position:absolute;top:2px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}.mbar .mk>span{width:24px;height:24px;border-radius:12px;background:#fff;border:2px solid #7f7f7f;box-sizing:border-box;display:flex;align-items:center;justify-content:center}.mbar .mk.on>span{background:var(--ok);border-color:var(--ok)}.mbar .mk small{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap}.mbar .mk.on small{color:var(--ok-text)}
+.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-top:1px solid #f0f0f0;padding-top:12px}.pstats>div{display:flex;flex-direction:column}.pstats span{font-size:12px}.pstats b{font-size:20px;color:var(--text-strong);line-height:1.3}.pstats em{font-style:normal;font-size:12px;font-weight:600;color:var(--text)}.pstats em.up{color:var(--ok-text)}.pstats em.dn{color:#8a6d00}
+.sgrp{border-top:1px solid #e6e6e6;padding:14px 0 4px;display:flex;flex-direction:column;gap:12px}.sgrp h2{font-size:18px}.sgrp .small{display:block}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 8px}.tile{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:var(--text-strong);font-size:13px;text-align:center;line-height:1.3;min-height:92px}
+.tile .ti{width:60px;height:60px;border-radius:16px;background:#f6f6f6;border:1px solid #e2e2e2;display:flex;align-items:center;justify-content:center;position:relative;color:#2b2b2b}.tile .ti.hl{background:var(--accent);border-color:var(--accent)}.tile .ti.dk{background:#3a3a3a;border-color:#3a3a3a;color:#fff}
+.tile .nb{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--danger-text);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-sizing:border-box;font-style:normal}
+.trow2.one{grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.tiles{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .nachip{min-width:56px;font-size:20px;font-weight:700;flex-shrink:0}
+.lblrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.lblrow>label{font-size:15px;font-weight:700;color:var(--text-strong)}.nmdef>summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--text-strong);min-height:32px;display:flex;align-items:center;gap:6px;list-style:none}.nmdef>summary::-webkit-details-marker{display:none}.nmdef>summary::after{content:'›';font-size:18px;transition:transform .15s}.nmdef[open]>summary::after{transform:rotate(90deg)}
+.nachip.sm{min-width:52px;min-height:36px;font-size:18px;line-height:1;padding:0 12px}
 .kv{display:grid;grid-template-columns:104px minmax(0,1fr);gap:6px;font-size:14px;color:var(--text-strong);padding:2px 0}.kv>b{color:var(--text);font-weight:600}
 .agenda{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:10px;background:#fff8e0;font-size:13px;color:var(--text-strong)}
 .tag{display:inline-block;font-size:12px;color:var(--text-strong);background:#f0f0f0;border-radius:6px;padding:1px 8px;white-space:nowrap}
@@ -128,10 +143,11 @@ a.card.between{display:flex;gap:12px;align-items:center}
 .btn.block{width:100%}
 .btn.danger{border-color:var(--danger);color:var(--danger-text)}
 .btn.small{min-height:44px;font-size:14px;padding:0 12px}
-.btn[disabled]{background:#e2e2e2;border-color:#e2e2e2;color:#6b6b6b;cursor:not-allowed}
+.btn[disabled]{background:#e2e2e2;border-color:#e2e2e2;color:#575757;cursor:not-allowed}
 .field{display:flex;flex-direction:column;gap:6px}
 .field>label,.field>.lbl,legend.lbl{font-size:15px;font-weight:700;color:var(--text-strong)}
-.req{color:var(--danger)}
+.req{color:var(--danger-text)}
+.tlink{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-weight:700}
 .inp{width:100%;min-height:48px;border:1px solid var(--line-2);border-radius:10px;padding:10px 14px;background:var(--surface);font-size:16px;color:var(--text-strong)}
 textarea.inp{min-height:84px;resize:vertical}
 .inp.big{font-size:22px;font-weight:700;text-align:right}
@@ -145,11 +161,11 @@ input[type=date].inp,input[type=time].inp,input[type=month].inp{-webkit-appearan
 .tledit{font-size:13px;font-weight:700;flex:none;padding:0 2px}
 .ring svg{position:absolute;left:0;top:0;margin:0}
 .hero2.flat{padding-bottom:18px}
-.h4{margin:-16px -16px 0;padding:calc(env(safe-area-inset-top) + 14px) 16px 16px;display:flex;flex-direction:column;gap:14px}.h4 h2{font-size:21px;line-height:1.3;margin:0}
+.h4{margin:-16px -16px 0;padding:14px 16px 18px;display:flex;flex-direction:column;gap:14px}.h4 h2{font-size:21px;line-height:1.3;margin:0}
 .h4 .ring{width:62px;height:62px}.h4 .ring svg{width:62px;height:62px}.h4 .ring b{font-size:17px}.h4 .ring small{font-size:10px}
 .menu.mw{gap:6px}.menu.mw a{min-height:76px;font-size:12.5px;font-weight:600}.menu.mw a .mi{width:52px;height:52px;border-radius:14px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}.menu.mw a .mi.q{background:#2b2b2b}
 a.hsearch{text-decoration:none;margin-top:0;border-radius:12px;min-height:48px}a.hsearch span{color:#6b6b6b;font-size:15px}
-.trow2{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:12px 0;border-top:1px solid var(--line)}.trow2 .tm{font-weight:700;color:var(--info);font-size:16px;line-height:1.25;white-space:nowrap}.trow2 .tm small{display:block;font-size:12px;font-weight:500;color:var(--text)}
+.trow2{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:12px 0;border-top:1px solid var(--line)}.trow2 .tm{font-weight:700;color:var(--info);font-size:16px;line-height:1.25;white-space:nowrap}.trow2 .tm small{display:block;font-size:12px;font-weight:500;color:var(--text);white-space:normal}
 .acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.acts .chip{display:flex;align-items:center;justify-content:center;gap:5px;min-height:40px;border-radius:10px;font-size:13px;font-weight:700;padding:0 6px;color:var(--text-strong);background:#fff;border:1px solid var(--line-2);white-space:nowrap;text-decoration:none}.acts .chip:first-child{background:var(--accent);border-color:var(--accent)}.acts .chip svg{flex:none}
 .arow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit;min-height:44px}.arow i{width:32px;height:32px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;background:#fff3cf;color:#2b2b2b}.arow.rd i{background:#ffe5e5;color:var(--danger-text)}.arow.rd b{color:var(--danger-text)}
 .okline{display:flex;align-items:center;gap:8px;color:var(--ok-text);font-weight:700}
@@ -230,6 +246,11 @@ legend{padding:0;margin-bottom:8px}
 .segl{min-height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:15px}
 .segl[aria-current="page"]{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:700;color:var(--text-strong)}
 .seg button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:700;color:var(--text-strong)}
+.meter{height:12px;background:#f1f1f1;border-radius:6px;overflow:hidden}.meter>div{height:100%;background:var(--accent);border-radius:6px}.meter.full>div{background:var(--danger-text)}
+.sttile{background:#f6f6f6;border-radius:10px;padding:8px 10px;display:flex;flex-direction:column}.sttile b{font-size:18px;color:var(--text-strong)}
+.pgset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pgopt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border:1.5px solid var(--line-2);border-radius:12px;cursor:pointer;background:#fff}.pgopt.on{border-color:var(--accent);background:#fffaf0}.pgopt input{width:22px;height:22px;accent-color:var(--accent);flex-shrink:0;margin:0}.pgopt .lt{flex:1;min-width:0;display:flex;flex-direction:column}.pgopt small{font-size:13px;color:var(--text)}
+.tblwrap{border:1px solid var(--line);border-radius:12px;overflow-x:auto}.rstbl{width:100%;border-collapse:collapse;font-size:14px}.rstbl th,.rstbl td{padding:8px 10px;text-align:right;border-top:1px solid #f0f0f0;color:var(--text-strong)}.rstbl thead th{background:#f6f6f6;border-top:0;font-weight:600;white-space:nowrap;font-size:13px}.rstbl th[scope=row],.rstbl thead th:first-child{text-align:left;font-weight:400}
 .switch{width:52px;height:32px;border:0;border-radius:16px;background:#9e9e9e;position:relative;flex-shrink:0;cursor:pointer;padding:0}
 .switch::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
 .switch[aria-checked="true"]{background:var(--accent)}
@@ -316,7 +337,7 @@ table.fx{table-layout:fixed;font-size:13px}table.fx th,table.fx td{padding:8px 4
    Replace Store.* persistence to add server sync later.
    ========================================================= */
 
-var APP_VERSION = '1.14.0';
+var APP_VERSION = '1.18.0';
 var SCHEMA_VERSION = 2;
 var DB_NAME = 'ps-tracker';
 var KDF_ITER = 250000;
@@ -432,11 +453,12 @@ var DB = {
   },
   tx: function (store, mode, fn) {
     return new Promise(function (res, rej) {
-      var t = DB.db.transaction(store, mode), s = t.objectStore(store), out, req = fn(s);
+      var t = DB.db.transaction(store, mode), s = t.objectStore(store), out, req;
+      try { req = fn(s); } catch (e) { qCheck(e); try { t.abort(); } catch (x) { } rej(e); return; }
       if (req) req.onsuccess = function () { out = req.result; };
       t.oncomplete = function () { res(out); };
-      t.onerror = function () { rej(t.error); };
-      t.onabort = function () { rej(t.error || new Error('abort')); };
+      t.onerror = function () { qCheck(t.error); rej(t.error); };
+      t.onabort = function () { qCheck(t.error); rej(t.error || new Error('abort')); };
     });
   },
   get: function (st, k) { return DB.tx(st, 'readonly', function (s) { return s.get(k); }); },
@@ -499,7 +521,7 @@ var Cx = {
 var Store = {
   projects: [], follows: [], sales: [], months: [], quotes: [], state: null, photoURL: {},
   ver: 0,
-  reset: function () { Store.ver++; Store.projects = []; Store.follows = []; Store.sales = []; Store.months = []; Store.quotes = []; Store.state = null; Object.keys(Store.photoURL).forEach(function (k) { URL.revokeObjectURL(Store.photoURL[k]); }); Store.photoURL = {}; },
+  reset: function () { Store.ver++; Store.undec = 0; Store.projects = []; Store.follows = []; Store.sales = []; Store.months = []; Store.quotes = []; Store.state = null; Object.keys(Store.photoURL).forEach(function (k) { URL.revokeObjectURL(Store.photoURL[k]); }); Store.photoURL = {}; },
   load: function () {
     return DB.get('meta', 'vault').then(function (v) { return Cx.decJSON(Cx.key, v.iv, v.ct); }).then(function (state) {
       Store.state = migrateState(state);
@@ -507,7 +529,7 @@ var Store = {
     }).then(function (rows) {
       return Promise.all(rows.map(function (r) { return Cx.decJSON(Cx.key, r.iv, r.ct).catch(function () { return null; }); }));
     }).then(function (recs) {
-      recs.forEach(function (r) { if (r) Store.mem(r); });
+      Store.undec = 0; recs.forEach(function (r) { if (r) Store.mem(r); else Store.undec++; });
       return migrateRecords();
     });
   },
@@ -518,9 +540,17 @@ var Store = {
   save: function (r, keepMeta) {
     if (!keepMeta) { r.updatedAt = nowISO(); r.synced = false; }
     r.schema = SCHEMA_VERSION;
-    return Cx.encJSON(Cx.key, r).then(function (e) { return DB.put('records', { id: r.id, kind: r.kind, iv: e.iv, ct: e.ct }); }).then(function () { Store.mem(r); return r; });
+    return Cx.encJSON(Cx.key, r).then(function (e) { return DB.put('records', { id: r.id, kind: r.kind, iv: e.iv, ct: e.ct }); }).then(function () { Store.mem(r); return r; }, function (err) { return Store.resync(r).then(function () { saveFail(err); throw err; }); });
   },
-  saveState: function () { return Cx.encJSON(Cx.key, Store.state).then(function (e) { return DB.put('meta', { iv: e.iv, ct: e.ct }, 'vault'); }); },
+  resync: function () {
+    if (Store._rs) return Store._rs;
+    Store._rs = DB.all('records').then(function (rows) { return Promise.all(rows.map(function (x) { return Cx.decJSON(Cx.key, x.iv, x.ct).catch(function () { return null; }); })); }).then(function (recs) {
+      Store.projects = []; Store.follows = []; Store.sales = []; Store.months = []; Store.quotes = []; Store.undec = 0;
+      recs.forEach(function (x) { if (x) Store.mem(x); else Store.undec++; }); Store.ver++;
+    }).catch(function () { }).then(function () { Store._rs = null; });
+    return Store._rs;
+  },
+  saveState: function () { return Cx.encJSON(Cx.key, Store.state).then(function (e) { return DB.put('meta', { iv: e.iv, ct: e.ct }, 'vault'); }).catch(function (err) { return DB.get('meta', 'vault').then(function (v) { return v ? Cx.decJSON(Cx.key, v.iv, v.ct) : null; }).then(function (st) { if (st) Store.state = migrateState(st); }).catch(function () { }).then(function () { saveFail(err); throw err; }); }); },
   savePhoto: function (blob) {
     var id = uid();
     return blob.arrayBuffer().then(function (buf) { return Cx.enc(Cx.key, new Uint8Array(buf)); }).then(function (e) {
@@ -719,6 +749,9 @@ function confirmBox(title, text, ok, danger) {
 }
 var IC = {
   home: '<path d="M3 10.5 12 3l9 7.5V21H3z"/>',
+  pause: '<circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>',
+  lockic: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/>',
   proj: '<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/>',
   chart: '<path d="M5 20V11M12 20V5M19 20v-6"/>',
   send: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
@@ -771,6 +804,7 @@ function pendingTasks() {
   var lastExp = st.lastExport ? diffDays(tsDay(st.lastExport), t) : null, lastBak = st.lastBackup ? diffDays(tsDay(st.lastBackup), t) : null;
   if (lastBak === null || lastBak >= 7) out.push(['ควรสำรองข้อมูล', 'สำรองล่าสุด ' + (st.lastBackup ? be(st.lastBackup) : 'ยังไม่เคยสำรอง'), '#/data']);
   var pmc = addMonths(curMonth(), -1); if (!isClosed(pmc) && monthHasData(pmc)) out.push(['ปิดงวด ' + monthName(pmc), 'ยังไม่ปิดงวดเดือนที่แล้ว', '#/months']);
+  if (Store.undec) out.push(['มีข้อมูลที่เปิดไม่ได้ ' + Store.undec + ' รายการ', 'ดูรายละเอียดและวิธีกู้คืนในหน้าสำรองข้อมูล', '#/data']);
   if (!isStandalone()) out.push(['ติดตั้งแอปลงหน้าจอหลัก', 'iPhone: ปุ่มแชร์ → เพิ่มไปยังหน้าจอโฮม · Android: เมนู ⋮ → ติดตั้งแอป ป้องกันมือถือลบข้อมูลเอง', '#/guide/staff']);
   return out;
 }
@@ -786,7 +820,7 @@ function shell(opt, body) {
     var on = cur === n[0] || (n[0] === '#/settings' && setGroup.indexOf(cur) >= 0);
     return '<a href="' + n[0] + '"' + (on ? ' aria-current="page"' : '') + (n[3] ? ' aria-label="' + n[1] + ' ' + n[3] + ' รายการ"' : '') + '><span>' + icon(n[2]) + (n[3] ? '<b class="nb" aria-hidden="true">' + (n[3] > 99 ? '99+' : n[3]) + '</b>' : '') + '</span>' + n[1] + '</a>';
   }).join('') + '<a href="#/summary"' + (cur === '#/summary' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('send') + '</span>สรุปส่ง Teams</a><a href="#/guide/staff"' + (cur === '#/guide' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('book') + '</span>คู่มือใช้งาน</a><a href="#/months"' + (cur === '#/months' || cur === '#/month' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('cal') + '</span>รายเดือน · ปิดงวด</a><a href="#/setup"' + (cur === '#/setup' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('sliders') + '</span>ข้อมูลหลัก</a><a href="#/rules"' + (cur === '#/rules' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('list') + '</span>กติกาการใช้งาน</a><a href="#/data"' + (cur === '#/data' ? ' aria-current="page"' : '') + ' class="deskonly"><span>' + icon('db') + '</span>ข้อมูล/สำรอง</a></nav>';
-  return '<div class="shell">' + navHtml + '<div class="content">' + top + '<main class="main' + (opt.nav === false ? ' noNav' : '') + (opt.action && opt.nav !== false ? ' hasAction' : '') + '" id="main">' + body + '</main>' + (opt.action ? '<div class="actionbar' + (opt.nav === false ? '' : ' withnav') + '"><div class="inner">' + opt.action + '</div></div>' : '') + '</div></div>';
+  return '<div class="shell">' + navHtml + '<div class="content">' + top + (opt.noTop ? '<div class="sabar" aria-hidden="true"></div>' : '') + '<main class="main' + (opt.nav === false ? ' noNav' : '') + (opt.action && opt.nav !== false ? ' hasAction' : '') + '" id="main">' + body + '</main>' + (opt.action ? '<div class="actionbar' + (opt.nav === false ? '' : ' withnav') + '"><div class="inner">' + opt.action + '</div></div>' : '') + '</div></div>';
 }
 
 /* ---------------- productivity helpers ---------------- */
@@ -929,6 +963,47 @@ function bulkHold() {
 }
 
 /* ---------------- views ---------------- */
+function perfCard(t, ym, so, tg) {
+  if (tg && !(tg.amount > 0)) tg = null;
+  var pm = addMonths(ym, -1), pms = monthShort(pm).split(' ')[0];
+  function cmp(a, b, lab) { var d = a - b; return d > 0 ? '<em class="up">▲ ' + d + ' จาก ' + lab + '</em>' : d < 0 ? '<em class="dn">▼ ' + (-d) + ' จาก ' + lab + '</em>' : '<em>เท่ากับ' + lab + '</em>'; }
+  var inM = function (x, m) { return x && monthOf(x) === m; };
+  var nl = liveProjects().filter(function (p) { return !p.parentId && inM(p.recordDate, ym); }).length, nlp = liveProjects().filter(function (p) { return !p.parentId && inM(p.recordDate, pm); }).length;
+  var w = weekRange(t), w0 = weekRange(addDays(t, -7)), isF = function (f) { return f.ctype !== FIRST_CTYPE && f.ctype !== 'ระบบ'; };
+  var nf = liveFollows().filter(function (f) { return isF(f) && f.date >= w[0] && f.date <= w[1]; }).length, nfp = liveFollows().filter(function (f) { return isF(f) && f.date >= w0[0] && f.date <= w0[1]; }).length;
+  var closedIn = function (m) { var u = {}; liveSales().forEach(function (x) { if (validSale(x) && inM(x.soDate, m)) u[x.projectId] = 1; }); return Object.keys(u).length; }, ns = closedIn(ym), nsp = closedIn(pm);
+  var stats = '<div class="pstats"><div><span>Lead ใหม่เดือนนี้</span><b>' + nl + '</b>' + cmp(nl, nlp, pms) + '</div><div><span>ติดตามสัปดาห์นี้</span><b>' + nf + '</b>' + cmp(nf, nfp, 'สัปดาห์ก่อน') + '</div><div><span>ปิดการขาย</span><b>' + ns + '</b>' + cmp(ns, nsp, pms) + '</div></div>';
+  var MS = [[50, 'ครึ่งทาง'], [80, 'ร้อยละ 80'], [100, 'ถึงเป้า']], bar, msg = [];
+  if (tg && tg.amount) {
+    var pct = so / tg.amount * 100, w100 = Math.min(100, pct);
+    bar = '<div class="mbar"><div class="tr' + (pct >= 100 ? ' full' : '') + '" role="img" aria-label="ยอด SO ร้อยละ ' + (pct >= 10 ? Math.round(pct) : Math.round(pct * 10) / 10) + ' ของเป้า"><i style="width:' + w100.toFixed(1) + '%"></i></div>' +
+      MS.map(function (m) { var on = pct >= m[0]; return '<div class="mk' + (on ? ' on' : '') + '" style="left:' + m[0] + '%"><span>' + (on ? icon('check', 14, '#fff') : '') + '</span><small>' + m[1] + '</small></div>'; }).join('') + '</div>';
+    if (pct >= 100) msg.push(so > tg.amount ? 'ถึงเป้าแล้ว · เกินเป้า ' + fmt(so - tg.amount) + ' บาท' : 'ถึงเป้าแล้ว');
+    else {
+      var nx = MS.filter(function (m) { return pct < m[0]; })[0], need = Math.ceil(tg.amount * nx[0] / 100 - so);
+      msg.push((pct >= 80 ? 'ผ่านร้อยละ 80 แล้ว · ' : pct >= 50 ? 'ผ่านครึ่งทางแล้ว · ' : '') + 'อีก ' + fmt(need) + ' บาท ' + (nx[0] === 50 ? 'ถึงครึ่งทาง' : nx[0] === 80 ? 'ถึงร้อยละ 80' : 'ถึงเป้า'));
+      if (ym === monthOf(t)) { var left = daysInMonth(ym) - parseISO(t).getDate() + 1, rest = tg.amount - so; msg.push(left > 1 ? 'เหลือ ' + left + ' วัน (รวมวันนี้) ต้องการเฉลี่ยวันละ ' + fmt(Math.ceil(rest / left / 100) * 100) + ' บาท' : 'วันนี้วันสุดท้ายของเดือน อีก ' + fmt(rest) + ' บาท ถึงเป้า'); }
+    }
+  } else {
+    bar = '<div class="mbar" style="height:24px"><div class="tr none" role="img" aria-label="ยังไม่ได้ตั้งเป้าเดือนนี้"></div></div>';
+    msg.push('ยังไม่ได้ตั้งเป้าเดือนนี้ ตั้งเป้าแล้วระบบจะบอกว่าต้องทำยอดวันละเท่าไร');
+  }
+  return '<section class="pcard" aria-labelledby="pc-h"><div class="between"><span id="pc-h" class="small">ยอด SO ' + monthName(ym) + '</span>' + (tg ? '<a class="small strong" href="#/perf">เป้า ' + fmt(tg.amount) + ' ›</a>' : '<a class="btn small primary" href="#/target" style="min-height:36px">ตั้งเป้า</a>') + '</div>' +
+    '<a class="pso" href="#/perf" style="text-decoration:none">' + fmt(so) + ' <small>บาท</small></a>' + bar +
+    '<div class="stack" style="gap:2px">' + msg.map(function (x) { return '<span class="pmsg">' + x + '</span>'; }).join('') + '</div>' + stats + '</section>';
+}
+function shortcutGroups(lastBak) {
+  var curDay = todayISO(), due = followList().filter(function (x) { return x.kind !== 'silent'; }).length, pm = addMonths(curMonth(), -1), monthDue = !isClosed(pm) && monthHasData(pm), bakDue = liveProjects().length && (lastBak !== null ? lastBak >= 7 : diffDays(liveProjects().reduce(function (m, p) { var c = tsDay(p.createdAt || '') || curDay; return c < m ? c : m; }, curDay), curDay) >= 7);
+  function T(href, ic, label, cls, badge, why) { return '<a class="tile" href="' + href + '"' + (badge ? ' aria-label="' + label + ' (' + why + ')"' : '') + '><span class="ti' + (cls ? ' ' + cls : '') + '">' + icon(ic, 26, cls === 'dk' ? '#fff' : '#2b2b2b') + (badge ? '<i class="nb" aria-hidden="true">' + badge + '</i>' : '') + '</span><span>' + label + '</span></a>'; }
+  var G = [
+    ['หาลูกค้าใหม่', 'เจอ Lead ที่หน้างาน งานแสดงสินค้า หรือมีคนแนะนำ', [T('#/quick', 'cam', 'Lead ด่วน', 'dk'), T('#/new', 'plus', 'Lead ใหม่', 'hl'), T('#/search', 'search', 'ค้นหา Lead')]],
+    ['ติดตามและนัดหมาย', 'โทร เข้าพบ และนัดครั้งถัดไป', [T('#/pick', 'note', 'บันทึกติดตาม', 'hl'), T('#/plan', 'cal', 'แผนงานและนัด', '', due ? (due > 99 ? '99+' : String(due)) : '', 'ต้องติดตาม ' + due + ' ราย'), T('#/hold', 'pause', 'Lead เลื่อน/ระงับ')]],
+    ['เสนอราคาและปิดการขาย', 'ใบเสนอราคา ใบสั่งขาย และผลงาน', [T('#/pick/qt', 'qt', 'ใบเสนอราคา'), T('#/pick/so', 'so', 'ใบสั่งขาย (SO)'), T('#/perf', 'chart', 'ผลงานและเป้า')]],
+    ['งานประจำ', 'ส่งงานรายวันและปิดงวดรายเดือน', [T('#/summary', 'send', 'สรุปส่ง Teams', 'hl'), T('#/months', 'lockic', 'ปิดงวดรายเดือน', '', monthDue ? '!' : '', 'ยังไม่ปิดงวด ' + monthName(pm)), T('#/data/export', 'upload', 'ส่งไฟล์ให้ผู้จัดการ')]],
+    ['ข้อมูลและช่วยเหลือ', 'สำรองข้อมูล คู่มือ และกติกา', [T('#/data', 'db', 'สำรองข้อมูล', '', bakDue ? '!' : '', 'ควรสำรองข้อมูล'), T('#/guide/staff', 'book', 'คู่มือใช้งาน'), T('#/rules', 'list', 'กติกาการใช้งาน')]]
+  ];
+  return G.map(function (g, i) { return '<section class="sgrp" aria-labelledby="sg' + i + '"><div><h2 id="sg' + i + '">' + g[0] + '</h2><span class="small">' + g[1] + '</span></div><div class="tiles">' + g[2].join('') + '</div></section>'; }).join('');
+}
 function vToday() {
   var D = planData(), t = D.t, d = new Date(), ym = monthOf(t);
   var sales = liveSales().filter(function (x) { return monthOf(x.soDate) === ym && validSale(x); }), so = sales.reduce(function (a, x) { return a + (x.soValue || 0); }, 0);
@@ -936,20 +1011,15 @@ function vToday() {
   var st = Store.state, lastBak = st.lastBackup ? diffDays(tsDay(st.lastBackup), t) : null, top = '';
   if (S.updateReady) top += '<button class="card warn link" style="text-align:left;width:100%;border:1.5px solid var(--accent);cursor:pointer;font:inherit" data-act="reload"><b class="strong">มีเวอร์ชันใหม่ของแอป</b><br><span class="small">แตะเพื่อโหลดเวอร์ชันใหม่ ข้อมูลในเครื่องยังอยู่ครบ</span></button>';
   var di = deviceInfo(); if (di.inapp) top += inappCard(di);
-  var C = 2 * Math.PI * 30, ringP = tg ? Math.min(1, so / tg.amount) : 0;
-  var ring = tg ? '<a class="ring" href="#/perf" aria-label="เป้า' + monthName(ym) + ' ทำได้ร้อยละ ' + pct + ' แตะเพื่อดูผลงาน"><svg viewBox="0 0 76 76" width="76" height="76" aria-hidden="true"><circle cx="38" cy="38" r="30" fill="none" stroke="rgba(0,0,0,.14)" stroke-width="8"/>' + (ringP > 0 ? '<circle cx="38" cy="38" r="30" fill="none" stroke="#2b2b2b" stroke-width="8" stroke-linecap="round" stroke-dasharray="' + (C * ringP).toFixed(1) + ' ' + C.toFixed(1) + '" transform="rotate(-90 38 38)"/>' : '') + '</svg><span><small>ร้อยละ</small><b>' + (pct >= 10 ? Math.round(pct) : pct) + '</b></span></a>'
-    : '<a class="ring empty" href="#/target" aria-label="ยังไม่ได้ตั้งเป้าเดือนนี้ แตะเพื่อตั้งเป้า"><svg viewBox="0 0 76 76" width="76" height="76" aria-hidden="true"><circle cx="38" cy="38" r="30" fill="none" stroke="#2b2b2b" stroke-width="2" stroke-dasharray="5 5"/></svg><span>ตั้งเป้า</span></a>';
-  var gline = tg ? '<a class="gline" href="#/perf">SO ' + fmt(so) + ' / เป้า ' + fmt(tg.amount) + (pct >= 100 ? ' · เกินเป้า' : '') + ' ›</a>' : '<a class="gline" href="#/target">SO เดือนนี้ ' + fmt(so) + ' · ตั้งเป้า ›</a>';
-  var menu = [['#/quick', 'cam', 'Lead ด่วน', 'q'], ['#/new', 'plus', 'Lead ใหม่'], ['#/pick', 'note', 'บันทึกติดตาม'], ['#/summary', 'send', 'สรุปส่ง Teams']];
-  var head = '<div class="hero2 h4"><div class="htop"><div><div class="small" style="color:#3a3a3a">' + TH_DAY[d.getDay()] + ' ' + be(t) + ' · ' + esc(P().branch) + '</div><h2>สวัสดี คุณ' + esc((P().name || '').split(' ')[0]) + '</h2>' + gline + '</div>' + ring + '</div>' +
-    '<nav class="menu mw" aria-label="เมนูลัด">' + menu.map(function (m) { return '<a href="' + m[0] + '"><span class="mi' + (m[3] ? ' q' : '') + '">' + icon(m[1], 24, m[3] ? '#fff' : '#2b2b2b') + '</span>' + m[2] + '</a>'; }).join('') + '</nav>' +
-    '<a class="hsearch" href="#/search" role="search">' + icon('search', 20) + '<span>ค้นหา Lead ชื่อ เบอร์ เลข QT / SO</span></a></div>';
-  var body = '<div class="stack">' + head + top + todayCard(D) + actionCard(D, lastBak) + weekStrip(t) + checklistCard() + '</div>';
+  var head = '<div class="hero2 h4"><div><div class="small" style="color:#3a3a3a">' + TH_DAY[d.getDay()] + ' ' + be(t) + ' · ' + esc(P().branch) + '</div><h2>สวัสดี คุณ' + esc((P().name || '').split(' ')[0]) + '</h2></div>' + perfCard(t, ym, so, tg) + '</div>';
+  var hasToday = D.now.some(function (x) { return x.kind === 'today'; });
+  var body = '<div class="stack">' + head + top + (hasToday ? todayCard(D) + actionCard(D, lastBak) : actionCard(D, lastBak) + todayCard(D)) + checklistCard() + shortcutGroups(lastBak) + '</div>';
+  if (!S.bakAsked && bakDue()) { S.bakAsked = true; setTimeout(function () { var h = location.hash || '#/today'; if (Cx.key && h === '#/today' && !$('#modal .modalbg')) openBakAsk(); }, 900); }
   return shell({ title: 'หน้าแรก', noTop: true }, body);
 }
 function todayRow(p, tm, sub, col, opts) {
   opts = opts || {};
-  return '<div class="trow2"><div class="tm" style="color:' + (col || 'var(--info)') + '">' + tm + '</div><div style="min-width:0"><a href="#/project/' + esc(p.id) + '" style="text-decoration:none;color:inherit;display:block"><span class="between"><b class="strong">' + esc(p.name) + '</b>' + badge(p.status) + '</span><span class="small">' + sub + '</span></a>' +
+  return '<div class="trow2' + (tm == null ? ' one' : '') + '">' + (tm == null ? '' : '<div class="tm" style="color:' + (col || 'var(--info)') + '">' + tm + '</div>') + '<div style="min-width:0"><a href="#/project/' + esc(p.id) + '" style="text-decoration:none;color:inherit;display:block"><span class="between"><b class="strong">' + esc(p.name) + '</b>' + badge(p.status) + '</span><span class="small">' + sub + '</span></a>' +
     '<div class="acts"><a class="chip" href="#/follow/' + esc(p.id) + '">' + icon('note', 16) + 'บันทึก</a><button type="button" class="chip" data-act="resched" data-id="' + esc(p.id) + '">' + icon('cal', 16) + (opts.set ? 'ตั้งนัด' : 'เลื่อนนัด') + '</button>' + (p.phone ? '<a class="chip" href="tel:' + esc(digits(p.phone)) + '" data-call="' + esc(p.id) + '|main" aria-label="โทรหา ' + esc(p.contactName || '') + '">' + icon('phone', 16) + 'โทร</a>' : '') + '</div></div></div>';
 }
 function apptSub(p) { return esc(p.contactName || '-') + ((p.nextAgenda || []).length ? ' · วาระ ' + esc(agendaText(p.nextAgenda, p.nextAgendaOther)) : '') + ((p.nextTeam || []).length ? ' · ทีม ' + esc(p.nextTeam.join(', ')) + (p.nextTeamOk === 'ทีมยืนยันแล้ว' ? ' ✓' : ' <span class="tag wait">รอทีมยืนยัน</span>') : ''); }
@@ -967,14 +1037,15 @@ function suggestList() {
 }
 function todayCard(D) {
   var t = D.t, today = D.now.filter(function (x) { return x.kind === 'today'; }), tm1 = addDays(t, 1), wEnd = D.wEnd;
-  var nTom = D.ahead.filter(function (p) { return p.nextDate === tm1; }).length, nWeek = D.ahead.filter(function (p) { return p.nextDate <= wEnd; }).length;
+  var nTom = D.ahead.filter(function (p) { return p.nextDate === tm1; }).length, nWeek = today.length + D.ahead.filter(function (p) { return p.nextDate <= wEnd; }).length;
   var foot = '<span class="small" style="border-top:1px solid var(--line);padding-top:8px">' + [today.length > 3 ? 'วันนี้อีก ' + (today.length - 3) + ' นัด' : '', 'พรุ่งนี้ ' + nTom + ' นัด', 'สัปดาห์นี้ ' + nWeek + ' นัด'].filter(Boolean).join(' · ') + '</span>';
   var title = 'วันนี้', rows = '';
-  if (today.length) rows = today.slice(0, 3).map(function (x) { return todayRow(x.p, x.p.nextTime ? x.p.nextTime + '<small>น.</small>' : 'วันนี้<small>ไม่ระบุเวลา</small>', apptSub(x.p)); }).join('');
-  else if (D.ahead.length) { title = 'วันนี้ไม่มีนัด · นัดถัดไป'; rows = D.ahead.slice(0, 3).map(function (p) { var dd = parseISO(p.nextDate); return todayRow(p, (p.nextDate === tm1 ? 'พรุ่งนี้' : TH_DAY[dd.getDay()]) + '<small>' + be(p.nextDate).slice(0, 5) + (p.nextTime ? ' · ' + p.nextTime : '') + '</small>', apptSub(p)); }).join(''); }
- else if (liveProjects().some(function (p) { return ACTIVE.indexOf(p.status) >= 0; })) { title = 'ควรติดต่อ'; var sg = suggestList().slice(0, 3); rows = sg.length ? sg.map(function (x) { return todayRow(x.p, '•', esc(x.why) + ' · ยอดคาดการณ์ ' + fmt(x.p.estimate), 'var(--text-strong)', { set: true }); }).join('') : '<span class="small muted">ทุก Lead มีนัดหรือติดตามล่าสุดแล้ว ลองหา Lead ใหม่</span>'; foot = '<span class="small" style="border-top:1px solid var(--line);padding-top:8px">ระบบแนะนำจากวันที่คาดว่าจะปิด สถานะหน้างาน และวันที่ติดต่อล่าสุด</span>'; }
-  else return '<section class="card stack" style="gap:10px;padding:16px;align-items:flex-start"><b class="strong" style="font-size:16px">เริ่มต้นวันแรก</b><span class="small">ยังไม่มี Lead ในเครื่องนี้ บันทึก Lead แรกได้ใน 30 วินาที</span><a class="btn primary" href="#/quick">+ Lead แรก</a><a href="#/guide/staff" class="small" style="font-weight:700">อ่านคู่มือใช้งาน</a></section>';
-  return '<section class="card stack" style="gap:0;padding:14px" aria-labelledby="td-h"><div class="between" style="padding-bottom:4px"><b id="td-h" class="strong" style="font-size:16px">' + title + '</b><a href="#/plan" style="font-weight:700;font-size:14px">ดูแผนงาน ›</a></div>' + rows + foot + '</section>';
+  if (today.length) rows = today.slice(0, 3).map(function (x) { return todayRow(x.p, x.p.nextTime ? esc(x.p.nextTime) + '<small>น.</small>' : 'วันนี้<small>ไม่ระบุเวลา</small>', apptSub(x.p)); }).join('');
+  else if (D.ahead.length) { title = 'วันนี้ไม่มีนัด · นัดถัดไป'; rows = D.ahead.slice(0, 3).map(function (p) { var dd = parseISO(p.nextDate); return todayRow(p, (p.nextDate === tm1 ? 'พรุ่งนี้' : TH_DAY[dd.getDay()]) + '<small>' + be(p.nextDate).slice(0, 5) + (p.nextTime ? ' · ' + esc(p.nextTime) : '') + '</small>', apptSub(p)); }).join(''); }
+ else if (liveProjects().some(function (p) { return ACTIVE.indexOf(p.status) >= 0; })) { title = 'ควรติดต่อ'; var sg = suggestList().slice(0, 3); rows = sg.length ? sg.map(function (x) { return todayRow(x.p, null, esc(x.why) + ' · ยอดคาดการณ์ ' + fmt(x.p.estimate), '', { set: true }); }).join('') : '<span class="small muted">ทุก Lead มีนัดหรือติดตามล่าสุดแล้ว ลองหา Lead ใหม่</span>'; foot = '<span class="small" style="border-top:1px solid var(--line);padding-top:8px">ระบบแนะนำจากวันที่คาดว่าจะปิด สถานะหน้างาน และวันที่ติดต่อล่าสุด</span>'; }
+  else if (liveProjects().length) { var nh = liveProjects().filter(function (p) { return p.status === ST.HOLD; }).length; return '<section class="card stack" style="gap:10px;padding:16px;align-items:flex-start" aria-labelledby="td-h"><b id="td-h" class="strong" style="font-size:16px">ไม่มี Lead ที่กำลังติดตาม</b><span class="small">Lead ทั้งหมด ' + liveProjects().length + ' รายจบแล้วหรือเลื่อนไว้ หา Lead ใหม่เพื่อเพิ่มโอกาสปิดการขาย</span><a class="btn primary" href="#/quick">+ Lead ด่วน</a>' + (nh ? '<a href="#/hold" class="small" style="font-weight:700">ดู Lead ที่เลื่อน/ระงับไว้ ' + nh + ' ราย</a>' : '') + '</section>'; }
+  else return '<section class="card stack" style="gap:10px;padding:16px;align-items:flex-start"><b class="strong" style="font-size:16px">เริ่มต้นวันแรก</b><span class="small">ยังไม่มี Lead ในเครื่องนี้ บันทึก Lead แรกได้ใน 30 วินาที</span><a class="btn primary" href="#/quick">+ Lead แรก</a><a href="#/data" class="small" style="font-weight:700">ย้ายมาจากเครื่องเดิม? กู้คืนจากไฟล์สำรอง</a><a href="#/guide/staff" class="small" style="font-weight:700">อ่านคู่มือใช้งาน</a></section>';
+  return '<section class="card stack" style="gap:0;padding:14px" aria-labelledby="td-h"><div class="between" style="padding-bottom:4px"><b id="td-h" class="strong" style="font-size:16px">' + title + '</b><a class="tlink" href="#/plan" style="font-size:14px">ดูแผนงาน ›</a></div>' + rows + foot + '</section>';
 }
 function actionCard(D, lastBak) {
   var t = D.t, rows = [], A = function (href, ic, title, sub, red) { rows.push('<a class="arow' + (red ? ' rd' : '') + '" href="' + href + '"><span style="display:flex;gap:10px;align-items:center;min-width:0"><i aria-hidden="true">' + ic + '</i><span style="min-width:0"><b class="strong">' + title + '</b>' + (sub ? '<br><span class="small">' + sub + '</span>' : '') + '</span></span><b aria-hidden="true">›</b></a>'); };
@@ -983,6 +1054,7 @@ function actionCard(D, lastBak) {
   if (D.pay.rcN) A('#/plan/pay', '฿', 'ใบเสร็จรอออก ' + D.pay.rcN + ' รายการ', 'รับเงินแล้วเกิน 3 วัน', false);
   var tw = D.ahead.filter(function (p) { return (p.nextTeam || []).length && p.nextTeamOk !== 'ทีมยืนยันแล้ว' && p.nextDate <= addDays(t, 3); }).concat(D.now.filter(function (x) { return x.kind === 'today' && (x.p.nextTeam || []).length && x.p.nextTeamOk !== 'ทีมยืนยันแล้ว'; }).map(function (x) { return x.p; }));
   if (tw.length) A('#/project/' + esc(tw[0].id), '👥', 'รอทีมยืนยัน ' + tw.length + ' นัด', 'นัดภายใน 3 วัน · ' + esc(tw[0].name), false);
+ if (S.pendingDraft) { var nd = Object.keys(S.drafts || {}).length; A(esc(S.pendingDraft.route), '✎', 'มีฟอร์มที่กรอกค้างไว้' + (nd > 1 ? ' ' + nd + ' รายการ' : ''), esc(draftLabel(S.pendingDraft)), false); }
  var qp = quickPending(); if (qp.length) A('#/edit/' + esc(qp[0].id), '✎', 'Lead ด่วน รอกรอกต่อ ' + qp.length + ' ราย', esc(qp[0].name), false);
  var rv = liveProjects().filter(function (p) { return reviewKeys(p).length; }).length; if (rv) A('#/review', '✎', 'เลือกข้อมูลใหม่หลังอัปเดต ' + rv + ' ราย', 'รายละไม่ถึง 10 วินาที', false);
   var pm = addMonths(curMonth(), -1); if (!isClosed(pm) && monthHasData(pm)) A('#/month/' + pm, '▦', 'ปิดงวด ' + monthName(pm), 'ยังไม่ปิดงวดเดือนที่แล้ว', false);
@@ -1145,12 +1217,12 @@ function chipsG(field, list, d, label) {
 function siteChips(f, d) { return '<div class="chips col">' + SITE.map(function (l, i) { var v = String(i + 1); return '<button type="button" class="chip" data-act="chip" data-f="' + esc(f) + '" data-v="' + v + '" aria-pressed="' + (String(d[f] || '') === v) + '">' + v + ' · ' + esc(l) + '</button>'; }).join('') + '</div>'; }
 function dateNA(f, d, label, opt) {
   opt = opt || {};
-  return '<div class="field"><label for="d-' + esc(f) + '">' + label + ' <span class="req">*</span></label><div class="row" style="gap:8px"><input id="d-' + esc(f) + '" class="inp' + errCls(f) + '" type="date" data-bind="' + esc(f) + '" value="' + esc(d[f] || '') + '"' + (opt.min ? ' min="' + opt.min + '"' : '') + (opt.max ? ' max="' + opt.max + '"' : '') + '><button type="button" class="chip nachip" data-act="na" data-f="' + esc(f) + '" aria-pressed="' + !!d[f + 'NA'] + '" aria-label="' + label + ' ไม่ระบุ">-</button></div>' + err(f) + '</div>';
+  return '<div class="field"><div class="lblrow"><label for="d-' + esc(f) + '">' + label + ' <span class="req">*</span></label><button type="button" class="chip nachip sm" data-act="na" data-f="' + esc(f) + '" aria-pressed="' + !!d[f + 'NA'] + '" aria-label="' + label + ' ไม่ระบุ">-</button></div><input id="d-' + esc(f) + '" class="inp' + errCls(f) + '" type="date" data-bind="' + esc(f) + '" value="' + esc(d[f] || '') + '"' + (opt.min ? ' min="' + opt.min + '"' : '') + (opt.max ? ' max="' + opt.max + '"' : '') + '>' + err(f) + '</div>';
 }
 function textNA(f, id, label, max, area) {
   var d = S.draft, v = d[f] || '', na = v === '-', ro = na ? ' readonly' : '';
   var ctl = area ? '<textarea id="' + id + '" class="inp' + errCls(f) + '" data-bind="' + f + '" maxlength="' + max + '"' + ro + '>' + esc(v) + '</textarea>' : '<input id="' + id + '" class="inp' + errCls(f) + '" data-bind="' + f + '" value="' + esc(v) + '" maxlength="' + max + '" autocomplete="off"' + ro + '>';
-  return '<div class="field"><label for="' + id + '">' + label + ' <span class="req">*</span></label><div class="row" style="gap:8px;align-items:flex-start">' + ctl + '<button type="button" class="chip nachip" data-act="tna" data-f="' + f + '" aria-pressed="' + na + '" aria-label="' + label + ' ไม่มีข้อมูล">-</button></div>' + err(f) + '</div>';
+  return '<div class="field"><div class="lblrow"><label for="' + id + '">' + label + ' <span class="req">*</span></label><button type="button" class="chip nachip sm" data-act="tna" data-f="' + f + '" aria-pressed="' + na + '" aria-label="' + label + ' ไม่มีข้อมูล">-</button></div>' + ctl + err(f) + '</div>';
 }
 function prodList() { return O().product.filter(function (x) { return x !== OTHER; }).concat([OTHER]); }
 function prodField(f, d) {
@@ -1353,9 +1425,10 @@ function vProjectForm(id) {
   var steps = '<div class="steps" aria-label="ขั้นตอน ' + st + ' จาก 3">' + labels.map(function (l, i) { return '<div class="' + (i < st ? 'on' : '') + '"><span class="bar"></span><small' + (i + 1 === st ? ' class="strong"' : '') + '>' + l + '</small></div>'; }).join('') + '</div>';
   var b = '';
   if (st === 1) {
-    b = '<fieldset><legend class="lbl">ช่องทางการติดต่อ (จุดแรกที่ได้ Lead มา) <span class="req">*</span></legend>' + chipsG('channel', O().channel, d, 'ช่องทางการติดต่อ') + err('channel') + '</fieldset>' +
-      '<div class="field"><label for="f-rd">วันที่ได้ Lead <span class="req">*</span></label><input id="f-rd" class="inp' + errCls('recordDate') + '" type="date" data-bind="recordDate" value="' + esc(d.recordDate) + '" max="' + todayISO() + '"><span class="hint">ถ้าบันทึกย้อนหลัง ให้เลือกวันที่ได้ Lead จริง ระบบเก็บวันที่บันทึกจริงไว้ให้อัตโนมัติ</span>' + err('recordDate') + '</div>' +
- '<div class="field"><label for="f-name">ชื่อ Lead <span class="req">*</span></label><input id="f-name" class="inp' + errCls('name') + '" data-bind="name" value="' + esc(d.name) + '" maxlength="150" autocomplete="off" placeholder="เช่น บ้านคุณสมชาย บางนา"><span class="hint">ชื่อที่ใช้เรียกและค้นหา Lead นี้ เช่น ชื่อลูกค้า ชื่ออาคาร หรือชื่อโครงการ</span>' + err('name') + '</div>';
+    b = '<div class="field"><label for="f-rd">วันที่ได้ Lead <span class="req">*</span></label><input id="f-rd" class="inp' + errCls('recordDate') + '" type="date" data-bind="recordDate" value="' + esc(d.recordDate) + '" max="' + todayISO() + '"><span class="hint">ถ้าบันทึกย้อนหลัง ให้เลือกวันที่ได้ Lead จริง ระบบเก็บวันที่บันทึกจริงไว้ให้อัตโนมัติ</span>' + err('recordDate') + '</div>' +
+      '<div class="field"><label for="f-name">ชื่อ Lead <span class="req">*</span></label><input id="f-name" class="inp' + errCls('name') + '" data-bind="name" value="' + esc(d.name) + '" maxlength="150" autocomplete="off" placeholder="เช่น The Base สุขุมวิท" aria-describedby="nm-def">' + err('name') +
+      '<details class="nmdef"' + (liveProjects().length < 3 ? ' open' : '') + '><summary>ชื่อ Lead คืออะไร</summary><div id="nm-def" class="ex stack" style="gap:4px;margin-top:6px"><span><b class="strong">ชื่อ Lead</b> คือชื่อเรียกงานขายนี้ ใช้ค้นหา แสดงในรายการ และใช้ตรวจ Lead ซ้ำ</span><span>งานโครงการหรืออาคาร: ใส่ชื่อโครงการ เช่น The Base สุขุมวิท</span><span>บ้านลูกค้า: ใส่ "บ้าน" ชื่อลูกค้า และย่าน เช่น บ้านคุณสมชาย บางนา</span><span>ชื่อและเบอร์ของผู้ติดต่อ กรอกแยกในขั้นที่ 3</span></div></details></div>' +
+      '<fieldset><legend class="lbl">ช่องทางการติดต่อ (จุดแรกที่ได้ Lead มา) <span class="req">*</span></legend>' + chipsG('channel', O().channel, d, 'ช่องทางการติดต่อ') + err('channel') + '</fieldset>';
   } else if (st === 2) {
     var loc = d.lat != null ? '<div class="card okc" role="status"><b class="okText">' + d.lat.toFixed(6) + ', ' + d.lng.toFixed(6) + '</b>' + (d.acc ? '<span class="small"> · ความแม่นยำประมาณ ±' + Math.round(d.acc) + ' เมตร</span>' : '') + (inThailand(d.lat, d.lng) ? '' : '<br><span class="errmsg">พิกัดอยู่นอกประเทศไทย กรุณาตรวจสอบ</span>') + '<br><a href="' + mapUrl(d.lat, d.lng) + '" target="_blank" rel="noopener noreferrer">เปิดดูใน Google Maps</a> · <button type="button" class="chip" style="min-height:32px" data-act="clearloc">ล้างพิกัด</button></div>' : '';
     b = '<fieldset><legend class="lbl">ประเภทอาคาร <span class="req">*</span></legend>' + chipsG('ptype', O().ptype, d, 'ประเภทอาคาร') + err('ptype') + '</fieldset>' +
@@ -1363,7 +1436,7 @@ function vProjectForm(id) {
       '<fieldset><legend class="lbl">สถานะหน้างาน <span class="req">*</span></legend>' + siteChips('site', d) + (d.siteGuess ? '<span class="hint" style="display:block;margin-top:6px">ประมาณจากกำหนดสร้างเสร็จเดิม กรุณายืนยัน</span>' : '') + err('site') + '</fieldset>' +
  textNA('developer', 'f-dev', 'Developer / บริษัทเจ้าของโครงการ', 150) +
       '<div class="field"><label for="f-prov">จังหวัด <span class="req">*</span></label><select id="f-prov" class="inp' + errCls('province') + '" data-bind="province"><option value="">เลือกจังหวัด</option>' + PROVINCES.map(function (x) { return '<option' + (d.province === x ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select>' + err('province') + '</div>' +
-      '<div class="field"><label for="f-addr">ที่อยู่หน้างาน <span class="req">*</span></label><textarea id="f-addr" class="inp' + errCls('address') + '" data-bind="address" maxlength="500">' + esc(d.address) + '</textarea>' + err('address') + '</div>' +
+      textNA('address', 'f-addr', 'ที่อยู่หน้างาน', 500, true) +
       '<div class="field"><span class="lbl">Location (ละติจูด, ลองจิจูด)</span><button type="button" class="btn" data-act="geo">' + icon('pin', 18) + ' ใช้ตำแหน่งปัจจุบัน</button>' + loc +
       '<label for="f-map" class="hint">หรือวางลิงก์ Google Maps / พิมพ์ ละติจูด,ลองจิจูด</label><input id="f-map" class="inp" data-act-change="maplink" placeholder="เช่น 13.7563, 100.5018" autocomplete="off"></div>' +
       '<div class="field"><span class="lbl">รูปหน้างาน แบบแปลน นามบัตร (สูงสุด 6 รูป)</span><div class="photos">' + [0, 1, 2, 3, 4, 5].slice(0, Math.min(6, d.photos.length + 1)).map(function (i) {
@@ -1407,7 +1480,7 @@ function tlRows(f) {
 }
 function projExtras(p) {
   var qs = quotesOf(p.id), fam = familyOf(p), out = '';
-  out += '<div class="card"><div class="between"><b class="strong">ใบเสนอราคา (' + qs.length + ')</b><a href="#/quote/' + esc(p.id) + '" style="font-weight:700">+ ใบเสนอราคา</a></div>' + (qs.length ? qs.map(function (q) { var exp = q.validUntil && q.validUntil < todayISO(); return '<a class="between" style="text-decoration:none;padding:10px 0;border-top:1px solid #f0f0f0" href="#/quote/' + esc(p.id) + '/' + esc(q.id) + '"><span><b class="strong">ใบเสนอราคา ' + esc(q.qtNo) + ' ครั้งที่ ' + (q.rev || 1) + '</b><br><span class="small">' + be(q.date) + ' · ยืนราคาถึง ' + be(q.validUntil) + (exp ? ' <b class="dangerText">หมดอายุ</b>' : '') + (q.priceMode === 'package' ? ' · แพ็กเกจ ' + (q.packages || []).reduce(function (a, r) { return a + (r.units || 0); }, 0) + ' ยูนิต' : '') + '</span></span><b class="strong">' + fmt(q.value) + '</b></a>'; }).join('') : '<div class="small muted">ยังไม่มีใบเสนอราคา</div>') + '</div>';
+  out += '<div class="card"><div class="between"><b class="strong">ใบเสนอราคา (' + qs.length + ')</b><a href="#/quote/' + esc(p.id) + '" class="tlink">+ ใบเสนอราคา</a></div>' + (qs.length ? qs.map(function (q) { var exp = q.validUntil && q.validUntil < todayISO(); return '<a class="between" style="text-decoration:none;padding:10px 0;border-top:1px solid #f0f0f0" href="#/quote/' + esc(p.id) + '/' + esc(q.id) + '"><span><b class="strong">ใบเสนอราคา ' + esc(q.qtNo) + ' ครั้งที่ ' + (q.rev || 1) + '</b><br><span class="small">' + be(q.date) + ' · ยืนราคาถึง ' + be(q.validUntil) + (exp ? ' <b class="dangerText">หมดอายุ</b>' : '') + (q.priceMode === 'package' ? ' · แพ็กเกจ ' + (q.packages || []).reduce(function (a, r) { return a + (r.units || 0); }, 0) + ' ยูนิต' : '') + '</span></span><b class="strong">' + fmt(q.value) + '</b></a>'; }).join('') : '<div class="small muted">ยังไม่มีใบเสนอราคา</div>') + '</div>';
   if (fam.length > 1 || p.status === ST.WON) {
     var tot = 0;
  out += '<section class="card stack" style="gap:8px;border:1.5px solid var(--accent)" aria-labelledby="fam-h"><h2 id="fam-h" class="h2" style="margin:0">การซื้อทั้งหมดใน Lead นี้</h2>' + fam.map(function (x) {
@@ -1421,7 +1494,7 @@ function projExtras(p) {
 function vProject(id) {
   var p = projById(id); if (!p || p.deleted) return vNotFound();
   var fs = followsOf(id), ss = salesOf(id), idx = PIPE.indexOf(p.status);
-  var hero = (p.photos || []).length ? '<div class="hero n' + Math.min(3, p.photos.length) + '">' + p.photos.map(function (ph, i) { return '<div><img data-photo="' + esc(ph) + '" alt="รูปหน้างาน ' + (i + 1) + '"></div>'; }).join('') + '</div>' : '';
+  var hero = (p.photos || []).length ? '<div class="hero n' + Math.min(3, p.photos.length) + '">' + p.photos.map(function (ph, i) { return '<div><img data-photo="' + esc(ph) + '" alt="รูปหน้างาน ' + (i + 1) + '"></div>'; }).join('') + '</div>' : p.photosPurged ? '<div class="ex">ลบรูป ' + p.photosPurged + ' รูปเพื่อคืนพื้นที่เมื่อ ' + be(p.photosPurgedAt) + ' กู้คืนได้จากไฟล์สำรองแบบรวมรูป</div>' : '';
   var pipe = '<div class="pipe" aria-label="ขั้นการขาย: ' + esc(p.status) + '">' + PIPE.map(function (s, i) { return '<div class="' + (i < idx ? 'done' : i === idx ? 'cur' : '') + '"><span></span><small' + (i === idx ? ' class="strong"' : '') + '>' + esc(s.replace('แล้ว', '')) + '</small></div>'; }).join('') + '</div>';
  var info = [['ยอดที่คาดว่าจะได้', fmt(p.estimate) + ' บาท'], ['วันที่คาดว่าจะปิด', p.closingDateNA ? '-' : be(p.closingDate)], ['สถานะหน้างาน', siteLabel(p.site) + (p.siteAt && p.site ? ' (ตั้งแต่ ' + be(p.siteAt) + ')' : '')], ['ประเภทสินค้าที่เสนอ', prodText(p) || '-'], ['ช่องทางการติดต่อ', dvFull(p, 'channel') || '-'], ['ลักษณะงาน', p.pform || '-']];
   var rk = reviewKeys(p), leg = p.legacy || {};
@@ -1431,7 +1504,7 @@ function vProject(id) {
     (lateN ? '<button class="btn small" data-act="resched" data-id="' + esc(p.id) + '">เลื่อนนัด</button>' : '<div class="grid2"><button class="btn small" data-act="resched" data-id="' + esc(p.id) + '">เลื่อนนัด</button><button class="btn small" data-act="ics" data-id="' + esc(p.id) + '">' + icon('cal', 18) + ' ลงปฏิทิน</button></div>' + ((p.nextTeam || []).length ? '<div class="grid2"><button class="btn small" data-act="shareappt" data-id="' + esc(p.id) + '">ส่งนัดให้ทีม</button>' + (p.nextTeamOk !== 'ทีมยืนยันแล้ว' ? '<button class="btn small" data-act="teamok" data-id="' + esc(p.id) + '">ทีมตอบรับแล้ว</button>' : '<span class="small okText" style="align-self:center">ทีมยืนยันแล้ว</span>') + '</div>' : '')) + '</div>' : '';
   var cs = contactsOf(p);
   var quickBtns = '<div class="grid2">' + (p.lat != null ? '<a class="btn small" href="' + esc(routeUrl([p])) + '" target="_blank" rel="noopener noreferrer">' + icon('pin', 18) + ' นำทาง</a>' : '<span class="btn small" aria-disabled="true" style="opacity:.5">' + icon('pin', 18) + ' ยังไม่มีพิกัด</span>') + (p.phone ? '<a class="btn small primary" href="tel:' + esc(digits(p.phone)) + '" data-call="' + esc(p.id) + '|main">' + icon('phone', 18) + ' โทรผู้ติดต่อหลัก</a>' : '<span></span>') + '</div>';
-  var contactCard = '<div class="card"><div class="between"><b class="strong">ผู้ติดต่อ (' + cs.length + ')</b><a href="#/contact/' + esc(p.id) + '" style="font-weight:700">+ เพิ่ม</a></div>' + cs.map(function (c) {
+  var contactCard = '<div class="card"><div class="between"><b class="strong">ผู้ติดต่อ (' + cs.length + ')</b><a href="#/contact/' + esc(p.id) + '" class="tlink">+ เพิ่ม</a></div>' + cs.map(function (c) {
     return '<div class="crow"><a href="#/contact/' + esc(p.id) + '/' + esc(c.id) + '" style="text-decoration:none;color:inherit;min-width:0"><b class="strong">' + esc(c.name || '-') + '</b>' + (c.primary ? ' <span class="badge b-nego">หลัก</span>' : '') + '<br><span class="small">' + esc(dvFull({ r: c.role, rDetail: c.roleDetail, rOther: c.roleOther }, 'r') || '-') + ' · ' + esc(fmtPhone(c.phone)) + (c.line && c.line !== '-' ? ' · LINE ' + esc(c.line) : '') + '</span></a>' + (c.phone ? '<a class="btn small" href="tel:' + esc(digits(c.phone)) + '" data-call="' + esc(p.id) + '|' + esc(c.id) + '" aria-label="โทรหา ' + esc(c.name) + '">' + icon('phone', 18) + ' โทร</a>' : '') + '</div>';
   }).join('') + '</div>';
   var body = '<div class="stack">' + hero + quickBtns +
@@ -1443,7 +1516,7 @@ function vProject(id) {
  contactCard + (p.quick ? '<a class="card warn link" href="#/edit/' + esc(p.id) + '"><b class="strong">Lead ด่วน: ข้อมูลยังไม่ครบ</b><br><span class="small">แตะเพื่อกรอกข้อมูล Lead ให้ครบ</span></a>' : '') +
     (p.info ? '<div class="card"><span class="small">Project information</span><div style="white-space:pre-wrap">' + esc(p.info) + '</div></div>' : '') +
     projExtras(p) +
-    '<div class="card"><div class="between"><b class="strong">ใบสั่งขาย (SO)</b><a href="#/sale/' + esc(p.id) + '" style="font-weight:700">+ บันทึก SO</a></div>' + (ss.length ? ss.map(function (s) { return '<a class="between" style="text-decoration:none;padding:10px 0;border-top:1px solid #f0f0f0" href="#/sale/' + esc(p.id) + '/' + esc(s.id) + '"><span><b class="strong">' + esc(s.soNo) + '</b><br><span class="small">' + be(s.soDate) + ' · รับแล้ว ' + fmt(paidOf(s)) + ' · จัดส่ง ' + be(s.deliveryDate) + ' · ' + esc(s.soStatus) + (s.lines && Object.keys(s.lines).length ? '<br>' + esc(linesText(s.lines, s.linesOther)) : '') + '</span></span><b class="strong">' + (s.needsValue && !s.soValue ? '<span class="errmsg">ยังไม่มีมูลค่า</span>' : fmt(s.soValue)) + '</b></a>' + (function () { var rm = Math.max(0, (s.soValue || 0) - paidOf(s)), du = dueOf(s), lt = rm && validSale(s) && du && du < todayISO(); var nm = moveCount(s.moves, 'delivery'); return '<div class="between" style="padding:0 0 10px;gap:8px"><a href="#/pay/' + esc(s.id) + '" class="small" style="font-weight:700;min-height:44px;display:flex;align-items:center;' + (lt ? 'color:var(--danger-text)' : '') + '">การรับชำระ · ' + (rm ? (lt ? 'เลยกำหนด ' : 'คงค้าง ') + fmt(rm) + ' บาท' + (du ? ' · กำหนด ' + be(du) : '') : 'รับครบแล้ว') + ' ›</a>' + (validSale(s) && s.soStatus !== 'จัดส่งแล้ว' ? '<button class="btn small" data-act="dmove" data-k="delivery" data-p="' + esc(s.projectId) + '" data-s="' + esc(s.id) + '">' + (s.deliveryDate ? 'เลื่อนจัดส่ง' : 'ตั้งวันจัดส่ง') + (nm ? ' (' + nm + ')' : '') + '</button>' : '') + '</div>'; })(); }).join('') : '<div class="small muted">ยังไม่มีใบสั่งขาย</div>') + '</div></div>' +
+    '<div class="card"><div class="between"><b class="strong">ใบสั่งขาย (SO)</b><a href="#/sale/' + esc(p.id) + '" class="tlink">+ บันทึก SO</a></div>' + (ss.length ? ss.map(function (s) { return '<a class="between" style="text-decoration:none;padding:10px 0;border-top:1px solid #f0f0f0" href="#/sale/' + esc(p.id) + '/' + esc(s.id) + '"><span><b class="strong">' + esc(s.soNo) + '</b><br><span class="small">' + be(s.soDate) + ' · รับแล้ว ' + fmt(paidOf(s)) + ' · จัดส่ง ' + be(s.deliveryDate) + ' · ' + esc(s.soStatus) + (s.lines && Object.keys(s.lines).length ? '<br>' + esc(linesText(s.lines, s.linesOther)) : '') + '</span></span><b class="strong">' + (s.needsValue && !s.soValue ? '<span class="errmsg">ยังไม่มีมูลค่า</span>' : fmt(s.soValue)) + '</b></a>' + (function () { var rm = Math.max(0, (s.soValue || 0) - paidOf(s)), du = dueOf(s), lt = rm && validSale(s) && du && du < todayISO(); var nm = moveCount(s.moves, 'delivery'); return '<div class="between" style="padding:0 0 10px;gap:8px"><a href="#/pay/' + esc(s.id) + '" class="small" style="font-weight:700;min-height:44px;display:flex;align-items:center;' + (lt ? 'color:var(--danger-text)' : '') + '">การรับชำระ · ' + (rm ? (lt ? 'เลยกำหนด ' : 'คงค้าง ') + fmt(rm) + ' บาท' + (du ? ' · กำหนด ' + be(du) : '') : 'รับครบแล้ว') + ' ›</a>' + (validSale(s) && s.soStatus !== 'จัดส่งแล้ว' ? '<button class="btn small" data-act="dmove" data-k="delivery" data-p="' + esc(s.projectId) + '" data-s="' + esc(s.id) + '">' + (s.deliveryDate ? 'เลื่อนจัดส่ง' : 'ตั้งวันจัดส่ง') + (nm ? ' (' + nm + ')' : '') + '</button>' : '') + '</div>'; })(); }).join('') : '<div class="small muted">ยังไม่มีใบสั่งขาย</div>') + '</div></div>' +
     '<div class="stack"><div class="between"><h2 class="h2" style="margin:0">ประวัติการติดตาม (' + fs.length + ')</h2></div><div class="timeline">' + tlMerge(p, fs).map(function (it, i, arr) { if (it.m) return tlMove(it.m); var f = it.f;
  return '<div class="tl"><div class="dot"><i' + (i === 0 ? ' style="background:var(--accent);border:2px solid #3a3a3a;width:14px;height:14px"' : '') + '></i>' + (i < arr.length - 1 ? '<b></b>' : '') + '</div><div class="body"><div class="between" style="align-items:flex-start;gap:8px"><span class="small strong">' + be(f.date) + (f.ctype === FIRST_CTYPE ? ' · สร้าง Lead' : '') + ' · ' + (f.ctype === 'โทร' ? 'โทร · ' + esc(f.callResult || '') : f.ctype === 'หลังส่งมอบ' ? 'ติดตามหลังส่งมอบ ' + (f.milestone || '') + ' เดือน' : f.statusBefore && f.statusBefore !== f.statusAfter ? esc(f.statusBefore) + ' → ' + esc(f.statusAfter) : 'สถานะ ' + esc(f.statusAfter)) + (f.editedAt ? ' · แก้ไขแล้ว ' + be(localTs(f.editedAt).slice(0, 10)) : '') + '</span>' + (canEditFollow(f) ? '<a class="tledit" href="#/fedit/' + esc(f.id) + '" aria-label="แก้ไขประวัติวันที่ ' + be(f.date) + '">แก้ไข</a>' : '') + '</div>' + tlRows(f) + '</div></div>';
     }).join('') + '</div>' +
@@ -1694,25 +1767,22 @@ function vSummary() {
   return shell({ title: 'สรุปส่ง Teams', action: '<button class="btn primary" data-act="copy">คัดลอกข้อความ (Power Automate)</button>' }, body);
 }
 
-function vData() {
+function vData(sub) {
   var st = Store.state, n = Store.unsynced();
-  var body = '<div class="stack">' +
-    '<div class="card stack" style="gap:10px;border:1.5px solid var(--accent)"><b class="strong">สำรองข้อมูลเข้ารหัส</b><div class="between small"><span>สำรองล่าสุด</span><b class="strong">' + (st.lastBackup ? be(st.lastBackup) : 'ยังไม่เคยสำรอง') + '</b></div>' +
-    '<div class="field"><label for="bp">รหัสผ่านไฟล์สำรอง (อย่างน้อย 8 ตัวอักษร)</label><input id="bp" class="inp" type="password" autocomplete="new-password" data-bind-ui="bpass"></div>' +
-    '<div class="grid2"><button class="btn" data-act="backup">สำรองตอนนี้</button><label class="btn" style="position:relative">กู้คืน<input type="file" accept=".json,application/json" data-restore="1" style="position:absolute;inset:0;opacity:0" aria-label="เลือกไฟล์สำรองเพื่อกู้คืน"></label></div>' +
- '<div class="between"><span id="bap" class="small">รวมรูปของ Lead ที่จบแล้ว (ไฟล์ใหญ่ขึ้น)</span><button type="button" class="switch" role="switch" aria-labelledby="bap" aria-checked="' + !!S.ui.bAllPhotos + '" data-act="bphotos"></button></div>' +
- '<span class="hint">ไฟล์สำรองมีข้อมูลทั้งหมด และรูปของ Lead ที่ยังติดตามอยู่ ใช้รหัสผ่านเดียวกันตอนกู้คืน หากลืมรหัสผ่านจะเปิดไฟล์ไม่ได้</span></div>' +
-    '<div class="card stack" style="gap:10px"><div class="between"><b class="strong">ส่งออก Excel (ฉบับเต็ม)</b></div><span class="small">สำหรับหัวหน้าหรือใช้งานภายใน มีชื่อ เบอร์ LINE ที่อยู่ พิกัด และ sheet Contacts</span>' +
+  if (sub === 'export') return shell({ title: 'ส่งออก Excel', back: '#/data' }, '<div class="stack">' +
+ '<section class="card stack" style="gap:10px;border:1.5px solid var(--accent)" aria-labelledby="exa"><h2 id="exa" style="font-size:17px">สำหรับส่งผู้จัดการ (ไม่มีข้อมูลส่วนบุคคล)</h2><span class="small">ใช้ส่งผู้จัดการทุกเดือน และใช้กับ AI ที่บริษัทอนุมัติ เช่น Copilot ของบริษัท ตัดชื่อ Lead ชื่อและเบอร์ผู้ติดต่อ LINE ที่อยู่ พิกัด ข้อความอิสระ และ sheet Contacts ออก เหลือรหัส Lead ประเภทต่าง ๆ ขั้นการขาย วันที่ และตัวเลข พร้อม sheet คำอธิบายคอลัมน์</span><span class="small strong">' + esc(exportName().replace(/\.xlsx$/, '_ANALYSIS.xlsx')) + '</span><button class="btn primary block" data-act="exportanon">ส่งออกไฟล์สำหรับผู้จัดการ</button></section>' +
+    '<section class="card stack" style="gap:10px" aria-labelledby="exf"><h2 id="exf" style="font-size:17px">ฉบับเต็ม · ใช้ภายใน ห้ามส่งต่อ</h2><span class="small">มีชื่อ เบอร์ LINE ที่อยู่ พิกัด และ sheet Contacts ของลูกค้า ใช้ตรวจหรือแก้ข้อมูลของตัวเองเท่านั้น</span>' +
     '<div class="between small"><span>ส่งออกล่าสุด</span><b class="strong">' + (st.lastExport ? be(st.lastExport) : 'ยังไม่เคยส่งออก') + '</b></div>' +
  '<div class="card" style="background:#f6f6f6;border:0"><b class="strong">' + esc(exportName()) + '</b><br><span class="small">Sheet โครงการ ' + liveProjects().length + ' แถว · การติดตาม ' + liveFollows().length + ' แถว · SO ' + liveSales().length + ' แถว</span></div>' +
-    '<button class="btn primary block" data-act="export">ส่งออก Excel ฉบับเต็ม</button>' +
-    '<span class="small strong" style="font-weight:500">ไฟล์ Excel ไม่เข้ารหัส เก็บไว้ในพื้นที่ของบริษัทฯ เท่านั้น</span></div>' +
- '<div class="card stack" style="gap:10px"><b class="strong">ส่งออกสำหรับวิเคราะห์ (ไม่มีข้อมูลส่วนบุคคล)</b><span class="small">สำหรับส่งให้ AI หรือทำรายงาน ตัดชื่อ Lead ชื่อและเบอร์ผู้ติดต่อ LINE ที่อยู่ พิกัด ข้อความอิสระ และ sheet Contacts ออก เหลือรหัส Lead ประเภทต่าง ๆ ขั้นการขาย วันที่ และตัวเลข พร้อม sheet คำอธิบายคอลัมน์</span><span class="small strong">' + esc(exportName().replace(/\.xlsx$/, '_ANALYSIS.xlsx')) + '</span><button class="btn block" data-act="exportanon">ส่งออกสำหรับวิเคราะห์</button><span class="small">ใช้กับ AI ที่บริษัทอนุมัติเท่านั้น เช่น Copilot ของบริษัท</span></div>' +
+    '<button class="btn block" data-act="export">ส่งออก Excel ฉบับเต็ม</button>' +
+    '<div class="card warn small strong" style="font-weight:500">ไฟล์ฉบับเต็มไม่เข้ารหัส เก็บไว้ในพื้นที่ของบริษัทฯ เท่านั้น ห้ามส่งทาง LINE อีเมลส่วนตัว หรือส่งให้ผู้อื่น</div></section>' + '</div>');
+  if (sub === 'import') return shell({ title: 'นำเข้าข้อมูลเดิม', back: '#/data' }, '<div class="stack">' +
  '<div class="card stack" style="gap:10px"><b class="strong">นำเข้าข้อมูลเดิมจาก Excel</b><span class="small">รองรับไฟล์ .xlsx หรือ .csv ที่มีหัวคอลัมน์ตามแบบเดิมของทีม (Date, ช่องทางการติดต่อ, Project Type, ชื่อโครงการ, ชื่อผู้ติดต่อ, เบอร์ติดต่อ, Note, สถานะ ฯลฯ) แถวที่ชื่อโครงการซ้ำกันจะรวมเป็น Lead เดียว และแต่ละแถวเป็นประวัติการติดตาม 1 ครั้ง ระบบแสดงผลให้ตรวจก่อนนำเข้าจริง</span>' +
     '<button class="btn" data-act="template">ดาวน์โหลดไฟล์ต้นแบบสำหรับกรอกข้อมูลเดิม</button><label class="btn" style="position:relative">เลือกไฟล์ Excel / CSV<input type="file" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" data-import="1" style="position:absolute;inset:0;opacity:0" aria-label="เลือกไฟล์ข้อมูลเดิม"></label>' + importPreview() +
- (st.imports || []).map(function (b) { return '<div class="between small" style="border-top:1px solid #f0f0f0;padding-top:8px"><span>' + esc(b.file) + ' · ' + be(b.at) + ' · ' + b.projects + ' ราย</span><button class="btn small danger" data-act="undoimport" data-id="' + esc(b.id) + '">ยกเลิกการนำเข้า</button></div>'; }).join('') + '</div>' +
-    '<a class="card link between" href="#/months"><span><b class="strong">ประวัติรายเดือน · ปิดงวด · ล้างข้อมูลเก่า</b></span><b aria-hidden="true">›</b></a>' +
-    '<details class="fold"><summary>ข้อมูลทางเทคนิค</summary><div class="card stack" style="gap:6px"><b class="strong">ความพร้อมย้ายขึ้นฐานข้อมูลกลาง</b><div class="between small"><span>รูปแบบข้อมูล</span><b class="strong">เวอร์ชัน ' + SCHEMA_VERSION + '</b></div><div class="between small"><span>รายการที่ยังไม่ส่งขึ้น server</span><b class="strong">' + n + ' รายการ</b></div><div class="between small"><span>การเชื่อมต่อ server</span><b>ยังไม่เปิดใช้ (ช่วงทดลอง)</b></div><div class="between small"><span>พื้นที่จัดเก็บถาวร</span><b id="persist">กำลังตรวจสอบ</b></div></div>' + '</details>' +
+ (st.imports || []).map(function (b) { return '<div class="between small" style="border-top:1px solid #f0f0f0;padding-top:8px"><span>' + esc(b.file) + ' · ' + be(b.at) + ' · ' + b.projects + ' ราย</span><button class="btn small danger" data-act="undoimport" data-id="' + esc(b.id) + '">ยกเลิกการนำเข้า</button></div>'; }).join('') + '</div>' + '</div>');
+  var body = '<div class="stack">' + iosCard() + stCard() + bakCard() + rsCard() +
+    '<h2 class="lhead" style="margin-bottom:0">จัดการและส่งออก</h2><div class="lgroup">' + lrow('#/manage', 'trash', 'จัดการพื้นที่และลบข้อมูล', 'ลบรูปเก่า · ล้างข้อมูลรายเดือน · ล้างทั้งหมด', '', 'hl') + lrow('#/data/export', 'list', 'ส่งออก Excel', 'ฉบับเต็ม · ฉบับวิเคราะห์ไม่มีข้อมูลส่วนบุคคล', '') + lrow('#/data/import', 'upload', 'นำเข้าข้อมูลเดิมจาก Excel', 'มีไฟล์ต้นแบบให้ดาวน์โหลด', '') + '</div>' +
+    '<details class="fold"><summary>ข้อมูลทางเทคนิค</summary><div class="card stack" style="gap:6px"><b class="strong">ความพร้อมย้ายขึ้นฐานข้อมูลกลาง</b><div class="between small"><span>รูปแบบข้อมูล</span><b class="strong">เวอร์ชัน ' + SCHEMA_VERSION + '</b></div><div class="between small"><span>รายการที่ยังไม่ส่งขึ้น server</span><b class="strong">' + n + ' รายการ</b></div><div class="between small"><span>การเชื่อมต่อ server</span><b>ยังไม่เปิดใช้ (ช่วงทดลอง)</b></div></div>' + '</details>' +
     '</div>';
   return shell({ title: 'ข้อมูลและสำรองข้อมูล', back: '#/today' }, body);
 }
@@ -1744,7 +1814,7 @@ function vSettings() {
     grp('งานประจำ', [lrow('#/summary', 'send', 'สรุปส่ง Teams', 'ข้อความสรุปรายวัน รายสัปดาห์ รายเดือน', ''), lrow('#/data', 'db', 'สำรองข้อมูล · ส่งออก Excel · กู้คืน', 'สำรองล่าสุด ' + (st.lastBackup ? be(st.lastBackup) : 'ยังไม่เคยสำรอง'), ''), lrow('#/months', 'cal', 'ประวัติรายเดือน · ปิดงวด', '', !isClosed(addMonths(curMonth(), -1)) && monthHasData(addMonths(curMonth(), -1)) ? '<b class="dangerText">ค้างปิดงวด</b>' : '')]) +
  grp('คู่มือและข้อมูล', [lrow('#/guide/staff', 'help', 'คู่มือใช้งาน', '', ''), lrow('#/rules', 'list', '<b>กติกาการใช้งาน</b>', 'วิธีเลือกข้อมูล ขั้นการขาย การนับผลงาน อุปกรณ์ที่รองรับ', '', 'hl'), lrow('#/setup', 'sliders', 'ข้อมูลหลัก (Master Data)', 'ประเภทอาคาร ลักษณะงาน ช่องทาง ประเภทการติดต่อ ประเภทสินค้า วาระนัด', ''), lrow('#/target', 'target', 'เป้ายอดขาย', 'ตั้งเป้ารายเดือนทั้งปี', tg ? fmt(tg.amount) : 'ยังไม่ตั้ง')]) +
     grp('บัญชีของฉัน', [lrow('#/profile', 'user', 'ข้อมูลพนักงาน', esc(p.name), esc(p.empId)), lrow('switchacct', 'logout', 'เปลี่ยนผู้ใช้', 'สำหรับเครื่องที่ใช้ร่วมกัน · ผู้ใช้ในเครื่องนี้ ' + (S.users || []).length + ' คน', '')]) +
-    grp('ข้อมูล', [lrow('#/data', 'upload', 'นำเข้าข้อมูลเดิมจาก Excel', 'มีไฟล์ต้นแบบให้ดาวน์โหลด', '')]) +
+    grp('ข้อมูล', [lrow('#/manage', 'trash', 'จัดการพื้นที่และลบข้อมูล', 'ลบรูปเก่า · ล้างข้อมูลรายเดือน · ล้างทั้งหมด', ''), lrow('#/data/import', 'upload', 'นำเข้าข้อมูลเดิมจาก Excel', 'มีไฟล์ต้นแบบให้ดาวน์โหลด', '')]) +
     grp('ความปลอดภัย', [lrow('#/security', 'shield', 'ล็อกอัตโนมัติและเปลี่ยน PIN', '', st.settings.autolock + ' นาที')]) +
     (st.onb.hidden || st.onb.doneAt ? grp('ช่วยเหลือ', [lrow('showcheck', 'list', 'แสดงเช็กลิสต์เริ่มต้นใช้งาน', '', '')]) : '') +
     '<div class="lgroup" style="margin-top:16px">' + lrow('lock', 'logout', 'ล็อกแอปตอนนี้', '', '', 'danger') + '</div>' +
@@ -1758,7 +1828,7 @@ function vProfile() {
     '<div class="grid2"><div class="field"><label for="p-br">สาขา</label><input id="p-br" class="inp" data-pf="branch" value="' + esc(p.branch) + '" maxlength="60"></div><div class="field"><label for="p-tm">ทีม</label><input id="p-tm" class="inp" data-pf="team" value="' + esc(p.team) + '" maxlength="60"></div></div>' +
  '<span class="hint">เมื่อแก้ไข ระบบจะถามว่าต้องการปรับข้อมูล Lead การติดตาม และ SO เดิมให้เป็นข้อมูลใหม่ด้วยหรือไม่</span>' +
     '<button class="btn small primary" data-act="saveprofile">บันทึกข้อมูลพนักงาน</button></div>' +
-    '<details class="fold"><summary>การจัดการบัญชี</summary><div class="card stack" style="gap:8px"><span class="small">ลบข้อมูลทั้งหมดของผู้ใช้นี้ในเครื่องนี้ ใช้เมื่อคืนเครื่องหรือย้ายเครื่อง ควรสำรองข้อมูลก่อน</span><button class="btn danger block" data-act="wipe">ล้างข้อมูลทั้งหมดของผู้ใช้นี้</button></div></details>' +
+    '<a class="card link between" href="#/manage"><span class="small">ล้างข้อมูลทั้งหมดของผู้ใช้นี้ ย้ายไปอยู่ที่หน้า <b class="strong">จัดการพื้นที่และลบข้อมูล</b></span><b aria-hidden="true">›</b></a>' +
  (function () { var n = codeMismatch().length; return n ? '<div class="card warn stack" style="gap:8px"><b class="strong">มี Lead ' + n + ' รายการที่รหัสยังใช้ Emp ID เดิม</b><span class="small">เปลี่ยนเป็น PS-' + esc(p.empId) + '-xxxx ได้ รหัสเดิมยังค้นหาได้</span><button class="btn small" data-act="renamecodes">เปลี่ยนรหัส Lead</button></div>' : ''; })() + '</div>';
   return shell({ title: 'ข้อมูลพนักงาน', back: '#/settings' }, body);
 }
@@ -2134,7 +2204,7 @@ function checklistCard() {
     c.map(function (x, i) {
       var isNext = x === next;
       return '<div class="between" style="min-height:44px"><span class="row" style="gap:10px"><span aria-hidden="true" style="width:26px;height:26px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;' + (x[2] ? 'background:var(--ok);color:#fff' : isNext ? 'background:var(--accent);color:#3a3a3a' : 'border:2px solid #bdbdbd;color:#6b6b6b') + '">' + (x[2] ? icon('check', 14, '#fff') : (i + 1)) + '</span><span' + (x[2] ? ' class="muted" style="text-decoration:line-through"' : isNext ? ' class="strong"' : '') + '>' + x[1] + (x[0] === 'setup' && Store.state.onb.skipSetup && O().version === 'default' ? ' (ข้ามแล้ว)' : '') + (x[2] ? '<span class="sr"> (ทำแล้ว)</span>' : '') + '</span></span>' + (x[2] ? '' : '<span class="row" style="gap:6px">' + (x[4] ? '<button class="btn small" style="border:0;text-decoration:underline;padding:0 6px" data-act="skipsetup">ข้าม</button>' : '') + '<a class="btn small' + (isNext ? ' primary' : '') + '" href="' + x[3] + '">' + (isNext ? 'ทำเลย' : 'ไป') + '</a></span>') + '</div>';
-    }).join('') + '<a href="#/guide/staff" class="small" style="font-weight:700">ดูคู่มือใช้งานทั้งหมด</a></section>';
+    }).join('') + '<a href="#/guide/staff" class="small tlink">ดูคู่มือใช้งานทั้งหมด</a></section>';
 }
 var GUIDE = [
   ['ติดตั้งแอปลงหน้าจอหลัก', 'iPhone: เปิดลิงก์ด้วย Safari กดปุ่มแชร์ แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" · Android: เปิดด้วย Chrome กดเมนู ⋮ แล้วเลือก "ติดตั้งแอป" จากนั้นเปิดแอปจากไอคอนทุกครั้ง เพื่อป้องกันมือถือลบข้อมูลเอง', ''],
@@ -2691,10 +2761,13 @@ function delFollow(fid) {
 function render() {
   if (!Cx.key) { app.innerHTML = (S.newUser || !(S.users || []).length) ? vOnboard() : !S.user ? vUsers() : vLock(); var pi = $('#pin'); if (pi) pi.focus(); return; }
   var h = location.hash || '#/today', parts = h.slice(2).split('/');
+  var entered = S.route !== h;
+  if (entered && Cx.key && FORM_RE.test(S.route || '') && S.draftDirty) clearDraft(S.route);
+  if (entered) S.draftDirty = false;
   if (S.route !== h) {
     var base = parts[0];
     if (base === 'new') { S.draft = newDraft(); S.ui.step = 1; S.ui.errors = {}; }
-    else if (base === 'edit') { var p = projById(parts[1]); S.draft = p ? JSON.parse(JSON.stringify(p)) : null; if (S.draft) { S.draft._orig = (p.photos || []).slice(); S.draft.photos = (p.photos || []).slice(); } S.ui.step = 1; S.ui.errors = {}; }
+    else if (base === 'edit') { var p = projById(parts[1]); S.draft = p ? JSON.parse(JSON.stringify(p)) : null; if (S.draft) { S.draft._orig = (p.photos || []).slice(); S.draft.photos = (p.photos || []).slice(); } S.ui.step = 1; S.ui.errors = {}; if (S.draft && p.quick) { var e1 = {}; setGrpErr(e1, S.draft, 'channel', O().channel); if (clean(S.draft.name) && S.draft.recordDate && !Object.keys(e1).length) S.ui.step = 2; } }
     else if (base === 'follow') { S.ui.siteOpen = false; var fp = projById(parts[1]); S.draft = fp ? Object.assign(draftP(fp), { date: todayISO(), channel: '', ctype: '', statusAfter: fp.status, lostReason: '', note: S.prefillNote || '', nextDate: '', nextDateNA: false, nextTime: '', agenda: [], agendaOther: '', prep: '', site: fp.site ? String(fp.site) : '', geo: true }) : null; S.prefillNote = ''; S.ui.errors = {}; }
     else if (base === 'quick') { var qpr = S.quickPreset || {}; S.quickPreset = null; S.draft = { name: '', phone: '', channel: qpr.channel || '', channelDetail: qpr.channelDetail || '', channelOther: '', consent: false, photos: [], lat: null, lng: null, acc: null, allCh: !!qpr.channel, geoBusy: true }; S.ui.errors = {}; getPos().then(function (pos) { if (S.draft && S.route === '#/quick') { S.draft.lat = pos.lat; S.draft.lng = pos.lng; S.draft.acc = pos.acc; S.draft.geoBusy = false; rerender(); } }, function () { if (S.draft && S.route === '#/quick') { S.draft.geoBusy = false; rerender(); } }); }
     else if (base === 'contact') { var cp = projById(parts[1]), cc = cp && parts[2] ? contactsOf(cp).find(function (x) { return x.id === parts[2]; }) : null; S.draft = cp && !(parts[2] && !cc) ? (cc ? { name: cc.name, contactRole: cc.role, contactRoleDetail: cc.roleDetail, contactRoleOther: cc.roleOther, phone: cc.phone, line: cc.line, consent: !!cc.consent, primary: false } : { name: '', contactRole: '', contactRoleDetail: '', contactRoleOther: '', phone: '', line: '', consent: false, primary: false }) : null; S.ui.errors = {}; }
@@ -2731,7 +2804,8 @@ function render() {
     case 'security': html = vSecurity(); break;
     case 'perf': html = vPerf(); break;
     case 'summary': html = vSummary(); break;
-    case 'data': html = vData(); break;
+    case 'data': html = vData(parts[1]); break;
+    case 'manage': html = vManage(); break;
     case 'settings': html = vSettings(); break;
     case 'setup': html = vSetup(); break;
     case 'rules': html = vRules(); break;
@@ -2747,7 +2821,9 @@ function render() {
   document.documentElement.classList.toggle('appshell', !!app.querySelector('.shell'));
   a11yPass(app);
   if (parts[0] === 'projects') renderPList();
-  if (parts[0] === 'data') checkPersist();
+  if (parts[0] === 'data' || parts[0] === 'manage') refreshStorage();
+  if (entered) { S.draftVer = FORM_RE.test(h) ? recVer(h) : null; var od = S.drafts && S.drafts[h];
+    if (od && S.draft) { if (od.ver !== undefined && od.ver !== S.draftVer) { clearDraft(h); toast('ข้อมูลที่กรอกค้างไว้เก่ากว่าข้อมูลล่าสุดของรายการนี้ จึงไม่ได้นำมาใช้'); } else setTimeout(openDraftOffer, 30); } }
   if (parts[0] === 'search') { renderHS(); var hs0 = $('#hs'); if (hs0) setTimeout(function () { try { hs0.focus(); } catch (e) { } }, 30); }
   if (parts[0] === 'project' && parts[1] && projById(parts[1])) noteRecent(parts[1]);
   $all('img[data-photo]').forEach(function (img) { Store.photo(img.dataset.photo).then(function (u) { if (u) img.src = u; }); });
@@ -2779,6 +2855,8 @@ document.addEventListener('input', function (e) {
   var t = e.target; touch();
   if (t.dataset.bind && S.draft) { var pa = t.dataset.num ? parseAmt(t.value) : null; S.draft[t.dataset.bind] = t.dataset.num ? (pa == null || isNaN(pa) ? '' : pa) : t.value; if (t.value && S.draft[t.dataset.bind + 'NA']) S.draft[t.dataset.bind + 'NA'] = false; if (S.ui.errors && S.ui.errors[t.dataset.bind]) { delete S.ui.errors[t.dataset.bind]; } }
   if (t.dataset.bindUi) S.ui[t.dataset.bindUi] = t.value;
+  scheduleDraft();
+  if (t.id === 'bp') { var pm = $('#bp-m'); if (pm) pm.innerHTML = pwMeter(t.value); }
   if (t.dataset.live === 'q') { S.ui.q = t.value; renderPList(); }
   if (t.dataset.live === 'hs') { S.ui.hs = t.value; renderHS(); }
 });
@@ -2800,16 +2878,18 @@ document.addEventListener('change', function (e) {
   if (t.dataset.due) { var dsx = saleById(t.dataset.due); if (dsx) { dsx.dueDate = t.value; Store.save(dsx).then(function () { toast('บันทึกกำหนดชำระแล้ว'); rerender(); }); } }
   if (t.dataset.actChange === 'autolock') { Store.state.settings.autolock = +t.value; Store.saveState(); toast('บันทึกแล้ว'); }
   if (t.dataset.photoSlot != null && t.files && t.files[0]) { addPhoto(+t.dataset.photoSlot, t.files[0]); t.value = ''; }
-  if (t.dataset.restore && t.files && t.files[0]) { restoreBackup(t.files[0]); t.value = ''; }
+  if (t.dataset.restore && t.files && t.files[0]) { openRestoreAsk(t.files[0]); t.value = ''; }
+  scheduleDraft();
+  if (t.dataset.pg) { S.ui.pg = S.ui.pg || { lost: true, won: true, hold: false }; S.ui.pg[t.dataset.pg] = t.checked; rerender(); }
   if (t.dataset.import && t.files && t.files[0]) { readImportFile(t.files[0]); t.value = ''; }
 });
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#pfh')) { H.pfdone(); return; } if (e.key === 'Enter' && e.target.id === 'pin') H.unlock(); if ((e.key === ' ' || e.key === 'Enter') && e.target.getAttribute && e.target.getAttribute('role') === 'checkbox') { e.preventDefault(); e.target.click(); } if (e.key === 'Enter' && e.target.id === 'hs') { var r = hsFind(S.ui.hs); if (r.length === 1) location.hash = '#/project/' + r[0].p.id; else if (r.length) H.hsall(); } });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#pfh')) { H.pfdone(); return; } if (e.key === 'Enter' && e.target.id === 'pin') H.unlock(); if (e.key === 'Enter' && e.target.id === 'rs-p') { e.preventDefault(); H.rscheck(); } if ((e.key === ' ' || e.key === 'Enter') && e.target.getAttribute && e.target.getAttribute('role') === 'checkbox') { e.preventDefault(); e.target.click(); } if (e.key === 'Enter' && e.target.id === 'hs') { var r = hsFind(S.ui.hs); if (r.length === 1) location.hash = '#/project/' + r[0].p.id; else if (r.length) H.hsall(); } });
 document.addEventListener('click', function (e) {
   touch();
   var cl = e.target.closest('a[data-call]');
   if (cl) { var cv = cl.dataset.call.split('|'); S.call = { pid: cv[0], cid: cv[1], at: Date.now(), result: '', note: '', next: '' }; S.callHidden = false; setTimeout(function () { if (S.call && !S.callHidden && !document.hidden) openCall(); }, 2500); return; }
   var t = e.target.closest('[data-act]'); if (!t) return;
-  var f = H[t.dataset.act]; if (f) { e.preventDefault(); if (/^(save|stepnext|holddo)/.test(t.dataset.act)) { if (S.busyUntil > Date.now()) return; S.busyUntil = Date.now() + 1200; } f(t); }
+  var f = H[t.dataset.act]; if (f) { e.preventDefault(); if (/^(save|stepnext|holddo)/.test(t.dataset.act)) { if (S.busyUntil > Date.now()) return; S.busyUntil = Date.now() + 1200; } f(t); if (!/^(draft|save)/.test(t.dataset.act)) scheduleDraft(); }
 });
 
 var H = {
@@ -2839,7 +2919,19 @@ var H = {
   consent: function () { S.draft.consent = !S.draft.consent; if (S.ui.errors) delete S.ui.errors.consent; rerender(); },
   geotoggle: function () { S.draft.geo = !S.draft.geo; rerender(); },
   detail: function () { S.ui.detail = !S.ui.detail; rerender(); },
+  draftuse: function () { var o = S.drafts && S.drafts[location.hash]; $('#modal').innerHTML = ''; if (!o) return; if (S.drafts) delete S.drafts[o.route]; S.pendingDraft = latestDraft(); S.draft = o.draft; S.ui.step = o.step || 1; S.ui.errors = {}; S.draftDirty = true; rerender(); toast('กรอกต่อจากข้อมูลเดิมแล้ว'); },
+  draftnew: function () { clearDraft(location.hash); $('#modal').innerHTML = ''; },
   bphotos: function () { S.ui.bAllPhotos = !S.ui.bAllPhotos; rerender(); },
+  pgage: function (t) { S.ui.pgAge = +t.dataset.v; rerender(); },
+  pgdel: function () { openPurge(); },
+  pgclose: function () { if (!S.pgBusy) $('#modal').innerHTML = ''; },
+  pgrun: function () { runPurge(); },
+  pgbak: function () { S.ui.bAllPhotos = true; $('#modal').innerHTML = ''; location.hash = '#/data'; setTimeout(function () { var f = $('#bp'); if (f) { f.focus(); f.scrollIntoView({ block: 'center' }); } }, 80); },
+  rsclose: function () { if (S.rBusy) return; S.rfile = null; S.rpkg = null; S.rplan = null; $('#modal').innerHTML = ''; },
+  rscheck: function () { checkRestore(); },
+  rsapply: function () { applyRestore(); },
+  qclose: function () { $('#modal').innerHTML = ''; },
+  qgo: function () { $('#modal').innerHTML = ''; location.hash = '#/manage'; },
   period: function (t) { S.ui.period = t.dataset.v; rerender(); },
   mstep: function (t) { var m = addMonths(S.ui.month || monthOf(todayISO()), +t.dataset.v); if (m > monthOf(todayISO())) return; S.ui.month = m; rerender(); },
   pf: function (t) { S.ui.pf = t.dataset.v; S.ui.limit = 20; S.ui.pst = ''; $all('[data-act="pf"]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.v === S.ui.pf); }); renderPList(); },
@@ -2896,7 +2988,7 @@ var H = {
  else if (op && op.recordDate !== d.recordDate && isLockedDate(op.recordDate)) e.recordDate = 'Lead นี้บันทึกในเดือนที่ปิดงวดแล้ว เปลี่ยนวันที่ไม่ได้';
       else if ((!op || op.recordDate !== d.recordDate) && isLockedDate(d.recordDate)) e.recordDate = 'เดือน ' + monthName(monthOf(d.recordDate)) + ' ปิดงวดแล้ว เลือกวันที่ในเดือนที่ยังไม่ปิด'; }
     if (st === 2) { setGrpErr(e, d, 'ptype', O().ptype); if (!d.pform) e.pform = 'กรุณาเลือกลักษณะงาน'; if (!d.site) e.site = 'กรุณาเลือกสถานะหน้างาน';
-      if (!clean(d.developer)) e.developer = 'กรุณากรอกข้อมูล หรือกดปุ่ม - ถ้าไม่มี'; if (!d.province) e.province = 'กรุณาเลือกจังหวัด'; if (!clean(d.address)) e.address = 'กรุณากรอกข้อมูล'; if (!clean(d.info)) e.info = 'กรุณากรอกข้อมูล หรือกดปุ่ม - ถ้าไม่มี'; }
+      if (!clean(d.developer)) e.developer = 'กรุณากรอกข้อมูล หรือกดปุ่ม - ถ้าไม่มี'; if (!d.province) e.province = 'กรุณาเลือกจังหวัด'; if (!clean(d.address)) e.address = 'กรุณากรอกข้อมูล หรือกดปุ่ม - ถ้าไม่มี'; if (!clean(d.info)) e.info = 'กรุณากรอกข้อมูล หรือกดปุ่ม - ถ้าไม่มี'; }
     if (st === 3) {
       if (!clean(d.contactName)) e.contactName = 'กรุณาใส่ชื่อผู้ติดต่อ';
       setGrpErr(e, d, 'contactRole', O().role);
@@ -2930,8 +3022,14 @@ var H = {
   export: function () { exportExcel(); },
   exportanon: function () { exportExcel(null, true); },
   backup: function () { makeBackup(); },
+  bakshare: function () { var b = S.bak; if (!b) return; var f = S.shareTxt ? new File([b.blob], b.name + '.txt', { type: 'text/plain' }) : new File([b.blob], b.name, { type: 'application/json' });
+    navigator.share({ files: [f], title: 'ไฟล์สำรอง PS Tracker' }).then(function () { return markBackup().then(function () { closeBak(); toast('บันทึกไฟล์สำรองแล้ว'); rerender(); }); })
+      .catch(function (e) { toast(e && e.name === 'AbortError' ? 'ยังไม่ได้บันทึกไฟล์ กดบันทึกอีกครั้งได้' : 'เปิดหน้าแชร์ไม่ได้ ใช้ปุ่มดาวน์โหลดแทน'); }); },
+  bakdl: function () { var b = S.bak; if (!b) return; download(b.blob, b.name); markBackup().then(function () { closeBak(); toast('ดาวน์โหลดไฟล์สำรองแล้ว'); rerender(); }); },
+  bakclose: function () { closeBak(); },
+  baklater: function () { Store.state.bakSnooze = addDays(todayISO(), 3); Store.saveState().then(function () { closeBak(); }); },
   wipe: function () {
- confirmBox('ล้างข้อมูลทั้งหมด', 'ข้อมูล Lead การติดตาม SO และรูปทั้งหมดของผู้ใช้นี้ในเครื่องนี้จะถูกลบถาวร (ข้อมูลของผู้ใช้อื่นในเครื่องไม่ถูกลบ) ควรสำรองข้อมูลก่อน ต้องการล้างใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (!ok) return; wipeAll(); });
+ confirmBox('ล้างข้อมูลทั้งหมด', 'ข้อมูล Lead การติดตาม SO และรูปทั้งหมดของผู้ใช้นี้ในเครื่องนี้จะถูกลบถาวร (ข้อมูลของผู้ใช้อื่นในเครื่องไม่ถูกลบ) ควรสำรองข้อมูลแบบรวมรูปก่อน ต้องการล้างใช่หรือไม่', 'ล้างข้อมูล', true).then(function (ok) { if (!ok) return false; return typeConfirm('ยืนยันการล้างข้อมูล', 'พิมพ์ Emp ID ของบัญชีนี้เพื่อยืนยัน ข้อมูลที่ล้างแล้วกู้คืนได้จากไฟล์สำรองเท่านั้น', (S.user && S.user.empId) || P().empId || ''); }).then(function (ok) { if (ok) wipeAll(); });
   },
   saveprofile: function () {
     var p = P(), old = { empId: p.empId, name: p.name, branch: p.branch, team: p.team }, nv = {};
@@ -3013,7 +3111,7 @@ function addPhoto(i, file) {
 }
 function saveProject() {
   var d = S.draft, isNew = !d.id, t = todayISO(), st = Store.state;
-  var rd = d.recordDate || t, r = isNew ? stamp({ id: uid(), kind: 'project', createdAt: nowISO(), recordDate: rd, status: ST.NEW }) : projById(d.id);
+  var rd = d.recordDate || t, r = isNew ? stamp({ id: d._pid || (d._pid = uid()), kind: 'project', createdAt: nowISO(), recordDate: rd, status: ST.NEW }) : projById(d.id);
   if (isNew) { st.counter++; r.code = 'PS-' + (P().empId || 'X') + '-' + String(st.counter).padStart(4, '0'); }
   ['name', 'developer', 'info', 'address', 'contactName', 'line'].forEach(function (k) { r[k] = clean(d[k], k === 'info' ? 1000 : 500); });
   ['ptype', 'ptypeDetail', 'channel', 'channelDetail', 'province', 'contactRole', 'contactRoleDetail', 'pform'].forEach(function (k) { r[k] = d[k] || ''; });
@@ -3032,7 +3130,7 @@ function saveProject() {
   jobs.push(Store.saveState()); jobs0.forEach(function (x) { jobs.push(Store.save(x)); });
   Promise.all(jobs).then(function () { return Store.save(r); }).then(function () {
     if (!isNew) return;
- return Store.save(stamp({ id: uid(), kind: 'follow', projectId: r.id, createdAt: nowISO(), date: rd, channel: d.channel, ctype: FIRST_CTYPE, statusBefore: '', statusAfter: ST.NEW, lostReason: '', note: 'สร้าง Lead', nextDate: r.nextDate, site: r.site, agenda: r.nextAgenda, agendaOther: r.nextAgendaOther, prep: r.nextPrep, lat: null, lng: null }));
+ return Store.save(stamp({ id: d._ffid || (d._ffid = uid()), kind: 'follow', projectId: r.id, createdAt: nowISO(), date: rd, channel: d.channel, ctype: FIRST_CTYPE, statusBefore: '', statusAfter: ST.NEW, lostReason: '', note: 'สร้าง Lead', nextDate: r.nextDate, site: r.site, agenda: r.nextAgenda, agendaOther: r.nextAgendaOther, prep: r.nextPrep, lat: null, lng: null }));
  }).then(function () { toast(isNew ? 'บันทึก Lead แล้ว' : 'บันทึกการแก้ไขแล้ว'); S.draft = null; location.hash = '#/project/' + r.id; }).catch(function () { toast('บันทึกไม่สำเร็จ ข้อมูลยังอยู่ในฟอร์ม ลองอีกครั้ง'); });
 }
 function saveFollow(pid) {
@@ -3053,7 +3151,7 @@ function saveFollow(pid) {
   S.ui.errors = e; if (Object.keys(e).length) { S.ui.focusErr = true; rerender(); return; }
   var btn = $('[data-act="savefollow"]'); if (btn) { btn.disabled = true; btn.textContent = 'กำลังบันทึก…'; }
   var closed = d.statusAfter === ST.WON || d.statusAfter === ST.LOST;
-  var f = stamp({ id: uid(), kind: 'follow', projectId: pid, createdAt: nowISO(), date: d.date || todayISO(), channel: p.channel || '', ctype: '', statusBefore: p.status, statusAfter: d.statusAfter, lostReason: d.statusAfter === ST.LOST ? d.lostReason : '', note: clean(d.note, 1000), nextDate: closed ? '' : (d.nextDate || ''), lat: null, lng: null });
+  var f = stamp({ id: d._fid || (d._fid = uid()), kind: 'follow', projectId: pid, createdAt: nowISO(), date: d.date || todayISO(), channel: p.channel || '', ctype: '', statusBefore: p.status, statusAfter: d.statusAfter, lostReason: d.statusAfter === ST.LOST ? d.lostReason : '', note: clean(d.note, 1000), nextDate: closed ? '' : (d.nextDate || ''), lat: null, lng: null });
   f.site = Number(d.site) || 0; f.nextDateNA = !closed && !!d.nextDateNA;
   f.nextTime = f.nextDate && /^\d{2}:\d{2}$/.test(d.nextTime || '') ? d.nextTime : '';
   f.agenda = f.nextDate ? (d.agenda || []).slice() : []; f.agendaOther = f.agenda.indexOf(OTHER) >= 0 ? clean(d.agendaOther, 80) : ''; f.prep = f.nextDate ? clean(d.prep, 300) : '';
@@ -3106,7 +3204,7 @@ function copyText(txt) {
 }
 function fallbackCopy(txt) { var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) { } ta.remove(); return ok; }
 function download(blob, name) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
-function checkPersist() { var el = $('#persist'); if (!el) return; if (navigator.storage && navigator.storage.persisted) navigator.storage.persisted().then(function (v) { el.textContent = v ? 'เปิดใช้แล้ว' : 'ยังไม่เปิดใช้ (ควรติดตั้งแอป)'; el.className = v ? 'okText' : 'dangerText'; }); else el.textContent = 'ไม่รองรับ'; }
+function checkPersist() { var el = $('#persist'); if (!el) return; if (navigator.storage && navigator.storage.persisted) navigator.storage.persisted().then(function (v) { el.textContent = v ? 'เปิดใช้แล้ว' : 'ยังไม่เปิดใช้'; el.className = v ? 'okText' : 'dangerText'; }); else el.textContent = 'ไม่รองรับ'; }
 function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
 
 /* ---------------- options code ---------------- */
@@ -3404,19 +3502,53 @@ function exportExcel(ym, anon) {
 /* ---------------- backup / restore ---------------- */
 function makeBackup() {
   var pw = S.ui.bpass || '';
-  if (pw.length < 8) { toast('รหัสผ่านไฟล์สำรองต้องมีอย่างน้อย 8 ตัวอักษร'); $('#bp').focus(); return; }
+  if (pw.length < 8) { toast('รหัสผ่านไฟล์สำรองต้องมีอย่างน้อย 8 ตัวอักษร'); var pf = $('#bk-p') || $('#bp'); if (pf) pf.focus(); return; }
+  if (S.bakBusy) return; S.bakBusy = true;
   toast('กำลังสำรองข้อมูล…');
-  var ids = [], allPh = !!S.ui.bAllPhotos; Store.projects.forEach(function (p) { if (allPh || ACTIVE.indexOf(p.status) >= 0 || p.status === ST.HOLD) (p.photos || []).forEach(function (x) { ids.push(x); }); });
+  var ids = [], allPh = !!S.ui.bAllPhotos; S.bakFull = allPh; S.bakIds = null; Store.projects.forEach(function (p) { if (allPh || ACTIVE.indexOf(p.status) >= 0 || p.status === ST.HOLD) (p.photos || []).forEach(function (x) { ids.push(x); }); });
   Promise.all(ids.map(function (id) { return Store.photoBytes(id).catch(function () { return null; }); })).then(function (ph) {
+    S.bakIds = ph.filter(Boolean).map(function (x) { return x.id; });
     var payload = { records: Store.all(), photos: ph.filter(Boolean).map(function (x) { return { id: x.id, mime: x.mime, b64: b64(x.bytes) }; }), state: { profile: P(), options: O(), settings: Store.state.settings, counter: Store.state.counter } };
     var salt = crypto.getRandomValues(new Uint8Array(16));
     return Cx.derive(pw, salt, KDF_ITER).then(function (k) { return Cx.encJSON(k, payload); }).then(function (e) {
       var file = { format: 'ps-tracker-backup', version: 1, appVersion: APP_VERSION, schema: SCHEMA_VERSION, createdAt: nowISO(), empId: P().empId, kdf: { salt: b64(salt), iter: KDF_ITER }, iv: b64(e.iv), ct: b64(e.ct) };
-      download(new Blob([JSON.stringify(file)], { type: 'application/json' }), 'PS_backup_' + (P().empId || 'EMP').replace(/[^\w-]/g, '') + '_' + todayISO() + '.json');
-      Store.state.lastBackup = nowISO(); return Store.saveState();
+      var name = 'PS_backup_' + (P().empId || 'EMP').replace(/[^\w-]/g, '') + '_' + todayISO() + '.json', blob = new Blob([JSON.stringify(file)], { type: 'application/json' });
+      S.ui.bpass = '';
+      if (canShareFile()) { S.bak = { blob: blob, name: name }; openBakReady(); return; }
+      download(blob, name);
+      return markBackup().then(function () { closeBak(); toast('ดาวน์โหลดไฟล์สำรองแล้ว ย้ายไฟล์ไปเก็บใน OneDrive / iCloud Drive / Google Drive'); rerender(); });
     });
-  }).then(function () { toast('สำรองข้อมูลแล้ว เก็บไฟล์ไว้ใน OneDrive ของบริษัท'); S.ui.bpass = ''; rerender(); }).catch(function () { toast('สำรองข้อมูลไม่สำเร็จ'); });
+  }).catch(function () { toast('สำรองข้อมูลไม่สำเร็จ'); }).then(function () { S.bakBusy = false; });
 }
+/* ---------- สำรองขึ้น Cloud ผ่านหน้าแชร์ของมือถือ (iCloud Drive / OneDrive / Google Drive / ไฟล์) ---------- */
+function canShareFile() { S.shareTxt = false; try { if (!navigator.share || !navigator.canShare) return false; if (navigator.canShare({ files: [new File(['{}'], 'PS_backup.json', { type: 'application/json' })] })) return true; if (navigator.canShare({ files: [new File(['{}'], 'PS_backup.txt', { type: 'text/plain' })] })) { S.shareTxt = true; return true; } return false; } catch (e) { return false; } }
+function markBackup() { Store.state.lastBackup = nowISO(); if (S.bakFull) { Store.state.lastBackupFull = Store.state.lastBackup; Store.state.fullBakPhotos = S.bakIds || []; } S.bakFull = false; S.bakIds = null; S.st = null; Store.state.bakSnooze = ''; return Store.saveState(); }
+function closeBak() { S.bak = null; var m = $('#modal'); if (m && m.querySelector('[data-bak]')) m.innerHTML = ''; }
+function openBakReady() {
+  var b = S.bak; if (!b) return;
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="bkh" data-bak="1"><div class="sheet"><div class="grab"></div><h2 id="bkh" style="font-size:18px">ไฟล์สำรองพร้อมแล้ว</h2>' +
+    '<span class="small">กดปุ่มด้านล่าง แล้วเลือก <b class="strong">บันทึกไปยังไฟล์ (Save to Files)</b> → iCloud Drive หรือเลือกแอป OneDrive / Google Drive เก็บไฟล์ไว้ใช้ย้ายเครื่องใหม่ หรือกู้คืนเมื่อเครื่องหายหรือเสีย</span>' +
+    (S.shareTxt ? '<span class="small">บนมือถือเครื่องนี้ ไฟล์จะลงท้ายด้วย .txt ใช้กู้คืนได้ตามปกติ</span>' : '') +
+    '<span class="small muted">' + esc(b.name) + (S.shareTxt ? '.txt' : '') + ' · ' + Math.max(1, Math.round(b.blob.size / 1024)) + ' KB · เข้ารหัสด้วยรหัสผ่านที่ตั้งไว้</span>' +
+    '<button class="btn primary block" data-act="bakshare">' + icon('upload', 18) + ' บันทึกขึ้น Cloud / ไฟล์</button>' +
+    '<div class="grid2"><button class="btn" data-act="bakclose">ยกเลิก</button><button class="btn" data-act="bakdl">ดาวน์โหลดแทน</button></div></div></div>';
+  var f = $('[data-act=bakshare]'); if (f) f.focus();
+}
+function bakDue() {
+  var st = Store.state, t = todayISO(); if (!st || !liveProjects().length) return false;
+  var last = st.lastBackup ? diffDays(tsDay(st.lastBackup), t) : null;
+  if (last !== null && last < 7) return false;
+  if (last === null) { var first = liveProjects().reduce(function (m, p) { var c = tsDay(p.createdAt || '') || t; return c < m ? c : m; }, t); if (diffDays(first, t) < 7) return false; }
+  return !(st.bakSnooze && st.bakSnooze > t);
+}
+function openBakAsk() {
+  var last = Store.state.lastBackup;
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="bkq" data-bak="1"><div class="sheet"><div class="grab"></div><h2 id="bkq" style="font-size:18px">สำรองข้อมูลประจำสัปดาห์</h2>' +
+    '<span class="small">' + (last ? 'สำรองล่าสุด ' + be(last) : 'ยังไม่เคยสำรองข้อมูล') + ' · ไฟล์สำรองใช้ย้ายไปเครื่องใหม่ หรือกู้คืนเมื่อเครื่องหายหรือเสีย ข้อมูลอยู่ในเครื่องนี้เครื่องเดียว</span>' +
+    '<div class="field"><label for="bk-p">รหัสผ่านไฟล์สำรอง (อย่างน้อย 8 ตัวอักษร)</label><input id="bk-p" class="inp" type="password" autocomplete="new-password" data-bind-ui="bpass"><span class="hint">ใช้รหัสผ่านเดิมทุกครั้งจะจำง่าย หากลืมรหัสผ่านจะเปิดไฟล์ไม่ได้</span></div>' +
+    '<div class="grid2"><button class="btn" data-act="baklater">ไว้ภายหลัง</button><button class="btn primary" data-act="backup">สำรองตอนนี้</button></div></div></div>';
+}
+window.addEventListener('hashchange', function () { if (!S.bakBusy) closeBak(); });
 var REC_DATE = ['recordDate', 'date', 'nextDate', 'closingDate', 'soDate', 'deliveryDate', 'validUntil', 'stageAt', 'siteAt', 'dueDate'];
 var REC_NUM = ['site', 'estimate', 'soValue', 'dp', 'value', 'units', 'rev', 'lat', 'lng', 'acc', 'distance', 'milestone', 'amount', 'price', 'lead', 'schema', 'counter', 'n'];
 function sanitizeRec(o, depth) {
@@ -3429,6 +3561,7 @@ function sanitizeRec(o, depth) {
   Object.keys(o).forEach(function (k) {
     if (k === '__proto__' || k === 'constructor' || k === 'prototype') return;
     var v = o[k];
+    if (k === 'nextTime' || k === 'time') { out[k] = typeof v === 'string' && /^\d{2}:\d{2}$/.test(v) ? v : ''; return; }
     if (REC_DATE.indexOf(k) >= 0) { out[k] = typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : ''; return; }
     if (/At$/.test(k)) { out[k] = typeof v === 'string' && /^\d{4}-\d{2}-\d{2}(T[0-9:.]+Z?)?$/.test(v) ? v : ''; return; }
     if (/^d[1-6]$|^install$/.test(k)) { out[k] = typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : ''; return; }
@@ -3437,50 +3570,339 @@ function sanitizeRec(o, depth) {
   });
   return out;
 }
-function restoreBackup(file) {
-  var pw = S.ui.bpass || '';
-  if (pw.length < 8) { toast('ใส่รหัสผ่านไฟล์สำรองก่อนเลือกไฟล์'); return; }
-  if (file.size > 300 * 1024 * 1024) { toast('ไฟล์ใหญ่เกินไป'); return; }
-  file.text().then(function (txt) {
-    var f = JSON.parse(txt);
-    if (f.format !== 'ps-tracker-backup') throw new Error('format');
-    var it = +(f.kdf && f.kdf.iter); if (!(it >= 100000 && it <= 2000000)) throw new Error('kdf');
-    return Cx.derive(pw, unb64(f.kdf.salt), it).then(function (k) { return Cx.decJSON(k, unb64(f.iv), unb64(f.ct)); });
-  }).then(function (data) {
-    var bid = data && ((data.state && data.state.profile && data.state.profile.empId) || (data.profile && data.profile.empId) || ((data.records || []).filter(function (r) { return r && r.empId; })[0] || {}).empId);
-    if (!bid || normEmp(bid) === normEmp(P().empId)) return data;
-    var other = empTaken(bid, S.user && S.user.id);
-    if (other) { toast('ไฟล์นี้เป็นของ Emp ID ' + bid + ' (' + (other.label || '') + ') ซึ่งมีบัญชีในเครื่องนี้แล้ว ให้กู้คืนในบัญชีของคนนั้น'); throw 'skip'; }
-    return confirmBox('ไฟล์สำรองเป็นของคนอื่น', 'ไฟล์นี้เป็นของ Emp ID ' + bid + ' แต่ผู้ใช้ปัจจุบันคือ ' + P().empId + ' ถ้ากู้คืน ข้อมูลจะรวมเข้ากับบัญชีนี้ ควรเพิ่มผู้ใช้ใหม่ในเครื่อง แล้วกู้คืนในบัญชีนั้นแทน ต้องการกู้คืนเข้าบัญชีนี้หรือไม่', 'กู้คืนเข้าบัญชีนี้').then(function (ok) { if (!ok) throw 'skip'; return data; });
-  }).then(function (data) {
-    var added = 0, jobs = [];
-    var skipped = 0;
-    (data.photos || []).filter(function (ph) { return ph && typeof ph.id === 'string' && typeof ph.b64 === 'string' && /^image\/(jpeg|png|webp)$/.test(ph.mime || ''); }).slice(0, 5000).forEach(function (ph) { jobs.push(DB.get('photos', ph.id).then(function (ex) { if (ex) return; var bytes = unb64(ph.b64); return Cx.enc(Cx.key, bytes).then(function (e) { return DB.put('photos', { id: ph.id, mime: ph.mime, iv: e.iv, ct: e.ct }); }); })); });
-    return Promise.all(jobs).then(function () {
-      var seq = Promise.resolve();
-      (data.records || []).forEach(function (r) {
-        if (!r || typeof r.id !== 'string' || !/^[\w-]{1,64}$/.test(r.id) || ['project', 'follow', 'sale', 'month', 'quote'].indexOf(r.kind) < 0) { skipped++; return; }
-        var cur = Store.list(r.kind).find(function (x) { return x.id === r.id; });
-        if (cur) { skipped++; return; }
-        var rc = sanitizeRec(r, 0); added++; seq = seq.then(function () { return Store.save(rc, true); });
-      });
-      return seq;
-    }).then(function () {
-      var st = Store.state, b = data.state || {};
-      if (O().version === 'default' && b.options) st.options = migrateState({ options: b.options }).options;
-      if (b.settings && b.settings.targets) Object.keys(b.settings.targets).forEach(function (m) { if (st.settings.targets[m] == null) st.settings.targets[m] = b.settings.targets[m]; });
-      st.counter = Math.max(st.counter || 0, b.counter || 0);
-      return Store.saveState();
-    }).then(migrateRecords).then(function () { toast('กู้คืนแล้ว ' + added + ' รายการ' + (skipped ? ' · ข้ามรายการที่มีอยู่แล้วหรือไม่ถูกต้อง ' + skipped + ' รายการ' : '')); S.ui.bpass = ''; rerender(); });
-  }).catch(function (e) { if (e === 'skip') return; toast('กู้คืนไม่สำเร็จ รหัสผ่านไม่ถูกต้องหรือไฟล์ไม่ถูกต้อง'); });
+/* ---------------- พื้นที่จัดเก็บ · จัดการพื้นที่ · กู้คืน (v1.16.0) ---------------- */
+function isIOS() { var u = navigator.userAgent || ''; return /iPad|iPhone|iPod/.test(u) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+function fmtBytes(b) { if (b == null || !isFinite(b)) return '-'; if (b >= 1073741824) return (Math.round(b / 107374182.4) / 10) + ' GB'; if (b >= 1048576) return (Math.round(b / 104857.6) / 10) + ' MB'; return Math.max(1, Math.round(b / 1024)) + ' KB'; }
+function pctText(p) { return p < 1 ? 'ไม่ถึงร้อยละ 1' : 'ร้อยละ ' + (p < 10 ? Math.round(p * 10) / 10 : Math.round(p)); }
+function agoText(ts) { var d = diffDays(tsDay(ts), todayISO()); return d <= 0 ? 'วันนี้' : d + ' วันก่อน'; }
+function storageScan() {
+  if (S.stBusy) return S.stBusy;
+  var out = { ver: Store.ver, at: Date.now(), usage: null, quota: null, persisted: null, sizes: {}, photoBytes: 0, photoCount: 0 };
+  var sg = navigator.storage || {};
+  var est = sg.estimate ? sg.estimate().catch(function () { return {}; }) : Promise.resolve({});
+  var per = sg.persisted ? sg.persisted().catch(function () { return null; }) : Promise.resolve(null);
+  var scan = new Promise(function (res) {
+    try {
+      var t = DB.db.transaction('photos', 'readonly'), c = t.objectStore('photos').openCursor();
+      c.onsuccess = function () { var cur = c.result; if (!cur) return; var v = cur.value || {}, n = v.ct ? (v.ct.byteLength || v.ct.length || 0) : 0; out.sizes[v.id] = n; out.photoBytes += n; out.photoCount++; cur.continue(); };
+      t.oncomplete = function () { res(); }; t.onerror = t.onabort = function () { res(); };
+    } catch (e) { res(); }
+  });
+  S.stBusy = Promise.all([est, per, scan]).then(function (r) { out.usage = r[0] && r[0].usage != null ? r[0].usage : null; out.quota = r[0] && r[0].quota ? r[0].quota : null; out.persisted = r[1]; S.st = out; S.stBusy = null; return out; });
+  return S.stBusy;
 }
+function refreshStorage() {
+  if (S.st && S.st.ver === Store.ver && Date.now() - S.st.at < 60000) return;
+  storageScan().then(function () { var b = (location.hash || '').split('/')[1]; if (Cx.key && (b === 'data' || b === 'manage') && !$('#modal').firstChild) rerender(); });
+}
+function askPersist() { try { var sg = navigator.storage; if (!isStandalone() || !sg || !sg.persisted || !sg.persist) return; sg.persisted().then(function (v) { if (!v) return sg.persist(); }).catch(function () { }); } catch (e) { } }
+function saveFail(err) {
+  try { if (err && typeof err === 'object') err.__shown = true; } catch (x) { }
+  if (S.rBusy || S.pgBusy || S.pinBusy) return;
+  if (err && err.name === 'QuotaExceededError') return;
+  toast('บันทึกไม่สำเร็จ ข้อมูลในเครื่องแสดงตามที่บันทึกไว้จริง ลองใหม่อีกครั้ง');
+  setTimeout(function () { if (Cx.key && !FORM_RE.test(location.hash)) rerender(); }, 50);
+}
+/* ---------- ฟอร์มที่กรอกค้าง: เก็บแบบเข้ารหัส กู้คืนเมื่อเปิดแอปใหม่ ---------- */
+var FORM_RE = /^#\/(new|edit|follow|quick|contact|sale|quote|fedit|phase|pay)(\/|$)/;
+var FORM_NAME = { 'new': 'Lead ใหม่', edit: 'แก้ไข Lead', follow: 'บันทึกติดตาม', quick: 'Lead ด่วน', contact: 'ผู้ติดต่อ', sale: 'ใบสั่งขาย', quote: 'ใบเสนอราคา', fedit: 'แก้ไขการติดตาม', phase: 'เพิ่มเฟส', pay: 'รับชำระ' };
+function recVer(route) {
+  var ids = route.slice(2).split('/').slice(1).filter(function (x) { return /^[\w-]{8,}$/.test(x); }), v = '';
+  for (var i = 0; i < ids.length; i++) { var r = Store.all().find(function (x) { return x.id === ids[i] && !x.deleted; }); if (!r) return null; v += (r.updatedAt || '') + '|'; }
+  return v;
+}
+function draftsRead(key) { return DB.get('meta', 'draft').then(function (v) { return v ? Cx.decJSON(key, v.iv, v.ct) : {}; }).then(function (o) { return o && typeof o === 'object' && !o.route ? o : {}; }).catch(function () { return {}; }); }
+function draftWrite(key, route, step, draft, ver) {
+  if (!key || !draft || !FORM_RE.test(route)) return Promise.resolve();
+  var gen = S.draftGen || 0;
+  return draftsRead(key).then(function (all) {
+    if ((S.draftGen || 0) !== gen) return;
+    all[route] = { route: route, at: nowISO(), step: step || 1, draft: draft, ver: ver };
+    var keys = Object.keys(all).sort(function (a, b) { return all[b].at.localeCompare(all[a].at); }); keys.slice(5).forEach(function (k) { delete all[k]; });
+    return Cx.encJSON(key, all).then(function (e) { if ((S.draftGen || 0) === gen) return DB.put('meta', { iv: e.iv, ct: e.ct }, 'draft'); });
+  }).catch(function () { });
+}
+function saveDraftNow() { clearTimeout(scheduleDraft._t); if (Cx.key && S.draft && S.draftDirty && FORM_RE.test(location.hash)) draftWrite(Cx.key, location.hash, S.ui.step, S.draft, S.draftVer); }
+function scheduleDraft() { if (!Cx.key || !S.draft || !FORM_RE.test(location.hash)) return; S.draftDirty = true; clearTimeout(scheduleDraft._t); scheduleDraft._t = setTimeout(saveDraftNow, 700); }
+function clearDraft(route) {
+  clearTimeout(scheduleDraft._t); S.draftGen = (S.draftGen || 0) + 1; var key = Cx.key;
+  if (S.drafts) delete S.drafts[route]; S.pendingDraft = latestDraft();
+  if (!key || !DB.db) return;
+  var gen = S.draftGen;
+  draftsRead(key).then(function (all) { delete all[route]; if (!Object.keys(all).length) return DB.del('meta', 'draft'); return Cx.encJSON(key, all).then(function (e) { if (S.draftGen === gen) return DB.put('meta', { iv: e.iv, ct: e.ct }, 'draft'); }); }).catch(function () { });
+}
+function latestDraft() { var d = S.drafts || {}, ks = Object.keys(d).sort(function (a, b) { return d[b].at.localeCompare(d[a].at); }); return ks.length ? d[ks[0]] : null; }
+function loadDraft() { return draftsRead(Cx.key).then(function (all) { S.drafts = {}; Object.keys(all).forEach(function (k) { var o = all[k]; if (o && typeof o.route === 'string' && FORM_RE.test(o.route) && o.draft && Date.now() - Date.parse(o.at) < 7 * 86400000) S.drafts[k] = o; }); S.pendingDraft = latestDraft(); }); }
+function draftLabel(o) { var k = o.route.slice(2).split('/')[0]; return (FORM_NAME[k] || 'ฟอร์ม') + ' · กรอกค้างไว้เมื่อ ' + be(o.at) + ' ' + new Date(o.at).toTimeString().slice(0, 5) + ' น.'; }
+function openDraftOffer() {
+  var o = S.drafts && S.drafts[location.hash]; if (!o) return;
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="dfh"><div class="sheet"><div class="grab"></div><h2 id="dfh" style="font-size:18px">มีข้อมูลที่กรอกค้างไว้</h2><span class="small">' + esc(draftLabel(o)) + ' ต้องการกรอกต่อจากเดิมหรือเริ่มใหม่</span><div class="grid2"><button class="btn" data-act="draftnew">เริ่มใหม่</button><button class="btn primary" data-act="draftuse">กรอกต่อจากเดิม</button></div></div></div>';
+  var f = $('[data-act=draftuse]'); if (f) f.focus();
+}
+window.addEventListener('unhandledrejection', function (e) { if (e.reason && e.reason.__shown) e.preventDefault(); });
+function qCheck(er) {
+  if (!er || er.name !== 'QuotaExceededError' || S.rBusy || S.pgBusy || S.pinBusy || !Cx.key) return;
+  if (S.qAt && Date.now() - S.qAt < 15000) return; S.qAt = Date.now();
+  setTimeout(function () {
+    $('#modal').innerHTML = '<div class="modalbg" role="alertdialog" aria-modal="true" aria-labelledby="qh"><div class="modal"><h2 id="qh" style="font-size:18px">พื้นที่ในเครื่องเต็ม</h2><p style="margin:0">บันทึกล่าสุดไม่สำเร็จเพราะพื้นที่จัดเก็บในเครื่องเต็ม ข้อมูลที่บันทึกไว้ก่อนหน้ายังอยู่ครบ ให้สำรองข้อมูล แล้วลบรูปของ Lead ที่จบแล้ว หรือลบรูปและแอปอื่นในมือถือ</p><div class="grid2"><button class="btn" data-act="qclose">ปิด</button><button class="btn primary" data-act="qgo">จัดการพื้นที่</button></div></div></div>';
+    var b = $('[data-act=qgo]'); if (b) b.focus();
+  }, 60);
+}
+function pwScore(p) { p = p || ''; if (p.length < 8) return 0; var s = 1; if (p.length >= 12) s++; if (/[A-Za-z฀-๿]/.test(p) && /\d/.test(p)) s++; if (/[^A-Za-z0-9฀-๿]/.test(p) || (/[a-z]/.test(p) && /[A-Z]/.test(p))) s++; return Math.min(4, s); }
+function pwMeter(p) {
+  if (!p) return '';
+  var s = pwScore(p), lab = ['สั้นเกินไป', 'อ่อน', 'พอใช้', 'ดี', 'แข็งแรง'][s], col = s <= 1 ? 'var(--danger-text)' : s === 2 ? '#8a6d00' : 'var(--ok-text)', fill = s <= 1 ? 'var(--danger-text)' : s === 2 ? 'var(--accent)' : 'var(--ok)';
+  var seg = ''; for (var i = 1; i <= 4; i++) seg += '<span style="flex:1;height:4px;border-radius:2px;background:' + (i <= s ? fill : '#e2e2e2') + '"></span>';
+  return '<div class="row" style="gap:4px;margin-top:6px" aria-hidden="true">' + seg + '</div><span class="small" style="color:' + col + ';font-weight:600">ความแข็งแรงของรหัสผ่าน: ' + lab + '</span>';
+}
+function bakSizeText(all) {
+  if (!S.st) return 'กำลังคำนวณ';
+  var b = 0; Store.projects.forEach(function (p) { if (all || ACTIVE.indexOf(p.status) >= 0 || p.status === ST.HOLD) (p.photos || []).forEach(function (x) { b += S.st.sizes[x] || 0; }); });
+  return fmtBytes(b * 1.37 + Store.all().length * 900);
+}
+function iosCard() {
+  if (!isIOS() || isStandalone()) return '';
+  return '<div class="card warn stack" style="gap:8px"><div class="row" style="align-items:flex-start">' + icon('alert', 22, '#8a6d00') + '<div><b class="strong" style="font-size:16px">ยังไม่ได้ติดตั้งแอปบนหน้าจอโฮม</b><br><span class="small strong" style="font-weight:400">เปิดผ่าน Safari โดยไม่ติดตั้ง หากไม่ได้เปิดแอปนานเกิน 7 วัน iPhone อาจลบข้อมูลในเครื่องเอง</span></div></div><a class="btn small" href="#/guide/staff">ดูวิธีติดตั้ง</a></div>';
+}
+function stCard() {
+  var st = S.st, pct = st && st.usage != null && st.quota ? st.usage / st.quota * 100 : null, full = pct != null && pct >= 80;
+  var head = '<div class="between"><h2 style="font-size:17px">พื้นที่จัดเก็บในเครื่องนี้</h2>' + (st ? '<span class="small muted">ตรวจเมื่อ ' + new Date(st.at).toTimeString().slice(0, 5) + '</span>' : '') + '</div>';
+  var use = !st ? '<span class="small" id="stwait">กำลังตรวจสอบพื้นที่…</span>'
+    : pct == null ? '<span class="small">เบราว์เซอร์นี้ไม่แสดงขนาดพื้นที่ที่ใช้ได้</span>'
+    : '<div class="stack" style="gap:6px"><div class="row" style="align-items:baseline;gap:6px;flex-wrap:wrap"><b class="strong" style="font-size:28px;line-height:1.1">' + fmtBytes(st.usage) + '</b><span class="small">จากที่ใช้ได้ประมาณ ' + fmtBytes(st.quota) + '</span></div>' +
+      '<div class="meter' + (full ? ' full' : '') + '" role="img" aria-label="ใช้พื้นที่ไปแล้ว ' + pctText(pct) + '"><div style="width:' + Math.max(1, Math.min(100, pct)).toFixed(1) + '%"></div></div><span class="small">ใช้ไป' + pctText(pct) + ' · รวมทุกผู้ใช้ในเครื่องนี้</span></div>';
+  var warn = full ? '<div class="card alert stack" style="gap:8px;background:#fff0f0"><b class="dangerText">พื้นที่ใกล้เต็ม</b><span class="small strong" style="font-weight:400">สำรองข้อมูลก่อน แล้วลบรูปของ Lead ที่จบแล้วเพื่อคืนพื้นที่ หากพื้นที่เต็ม แอปจะบันทึกข้อมูลใหม่ไม่ได้</span><a class="btn primary small" href="#/manage">จัดการพื้นที่</a></div>' : '';
+  function tile(l, v, s) { return '<div class="sttile"><span class="small">' + l + '</span><b>' + v + '</b>' + (s ? '<span class="small">' + s + '</span>' : '') + '</div>'; }
+  var nph = Store.projects.reduce(function (n, p) { return n + (p.deleted ? 0 : (p.photos || []).length); }, 0);
+  var grid = '<div class="grid2">' + tile('Lead', fmt(liveProjects().length) + ' ราย') + tile('การติดตาม', fmt(liveFollows().length) + ' ครั้ง') + tile('SO และใบเสนอราคา', fmt(liveSales().length + liveQuotes().length) + ' รายการ') + tile('รูป', fmt(st ? st.photoCount : nph) + ' รูป', st ? fmtBytes(st.photoBytes) : '') + '</div>';
+  var per = st && st.persisted === true, inst = isStandalone(), und = Store.undec || 0;
+  var rows = '<div class="stack" style="gap:8px;border-top:1px solid #f0f0f0;padding-top:10px">' +
+    '<div class="between small"><span class="strong">การจัดเก็บถาวร</span><b id="persist" class="' + (per ? 'okText' : st && st.persisted === false ? 'dangerText' : '') + '">' + (!st ? 'กำลังตรวจสอบ' : st.persisted == null ? 'ไม่รองรับ' : per ? 'เปิดใช้แล้ว' : 'ยังไม่เปิดใช้') + '</b></div>' +
+    '<div class="between small"><span class="strong">ติดตั้งบนหน้าจอโฮม</span><b class="' + (inst ? 'okText' : 'dangerText') + '">' + (inst ? 'ติดตั้งแล้ว' : 'ยังไม่ติดตั้ง') + '</b></div>' +
+    '<div class="between small"><span class="strong">ข้อมูลที่เปิดไม่ได้</span><b class="' + (und ? 'dangerText' : 'strong') + '">' + (und ? fmt(und) + ' รายการ' : 'ไม่มี') + '</b></div>' +
+    (und ? '<span class="small dangerText" style="font-weight:600">มีข้อมูล ' + fmt(und) + ' รายการที่ถอดรหัสไม่ได้ ระบบเก็บไว้ ไม่ได้ลบ ให้กู้คืนจากไฟล์สำรองล่าสุด หากยังไม่หาย แจ้งผู้ดูแลระบบ</span>' : '') +
+    (!per && st && st.persisted === false ? '<span class="hint">ติดตั้งแอปบนหน้าจอโฮม แล้วเปิดจากไอคอนทุกครั้ง เพื่อลดโอกาสที่เครื่องจะลบข้อมูลเอง</span>' : '') + '</div>';
+  return '<section class="card stack" style="gap:12px" aria-label="พื้นที่จัดเก็บในเครื่องนี้">' + head + use + warn + grid + rows + '</section>';
+}
+function bakCard() {
+  var st = Store.state, all = !!S.ui.bAllPhotos;
+  return '<section class="card stack" style="gap:10px;border:1.5px solid var(--accent)" aria-labelledby="bkc"><h2 id="bkc" style="font-size:17px">สำรองข้อมูล</h2><div class="between small"><span>สำรองล่าสุด</span><b class="strong">' + (st.lastBackup ? be(st.lastBackup) + ' · ' + agoText(st.lastBackup) : 'ยังไม่เคยสำรอง') + '</b></div>' +
+    '<div class="field"><label for="bp">รหัสผ่านไฟล์สำรอง (อย่างน้อย 8 ตัวอักษร)</label><input id="bp" class="inp" type="password" autocomplete="new-password" data-bind-ui="bpass" value="' + esc(S.ui.bpass || '') + '"><div id="bp-m" aria-live="polite">' + pwMeter(S.ui.bpass) + '</div></div>' +
+    '<div class="between"><span id="bap" class="small strong" style="font-weight:400">รวมรูปทุก Lead (ใช้เมื่อย้ายเครื่อง)<br><span class="small" style="color:var(--text)">ไฟล์ประมาณ ' + bakSizeText(all) + '</span></span><button type="button" class="switch" role="switch" aria-labelledby="bap" aria-checked="' + all + '" data-act="bphotos"></button></div>' +
+    '<button class="btn primary block" data-act="backup">สำรองตอนนี้</button>' +
+    '<span class="hint">เมื่อสร้างไฟล์แล้ว เลือกบันทึกไปที่ iCloud Drive, OneDrive หรือ Google Drive หากลืมรหัสผ่านจะเปิดไฟล์ไม่ได้</span></section>';
+}
+function rsCard() {
+  return '<section class="card stack" style="gap:10px" aria-labelledby="rsc"><h2 id="rsc" style="font-size:17px">กู้คืนจากไฟล์สำรอง</h2><span class="small strong" style="font-weight:400">เลือกไฟล์ .json จาก iCloud Drive, OneDrive, Google Drive หรือในเครื่อง ข้อมูลเดิมในเครื่องไม่ถูกลบ รายการที่มีอยู่แล้วจะข้าม</span>' +
+    '<label class="btn block" style="position:relative">' + icon('upload', 18) + ' เลือกไฟล์สำรอง<input type="file" accept=".json,.txt,application/json,text/plain" data-restore="1" style="position:absolute;inset:0;opacity:0" aria-label="เลือกไฟล์สำรองเพื่อกู้คืน จาก iCloud Drive OneDrive Google Drive หรือไฟล์ในเครื่อง"></label>' +
+    '<details class="fold"><summary>ย้ายไปเครื่องใหม่</summary><ol class="small" style="margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px"><li>เครื่องเดิม: เปิด "รวมรูปทุก Lead" แล้วกด "สำรองตอนนี้" บันทึกไฟล์ขึ้น iCloud Drive / OneDrive / Google Drive</li><li>เครื่องใหม่: เปิดแอป ตั้งค่าด้วย Emp ID เดิม (ตั้ง PIN ใหม่ได้)</li><li>เมนู → สำรองข้อมูล → เลือกไฟล์สำรอง แล้วใส่รหัสผ่านไฟล์</li><li>ตรวจว่า Lead ครบ แล้วจึงลบแอปในเครื่องเดิม</li></ol></details></section>';
+}
+
+/* ---------- จัดการพื้นที่และลบข้อมูล ---------- */
+var PG = [['lost', 'ไม่ได้งาน'], ['won', 'ได้งานและส่งมอบครบแล้ว'], ['hold', 'เลื่อน/ระงับ']];
+function pgGroup(p) { return p.status === ST.LOST ? 'lost' : p.status === ST.WON && (!hasBuiltin(p) || delivStep(p) > 6) ? 'won' : p.status === ST.HOLD ? 'hold' : ''; }
+function lastActOf(p, lastF) { var d = [p.recordDate || '', p.stageAt || '', lastF[p.id] || ''], dl = p.delivery || {}; for (var i = 1; i <= 6; i++) if (typeof dl['d' + i] === 'string') d.push(dl['d' + i]); if (typeof dl.install === 'string') d.push(dl.install); return d.sort().pop(); }
+function purgePlan() {
+  var m = S.ui.pgAge == null ? 6 : S.ui.pgAge, sel = S.ui.pg || (S.ui.pg = { lost: true, won: true, hold: false }), cut = m ? addMonthsDate(todayISO(), -m) : '';
+  var lastF = {}; liveFollows().forEach(function (f) { if ((f.date || '') > (lastF[f.projectId] || '')) lastF[f.projectId] = f.date; });
+  var base = {}, full = {}, cand = [];
+  liveProjects().forEach(function (p) {
+    var k = pgGroup(p), ok = k && (p.photos || []).length && (!m || lastActOf(p, lastF) < cut);
+    if (ok) { cand.push({ p: p, k: k }); if (!sel[k]) (p.photos || []).forEach(function (x) { full[x] = 1; }); }
+    else (p.photos || []).forEach(function (x) { base[x] = 1; full[x] = 1; });
+  });
+  var g = {}, plan = { groups: g, sel: {}, items: [], photos: 0, leads: 0, bytes: 0, months: m };
+  PG.forEach(function (x) { g[x[0]] = { leads: 0, photos: 0, bytes: 0 }; plan.sel[x[0]] = 0; });
+  function sz(x) { return (S.st && S.st.sizes[x]) || 0; }
+  cand.forEach(function (c) {
+    var shown = c.p.photos.filter(function (x) { return !base[x]; }); if (shown.length) { var G = g[c.k]; G.leads++; G.photos += shown.length; G.bytes += shown.reduce(function (s, x) { return s + sz(x); }, 0); }
+    if (!sel[c.k]) return;
+    var inBak = {}; (Store.state.fullBakPhotos || []).forEach(function (x) { inBak[x] = 1; });
+    var ids = c.p.photos.filter(function (x) { return !full[x] && (!fullBakToday() || inBak[x]); }); if (!ids.length) return;
+    plan.items.push({ p: c.p, ids: ids }); plan.photos += ids.length; plan.leads++; plan.sel[c.k] += ids.length; plan.bytes += ids.reduce(function (s, x) { return s + sz(x); }, 0);
+  });
+  return plan;
+}
+function fullBakToday() { var b = Store.state.lastBackupFull; return !!b && tsDay(b) === todayISO(); }
+function monthRows() {
+  var cur = curMonth(), ms = dataMonths().filter(function (ym) { return ym < cur; }).reverse().slice(0, 6);
+  if (!ms.length) return '<span class="small">ยังไม่มีเดือนที่ผ่านมา</span>';
+  return ms.map(function (ym) {
+    var rec = monthRec(ym), sub, cls = '', btn = '';
+    if (rec && rec.archived) { sub = 'เก็บเข้าไฟล์และล้างแล้ว ' + (rec.archivedCount || 0) + ' ราย'; cls = 'okText'; }
+    else if (!rec || !rec.closed) { sub = 'ยังไม่ปิดงวด'; btn = '<a class="btn small" href="#/month/' + ym + '">ไปปิดงวด</a>'; }
+    else if (ym > addMonths(cur, -2)) sub = 'ล้างได้เมื่อเก่ากว่า 2 เดือน';
+    else if (!exportedAfterClose(rec)) { sub = 'ต้องส่งออก Excel หลังปิดงวดก่อน'; btn = '<a class="btn small" href="#/month/' + ym + '">ไปส่งออก</a>'; }
+    else { var n = archivable(ym).projects.length; if (n) { sub = n + ' ราย · พร้อมล้าง'; cls = 'okText'; btn = '<a class="btn small danger" href="#/month/' + ym + '">ล้างเดือนนี้</a>'; } else sub = 'ไม่มี Lead ที่จบแล้วให้ล้าง'; }
+    return '<div class="between" style="border-top:1px solid #f0f0f0;padding-top:10px"><span><b class="strong">' + monthName(ym) + '</b><br><span class="small ' + cls + '">' + sub + '</span></span>' + btn + '</div>';
+  }).join('');
+}
+function vManage() {
+  var st = Store.state, pl = purgePlan(), sel = S.ui.pg, full = fullBakToday();
+  var gate = full ? '<div class="card okc between"><span><b class="okText">สำรองแบบรวมรูปแล้ววันนี้</b><br><span class="small">' + new Date(st.lastBackupFull).toTimeString().slice(0, 5) + ' น. · ลบรูปได้</span></span></div>'
+    : '<div class="card warn between"><span><b class="strong">สำรองข้อมูลก่อนลบ</b><br><span class="small strong" style="font-weight:400">' + (st.lastBackup ? 'สำรองล่าสุด ' + agoText(st.lastBackup) : 'ยังไม่เคยสำรองข้อมูล') + ' ข้อมูลที่ลบแล้วกู้คืนได้จากไฟล์สำรองเท่านั้น</span></span><button class="btn small primary" style="flex-shrink:0" data-act="pgbak">สำรองตอนนี้</button></div>';
+  var opts = PG.map(function (x) { var G = pl.groups[x[0]], on = !!sel[x[0]]; return '<label class="pgopt' + (on ? ' on' : '') + '"><input type="checkbox" data-pg="' + x[0] + '"' + (on ? ' checked' : '') + '><span class="lt"><b class="strong">' + x[1] + '</b><small>' + fmt(G.leads) + ' ราย · ' + fmt(G.photos) + ' รูป</small></span><b class="strong small">' + (S.st ? fmtBytes(G.bytes) : '') + '</b></label>'; }).join('');
+  var ages = [[0, 'ทั้งหมด'], [3, '3 เดือน'], [6, '6 เดือน'], [12, '12 เดือน']].map(function (a) { return '<button type="button" data-act="pgage" data-v="' + a[0] + '" aria-pressed="' + (pl.months === a[0]) + '">' + a[1] + '</button>'; }).join('');
+  var body = '<div class="stack">' + gate +
+    '<section class="card stack" style="gap:12px" aria-labelledby="pgh2"><div><h2 id="pgh2" style="font-size:17px">ลบรูปเพื่อคืนพื้นที่</h2><span class="small">ลบเฉพาะรูป ข้อมูล Lead การติดตาม และ SO ยังอยู่ครบ</span></div>' +
+    '<fieldset class="pgset"><legend class="small strong" style="font-weight:600;margin-bottom:6px">รูปของ Lead ที่</legend>' + opts + '<span class="hint">รูปของ Lead ที่ยังติดตามอยู่ ลบได้ทีละรูปจากหน้าแก้ไข Lead</span></fieldset>' +
+    '<div class="field"><span id="age-l" class="small strong" style="font-weight:600">จบงานมานานกว่า</span><div class="seg" style="grid-template-columns:repeat(4,1fr)" role="group" aria-labelledby="age-l">' + ages + '</div><span class="hint">นับจากวันที่มีการติดตาม เปลี่ยนสถานะ หรือส่งมอบครั้งล่าสุด</span></div>' +
+    '<div class="ex between"><span>จะลบ <b class="strong">' + fmt(pl.photos) + ' รูป</b> จาก ' + fmt(pl.leads) + ' ราย</span><b class="strong">' + (S.st ? 'คืนประมาณ ' + fmtBytes(pl.bytes) : '') + '</b></div>' +
+    '<button class="btn danger block" data-act="pgdel"' + (pl.photos ? '' : ' disabled') + '>ลบรูปที่เลือก</button></section>' +
+    '<section class="card stack" style="gap:10px" aria-labelledby="mo-h"><div><h2 id="mo-h" style="font-size:17px">ล้างข้อมูลเก่ารายเดือน</h2><span class="small">ย้าย Lead ที่จบแล้วของเดือนที่ปิดงวดออกเป็นไฟล์เข้ารหัส แล้วลบออกจากเครื่อง ยอดสรุปของเดือนยังแสดงในแอป</span></div>' + monthRows() + '<a class="small strong" href="#/months" style="font-weight:600">ดูประวัติรายเดือนทั้งหมด</a></section>' +
+    '<section class="card stack" style="gap:4px" aria-labelledby="one-h"><h2 id="one-h" style="font-size:17px">ลบ Lead ทีละราย</h2><span class="small">เปิดหน้า Lead แล้วกดเมนู "เพิ่มเติม" เลือก "ลบ Lead" การติดตาม SO และรูปของ Lead นั้นจะถูกลบด้วย</span></section>' +
+    '<section class="card alert stack" style="gap:10px;margin-top:8px" aria-labelledby="all-h"><div><h2 id="all-h" style="font-size:17px" class="dangerText">ล้างข้อมูลทั้งหมดของผู้ใช้นี้</h2><span class="small strong" style="font-weight:400">ใช้เมื่อย้ายเครื่องเสร็จแล้วหรือคืนเครื่อง Lead การติดตาม SO และรูปทั้งหมดของผู้ใช้นี้จะถูกลบถาวร ข้อมูลของผู้ใช้อื่นในเครื่องไม่ถูกลบ</span></div><button class="btn danger block" data-act="wipe">ล้างข้อมูลทั้งหมด</button></section>' +
+    '</div>';
+  return shell({ title: 'จัดการพื้นที่และลบข้อมูล', back: '#/data' }, body);
+}
+function openPurge() {
+  var pl = purgePlan(), full = fullBakToday(); if (!pl.photos) return;
+  var rows = PG.filter(function (x) { return pl.sel[x[0]]; }).map(function (x) { return '<div class="between small"><span>Lead ' + x[1] + '</span><b class="strong">' + fmt(pl.sel[x[0]]) + ' รูป</b></div>'; }).join('');
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="pgh" data-pgs="1"><div class="sheet"><div class="grab"></div><h2 id="pgh" style="font-size:18px">ยืนยันการลบรูป</h2>' +
+    '<div class="card stack" style="background:#f6f6f6;border:0;gap:6px">' + rows + '<div class="between small"><span>จบงานมานานกว่า</span><b class="strong">' + (pl.months ? pl.months + ' เดือน' : 'ทุกช่วงเวลา') + '</b></div><div class="between" style="border-top:1px solid #e2e2e2;padding-top:6px;flex-wrap:wrap"><b class="strong">รวม ' + fmt(pl.photos) + ' รูป จาก ' + fmt(pl.leads) + ' ราย</b><b class="strong">' + (S.st ? 'คืนประมาณ ' + fmtBytes(pl.bytes) : '') + '</b></div></div>' +
+    (full ? '<div class="card okc"><b class="okText">สำรองแบบรวมรูปแล้ว</b> <span class="small">วันนี้ ' + new Date(Store.state.lastBackupFull).toTimeString().slice(0, 5) + ' น.</span></div>'
+      : '<div class="card alert stack" style="gap:8px;background:#fff0f0"><b class="dangerText">ต้องสำรองแบบรวมรูปทุก Lead ก่อน</b><span class="small strong" style="font-weight:400">ไฟล์สำรองแบบปกติไม่มีรูปของ Lead ที่จบแล้ว หากลบตอนนี้จะกู้รูปเหล่านี้คืนไม่ได้</span><button class="btn primary block" data-act="pgbak">สำรองแบบรวมรูปตอนนี้</button></div>') +
+    '<label class="row small strong" style="align-items:flex-start;gap:12px;cursor:pointer;font-weight:400"><input type="checkbox" id="pg-ok" style="width:22px;height:22px;accent-color:var(--accent);margin:0;flex-shrink:0"><span>เข้าใจแล้วว่ารูปที่ลบ กู้คืนได้จากไฟล์สำรองแบบรวมรูปเท่านั้น</span></label><span id="pg-e" class="errmsg" role="alert"></span>' +
+    '<div class="grid2"><button class="btn" data-act="pgclose">ยกเลิก</button><button class="btn danger" data-act="pgrun"' + (full ? '' : ' disabled') + '>ลบ ' + fmt(pl.photos) + ' รูป</button></div></div></div>';
+  var f = $(full ? '#pg-ok' : '[data-act=pgbak]'); if (f) f.focus();
+}
+function runPurge() {
+  var ok = $('#pg-ok'); if (!ok || !ok.checked) { var e = $('#pg-e'); if (e) e.textContent = 'กรุณาติ๊กยืนยันก่อนลบ'; return; }
+  if (!fullBakToday() || S.pgBusy) return;
+  var pl = purgePlan(); if (!pl.photos) return;
+  S.pgBusy = true; var b = $('[data-act=pgrun]'); if (b) { b.disabled = true; b.textContent = 'กำลังลบ…'; }
+  var seq = Promise.resolve(), n = 0;
+  pl.items.forEach(function (it) {
+    seq = seq.then(function () {
+      var del = {}; it.ids.forEach(function (x) { del[x] = 1; });
+      var cp = Object.assign({}, it.p, { photos: (it.p.photos || []).filter(function (x) { return !del[x]; }), photosPurged: (it.p.photosPurged || 0) + it.ids.length, photosPurgedAt: nowISO(), synced: false });
+      return Store.save(cp, true).then(function () { return Promise.all(it.ids.map(function (x) { return Store.delPhoto(x); })); }).then(function () { n += it.ids.length; });
+    });
+  });
+  var end = function (msg) { S.pgBusy = false; S.st = null; $('#modal').innerHTML = ''; toast(msg); rerender(); };
+  seq.then(function () { end('ลบรูปแล้ว ' + fmt(n) + ' รูป'); }, function () { end('ลบได้ ' + fmt(n) + ' รูป ส่วนที่เหลือลบไม่สำเร็จ'); });
+}
+
+/* ---------- กู้คืน: เลือกไฟล์ → ใส่รหัสผ่าน → ตรวจไฟล์ → กู้คืน ---------- */
+var RS_KINDS = ['project', 'follow', 'sale', 'month', 'quote'];
+function rsValidRec(r) { return !!r && typeof r.id === 'string' && /^[\w-]{1,64}$/.test(r.id) && RS_KINDS.indexOf(r.kind) >= 0; }
+function rsValidPh(ph) { return !!ph && typeof ph.id === 'string' && /^[\w-]{1,64}$/.test(ph.id) && typeof ph.b64 === 'string' && /^image\/(jpeg|png|webp)$/.test(ph.mime || ''); }
+function readBackup(file, pw) {
+  if (file.size > 1024 * 1024 * 1024) return Promise.reject('size');
+  return file.text().then(function (txt) {
+    var f; try { f = JSON.parse(txt); } catch (e) { throw 'format'; }
+    if (!f || f.format !== 'ps-tracker-backup' || !f.kdf) throw 'format';
+    var it = +f.kdf.iter; if (!(it >= 100000 && it <= 2000000)) throw 'format';
+    var salt, iv, ctb; try { salt = unb64(f.kdf.salt); iv = unb64(f.iv); ctb = unb64(f.ct); } catch (x) { throw 'format'; }
+    return Cx.derive(pw, salt, it).then(function (k) { return Cx.decJSON(k, iv, ctb); }).then(function (data) {
+      return { meta: { schema: +f.schema || 0, createdAt: typeof f.createdAt === 'string' ? f.createdAt : '', appVersion: clean(f.appVersion, 20), empId: clean(f.empId, 20), kind: f.kind === 'archive' ? 'archive' : 'backup', month: /^\d{4}-\d{2}$/.test(f.month || '') ? f.month : '', name: file.name, size: file.size }, data: data && typeof data === 'object' ? data : {} };
+    }, function () { throw 'pw'; });
+  });
+}
+function restorePlan(pkg) {
+  var d = pkg.data, have = {}, c = {}, recs = [], relink = [], bad = 0, ref = {};
+  Store.all().forEach(function (r) { have[r.id] = r; });
+  RS_KINDS.forEach(function (k) { c[k] = { inFile: 0, add: 0, skip: 0 }; });
+  (Array.isArray(d.records) ? d.records : []).forEach(function (r) {
+    if (!rsValidRec(r)) { bad++; return; }
+    var x = c[r.kind], cur = have[r.id]; x.inFile++;
+    if (cur) { x.skip++; if (r.kind === 'project' && cur.photosPurged && Array.isArray(r.photos) && r.photos.length) relink.push({ cur: cur, ids: r.photos.filter(function (id) { return typeof id === 'string'; }).slice(0, 6) }); }
+    else { x.add++; recs.push(r); have[r.id] = r; if (r.kind === 'project' && Array.isArray(r.photos)) r.photos.forEach(function (id) { ref[id] = 1; }); }
+  });
+  relink.forEach(function (x) { x.ids.forEach(function (id) { ref[id] = 1; }); });
+  Store.projects.forEach(function (p) { if (!p.deleted) (p.photos || []).forEach(function (id) { ref[id] = 1; }); });
+  var phs = (Array.isArray(d.photos) ? d.photos : []).filter(rsValidPh).slice(0, 50000);
+  return DB.tx('photos', 'readonly', function (s) { return s.getAllKeys(); }).then(function (keys) {
+    var hk = {}, inF = {}; (keys || []).forEach(function (k) { hk[k] = 1; }); phs.forEach(function (p) { inF[p.id] = 1; });
+    var newPh = phs.filter(function (p) { return !hk[p.id] && ref[p.id]; });
+    relink = relink.map(function (x) { return { cur: x.cur, ids: x.ids.filter(function (id) { return inF[id] || hk[id]; }) }; }).filter(function (x) { return x.ids.length; });
+    var bid = (d.state && d.state.profile && d.state.profile.empId) || (d.profile && d.profile.empId) || pkg.meta.empId || ((Array.isArray(d.records) ? d.records : []).filter(function (r) { return r && r.empId; })[0] || {}).empId || '';
+    var need = newPh.reduce(function (s, p) { return s + p.b64.length * 0.75; }, 0) + recs.length * 900;
+    return { c: c, recs: recs, photos: newPh, phIn: phs.length, relink: relink, bad: bad, need: need, bid: clean(String(bid), 20), state: d.state && typeof d.state === 'object' ? d.state : {} };
+  });
+}
+function openRestoreAsk(file, err) {
+  S.rfile = file;
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="rsh" data-rs="1"><div class="sheet"><div class="grab"></div><h2 id="rsh" style="font-size:18px">กู้คืนจากไฟล์สำรอง</h2><span class="small">' + esc(file.name) + ' · ' + fmtBytes(file.size) + '</span>' +
+    '<div class="field"><label for="rs-p">รหัสผ่านไฟล์สำรอง</label><input id="rs-p" class="inp" type="password" autocomplete="current-password"' + (err ? ' aria-invalid="true" aria-describedby="rs-e"' : '') + '>' + (err ? '<span id="rs-e" class="errmsg" role="alert">' + esc(err) + '</span>' : '') + '</div>' +
+    '<div class="grid2"><button class="btn" data-act="rsclose">ยกเลิก</button><button class="btn primary" data-act="rscheck">ตรวจไฟล์</button></div></div></div>';
+  var f = $('#rs-p'); if (f) f.focus();
+}
+function checkRestore() {
+  var file = S.rfile, pw = ($('#rs-p') || {}).value || ''; if (!file || S.rBusy) return;
+  if (pw.length < 8) { openRestoreAsk(file, 'รหัสผ่านไฟล์สำรองมีอย่างน้อย 8 ตัวอักษร'); return; }
+  var b = $('[data-act=rscheck]'); if (b) { b.disabled = true; b.textContent = 'กำลังตรวจไฟล์…'; }
+  S.rBusy = true;
+  readBackup(file, pw).then(function (pkg) { S.rpkg = pkg; return Promise.all([restorePlan(pkg), storageScan().catch(function () { return null; })]); }).then(function (r) { S.rBusy = false; S.rplan = r[0]; openRestorePreview(); }, function (e) {
+    S.rBusy = false; openRestoreAsk(file, e === 'size' ? 'ไฟล์ใหญ่เกินไป (เกิน 1 GB)' : e === 'format' ? 'ไฟล์นี้ไม่ใช่ไฟล์สำรองของ PS Tracker หรือไฟล์เสียหาย' : e === 'pw' ? 'รหัสผ่านไม่ถูกต้อง' : 'ตรวจไฟล์ไม่สำเร็จ ลองใหม่อีกครั้ง');
+  });
+}
+function openRestorePreview() {
+  var pk = S.rpkg, pl = S.rplan; if (!pk || !pl) return;
+  var me = P().empId || '', same = !pl.bid || normEmp(pl.bid) === normEmp(me), other = !same && empTaken(pl.bid, S.user && S.user.id);
+  var st = S.st, free = st && st.quota != null && st.usage != null ? st.quota - st.usage : null, noSpace = free != null && pl.need > free;
+  var c = pl.c, so = { inFile: c.sale.inFile + c.quote.inFile, add: c.sale.add + c.quote.add, skip: c.sale.skip + c.quote.skip };
+  var adds = pl.recs.length + pl.photos.length + pl.relink.length;
+  function tr(l, x) { return '<tr><th scope="row">' + l + '</th><td>' + fmt(x.inFile) + '</td><td><b class="strong">' + fmt(x.add) + '</b></td><td>' + fmt(x.skip) + '</td></tr>'; }
+  var emp = !pl.bid ? '<div class="between small"><span>Emp ID ในไฟล์</span><b class="strong">ไม่ระบุ (ไฟล์รุ่นเก่า)</b></div>' : same ? '<div class="between small"><span>Emp ID ในไฟล์</span><b class="okText">' + icon('check', 16) + ' ' + esc(pl.bid) + ' ตรงกับบัญชีนี้</b></div>'
+    : other ? '<div class="card alert small" style="background:#fff0f0"><b class="dangerText">ไฟล์นี้เป็นของ Emp ID ' + esc(pl.bid) + ' (' + esc(other.label || '') + ')</b> ซึ่งมีบัญชีในเครื่องนี้แล้ว ให้กู้คืนในบัญชีของคนนั้น</div>'
+    : '<div class="card warn small"><b class="strong">ไฟล์นี้เป็นของ Emp ID ' + esc(pl.bid) + '</b> แต่ผู้ใช้ปัจจุบันคือ ' + esc(me) + ' ถ้ากู้คืน ข้อมูลจะรวมเข้ากับบัญชีนี้ ควรเพิ่มผู้ใช้ใหม่ในเครื่อง แล้วกู้คืนในบัญชีนั้นแทน</div>';
+  var newer = pk.meta.schema > SCHEMA_VERSION;
+  var label = !adds ? '' : !same ? 'กู้คืนเข้าบัญชีนี้' : c.project.add ? 'กู้คืน ' + fmt(c.project.add) + ' ราย' : 'กู้คืน ' + fmt(adds) + ' รายการ';
+  var act = !adds ? '<div class="card okc small"><b class="okText">ข้อมูลในไฟล์มีอยู่ในเครื่องครบแล้ว</b> ไม่มีรายการให้เพิ่ม</div><button class="btn block" data-act="rsclose">ปิด</button>'
+    : '<div class="grid2"><button class="btn" data-act="rsclose">ยกเลิก</button><button class="btn primary" data-act="rsapply"' + (other || noSpace || newer ? ' disabled' : '') + '>' + label + '</button></div>';
+  $('#modal').innerHTML = '<div class="modalbg bottom" role="dialog" aria-modal="true" aria-labelledby="rsh" data-rs="1"><div class="sheet"><div class="grab"></div><h2 id="rsh" style="font-size:18px">ตรวจไฟล์ก่อนกู้คืน</h2>' +
+    '<div class="stack small" style="gap:4px"><div class="between"><span>ไฟล์</span><b class="strong" style="text-align:right;word-break:break-all">' + esc(pk.meta.name) + '</b></div><div class="between"><span>สร้างเมื่อ</span><b class="strong">' + (pk.meta.createdAt ? be(pk.meta.createdAt) + ' ' + new Date(pk.meta.createdAt).toTimeString().slice(0, 5) : '-') + (pk.meta.appVersion ? ' · เวอร์ชัน ' + esc(pk.meta.appVersion) : '') + '</b></div>' + (pk.meta.kind === 'archive' && pk.meta.month ? '<div class="between"><span>ประเภทไฟล์</span><b class="strong">ไฟล์เก็บข้อมูลเดือน ' + monthName(pk.meta.month) + '</b></div>' : '') + emp + '</div>' +
+    '<div class="tblwrap"><table class="rstbl"><caption class="sr">สรุปข้อมูลในไฟล์สำรอง</caption><thead><tr><th scope="col">ข้อมูล</th><th scope="col">ในไฟล์</th><th scope="col">เพิ่มใหม่</th><th scope="col">มีแล้ว ข้าม</th></tr></thead><tbody>' +
+    tr('Lead', c.project) + tr('การติดตาม', c.follow) + tr('SO และใบเสนอราคา', so) + tr('รูป', { inFile: pl.phIn, add: pl.photos.length, skip: Math.max(0, pl.phIn - pl.photos.length) }) + '</tbody></table></div>' +
+    (pl.relink.length ? '<span class="small">เชื่อมรูปกลับให้ Lead ที่เคยลบรูปเพื่อคืนพื้นที่ ' + fmt(pl.relink.length) + ' ราย</span>' : '') +
+    (pl.bad ? '<span class="small">ข้ามรายการที่รูปแบบไม่ถูกต้อง ' + fmt(pl.bad) + ' รายการ</span>' : '') +
+    '<span class="hint">ข้อมูลที่มีอยู่ในเครื่องจะไม่ถูกลบหรือแก้ไข ต้องใช้พื้นที่ประมาณ ' + fmtBytes(pl.need) + (free != null ? ' (ว่างอยู่ ' + fmtBytes(free) + ')' : '') + '</span>' +
+    (newer ? '<span class="errmsg" role="alert">ไฟล์นี้มาจากแอปเวอร์ชันใหม่กว่าเครื่องนี้' + (pk.meta.appVersion ? ' (' + esc(pk.meta.appVersion) + ')' : '') + ' ปิดแอปแล้วเปิดใหม่เพื่ออัปเดตก่อนกู้คืน</span>' : '') +
+    (noSpace ? '<span class="errmsg" role="alert">พื้นที่ในเครื่องไม่พอ ลบรูปหรือแอปอื่นในมือถือก่อน แล้วลองใหม่</span>' : '') +
+    '<div id="rs-act">' + act + '</div></div></div>';
+  var f = $('[data-act=rsapply]') || $('[data-act=rsclose]'); if (f) f.focus();
+}
+function applyRestore() {
+  var pl = S.rplan; if (!pl || S.rBusy) return; S.rBusy = true;
+  var total = pl.recs.length + pl.photos.length + pl.relink.length || 1, done = 0, added = 0, box = $('#rs-act');
+  if (box) box.innerHTML = '<div class="stack" style="gap:6px"><div class="between small"><b class="strong">กำลังกู้คืน</b><b class="strong" id="rs-pct">ร้อยละ 0</b></div><div class="meter" id="rs-bar" role="progressbar" aria-label="ความคืบหน้าการกู้คืน" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div style="width:0%"></div></div><span class="small strong" style="font-weight:400">อย่าปิดแอประหว่างกู้คืน หากถูกปิด ให้กู้คืนไฟล์เดิมซ้ำได้ รายการที่เข้าแล้วจะข้าม</span></div>';
+  function tick() { done++; if (done % 20 && done !== total) return; var p = Math.min(100, Math.round(done / total * 100)), b = $('#rs-bar'), t = $('#rs-pct'); if (b) { b.setAttribute('aria-valuenow', p); b.firstChild.style.width = p + '%'; } if (t) t.textContent = 'ร้อยละ ' + p; }
+  var seq = Promise.resolve();
+  for (var i = 0; i < pl.photos.length; i += 10) (function (chunk) { seq = seq.then(function () { return Promise.all(chunk.map(function (ph) { var by; try { by = unb64(ph.b64); } catch (x) { tick(); return null; } return Cx.enc(Cx.key, by).then(function (e) { return DB.put('photos', { id: ph.id, mime: ph.mime, iv: e.iv, ct: e.ct }); }).then(tick); })); }); })(pl.photos.slice(i, i + 10));
+  pl.recs.forEach(function (r) { seq = seq.then(function () { return Store.save(sanitizeRec(r, 0), true); }).then(function () { added++; tick(); }); });
+  pl.relink.forEach(function (x) { seq = seq.then(function () { var cp = x.cur, s = {}; cp.photos = cp.photos || []; cp.photos.forEach(function (id) { s[id] = 1; }); x.ids.forEach(function (id) { if (!s[id] && cp.photos.length < 6) { cp.photos.push(id); s[id] = 1; } }); cp.photosPurged = 0; cp.photosPurgedAt = ''; cp.synced = false; return Store.save(cp, true); }).then(tick); });
+  seq.then(function () {
+    var st = Store.state, b = pl.state || {};
+    if (O().version === 'default' && b.options) st.options = migrateState({ options: b.options }).options;
+    if (b.settings && b.settings.targets) Object.keys(b.settings.targets).forEach(function (m) { if (st.settings.targets[m] == null) st.settings.targets[m] = b.settings.targets[m]; });
+    st.counter = Math.max(st.counter || 0, +b.counter || 0);
+    return Store.saveState();
+  }).then(migrateRecords).then(function () {
+    S.rBusy = false; S.rplan = null; S.rpkg = null; S.rfile = null; S.st = null; $('#modal').innerHTML = '';
+    toast('กู้คืนแล้ว ' + fmt(added) + ' รายการ' + (pl.photos.length ? ' · รูป ' + fmt(pl.photos.length) + ' รูป' : '')); rerender();
+  }).catch(function (e) {
+    S.rBusy = false; S.st = null; var q = e && e.name === 'QuotaExceededError';
+    var bx = $('#rs-act'); if (bx) bx.innerHTML = '<div class="card alert stack" style="gap:6px;background:#fff0f0"><b class="dangerText">กู้คืนไม่ครบ (' + fmt(added) + ' รายการเข้าแล้ว)</b><span class="small strong" style="font-weight:400">' + (q ? 'พื้นที่ในเครื่องเต็ม ลบรูปหรือแอปอื่นในมือถือก่อน ' : '') + 'ข้อมูลที่เข้าแล้วยังอยู่ กู้คืนไฟล์เดิมซ้ำได้ รายการที่เข้าแล้วจะข้าม</span><button class="btn block" data-act="rsclose">ปิด</button></div>';
+  });
+}
+function weakPin(p) {
+  if (/^(\d)\1{5}$/.test(p) || /^(\d\d)\1\1$/.test(p) || /^(\d\d\d)\1$/.test(p) || /^(\d)\1\1(\d)\2\2$/.test(p) || /^(\d)\1(\d)\2(\d)\3$/.test(p)) return true;
+  if ('0123456789012'.indexOf(p) >= 0 || '9876543210987'.indexOf(p) >= 0) return true;
+  return ['147258', '258369', '159753', '789456', '456123', '102030', '520520', '010203'].indexOf(p) >= 0;
+}
+(function () {
+  var m = document.getElementById('modal'); if (!m || !window.MutationObserver) return;
+  new MutationObserver(function (list) { var added = list.some(function (r) { return r.addedNodes && r.addedNodes.length; }); if (added) m.dataset.route = location.hash; if (!m.firstChild) delete m.dataset.route; }).observe(m, { childList: true });
+  window.addEventListener('hashchange', function () { if (!m.firstChild || S.bakBusy || S.rBusy || S.pgBusy || S.pinBusy) return; if (m.dataset.route !== location.hash) { m.innerHTML = ''; S.busyUntil = 0; } });
+})();
 function wipeAll() { Cx.key = null; Store.reset(); var u = S.user; (u ? DIR.del(u.id) : Promise.resolve()).catch(function () { }).then(function () { return DB.destroy(); }).then(function () { location.hash = ''; location.reload(); }); }
 
 /* ---------------- auth ---------------- */
 function onboard() {
   var d = S.draft, e = {}, p1 = $('#o-p1').value, p2 = $('#o-p2').value;
   if (!clean(d.empId)) e.empId = 'กรุณาใส่ Emp ID'; else if (empTaken(d.empId)) e.empId = 'Emp ID นี้มีผู้ใช้ในเครื่องนี้แล้ว ให้กลับไปเลือกชื่อของตัวเองแล้วใส่ PIN'; if (!clean(d.name)) e.name = 'กรุณาใส่ชื่อ'; if (!clean(d.branch)) e.branch = 'กรุณาใส่สาขา';
-  if (!/^\d{6}$/.test(p1)) e.pin = 'PIN ต้องเป็นตัวเลข 6 หลัก'; else if (p1 !== p2) e.pin = 'PIN ทั้งสองช่องไม่ตรงกัน'; else if (/^(\d)\1{5}$/.test(p1) || p1 === '123456' || p1 === '654321') e.pin = 'PIN นี้เดาง่ายเกินไป';
+  if (!/^\d{6}$/.test(p1)) e.pin = 'PIN ต้องเป็นตัวเลข 6 หลัก'; else if (p1 !== p2) e.pin = 'PIN ทั้งสองช่องไม่ตรงกัน'; else if (weakPin(p1)) e.pin = 'PIN นี้เดาง่ายเกินไป เช่น เลขเรียงหรือเลขซ้ำ ให้ตั้งใหม่';
   S.ui.errors = e; if (Object.keys(e).length) { S.ui.focusErr = true; app.innerHTML = vOnboard(); return; }
   var btn = $('[data-act="onboard"]'); btn.disabled = true; btn.textContent = 'กำลังตั้งค่า…';
   var salt = crypto.getRandomValues(new Uint8Array(16)), nu = { id: uid(), empId: clean(d.empId, 20), label: firstName(d.name), createdAt: nowISO() };
@@ -3513,44 +3935,49 @@ function tryUnlock() {
     return Cx.derive(pin, a.salt, a.iter).then(function (k) { return Cx.decJSON(k, a.iv, a.ct).then(function () { return k; }); });
   }).then(function (k) {
     Cx.key = k; S.failed = 0; S.lockUntil = 0; return DB.put('meta', { n: 0, until: 0 }, 'lock').catch(function () { }).then(function () { return Store.load(); });
-  }).then(syncUserEntry).then(function () { touch(); S.route = ''; if (!location.hash || location.hash === '#') location.hash = '#/today'; render(); if (S.call && Date.now() - S.call.at < 7200000) setTimeout(openCall, 400); else S.call = null; }).catch(function (e) {
+  }).then(syncUserEntry).then(loadDraft).then(function () { touch(); askPersist(); S.route = ''; if (!location.hash || location.hash === '#') location.hash = '#/today'; render(); if (S.call && Date.now() - S.call.at < 7200000) setTimeout(openCall, 400); else S.call = null; }).catch(function (e) {
     if (e === 'locked') { render(); return; }
     Cx.key = null; Store.reset(); lk.n = (lk.n || 0) + 1;
     if (lk.n >= 5) { var dl = LOCK_STEPS[Math.min(LOCK_STEPS.length - 1, lk.n - 5)]; lk.until = Date.now() + dl; S.lockUntil = lk.until; setTimeout(render, dl + 500); }
     DB.put('meta', lk, 'lock').catch(function () { }).then(function () { render(); var m = $('#lockmsg'); if (m && S.lockUntil <= Date.now()) m.textContent = 'PIN ไม่ถูกต้อง' + (lk.n >= 3 ? ' (ผิด ' + lk.n + ' ครั้ง)' : ''); });
   });
 }
-function lockApp() { Cx.key = null; Store.reset(); S.draft = null; S.ui = {}; S.route = ''; S.sidx = null; $('#modal').innerHTML = ''; render(); }
+function lockApp() { if (Cx.key && S.draft && S.draftDirty && FORM_RE.test(location.hash)) draftWrite(Cx.key, location.hash, S.ui.step, S.draft, S.draftVer); S.drafts = null; clearTimeout(scheduleDraft._t); S.pendingDraft = null; Cx.key = null; Store.reset(); S.draft = null; S.ui = {}; S.route = ''; S.sidx = null; $('#modal').innerHTML = ''; render(); }
 function changePin(a, b) {
   if (!/^\d{6}$/.test(a)) { toast('PIN ต้องเป็นตัวเลข 6 หลัก'); return; }
   if (a !== b) { toast('PIN ทั้งสองช่องไม่ตรงกัน'); return; }
-  toast('กำลังเปลี่ยน PIN…');
+  if (weakPin(a)) { toast('PIN นี้เดาง่ายเกินไป เช่น เลขเรียงหรือเลขซ้ำ ให้ตั้งใหม่'); return; }
+  if (S.pinBusy) return; S.pinBusy = true;
+  $('#modal').innerHTML = '<div class="modalbg" role="alertdialog" aria-modal="true" aria-labelledby="pnh"><div class="modal"><h2 id="pnh" style="font-size:18px">กำลังเปลี่ยน PIN</h2><p style="margin:0">กำลังเข้ารหัสข้อมูลใหม่ทั้งหมด อย่าปิดแอป</p></div></div>';
   var salt = crypto.getRandomValues(new Uint8Array(16)), oldKey = Cx.key, newKey;
-  Cx.derive(a, salt, KDF_ITER).then(function (k) {
+  var draftsOld; Cx.derive(a, salt, KDF_ITER).then(function (k) {
     newKey = k;
+    return draftsRead(oldKey).then(function (all) { draftsOld = all; return k; });
+  }).then(function (k) {
     return DB.all('photos').then(function (ps) { return Promise.all(ps.map(function (p) { return Cx.dec(oldKey, p.iv, p.ct).then(function (b) { return Cx.enc(newKey, b); }).then(function (e) { p.iv = e.iv; p.ct = e.ct; return p; }); })); });
   }).then(function (photos) {
     Cx.key = newKey;
     var all = Store.all();
     return Promise.all(all.map(function (r) { return Cx.encJSON(newKey, r).then(function (e) { return { id: r.id, kind: r.kind, iv: e.iv, ct: e.ct }; }); })).then(function (recs) {
-      return Promise.all([Cx.encJSON(newKey, { ok: 'ps-tracker' }), Cx.encJSON(newKey, Store.state)]).then(function (v) {
+      return Promise.all([Cx.encJSON(newKey, { ok: 'ps-tracker' }), Cx.encJSON(newKey, Store.state), Cx.encJSON(newKey, draftsOld || {})]).then(function (v) {
         return new Promise(function (res, rej) {
           var t = DB.db.transaction(['meta', 'records', 'photos'], 'readwrite');
           recs.forEach(function (r) { t.objectStore('records').put(r); });
           photos.forEach(function (p) { t.objectStore('photos').put(p); });
           t.objectStore('meta').put({ salt: salt, iter: KDF_ITER, iv: v[0].iv, ct: v[0].ct, createdAt: nowISO() }, 'auth');
           t.objectStore('meta').put({ iv: v[1].iv, ct: v[1].ct }, 'vault');
+          if (draftsOld && Object.keys(draftsOld).length) t.objectStore('meta').put({ iv: v[2].iv, ct: v[2].ct }, 'draft'); else t.objectStore('meta').delete('draft');
           t.oncomplete = res; t.onerror = function () { rej(t.error); }; t.onabort = function () { rej(t.error); };
         });
       });
     });
-  }).then(function () { toast('เปลี่ยน PIN แล้ว'); rerender(); }).catch(function () { Cx.key = oldKey; toast('เปลี่ยน PIN ไม่สำเร็จ ใช้ PIN เดิมต่อได้'); });
+  }).then(function () { S.pinBusy = false; $('#modal').innerHTML = ''; toast('เปลี่ยน PIN แล้ว'); rerender(); }).catch(function () { S.pinBusy = false; $('#modal').innerHTML = ''; Cx.key = oldKey; toast('เปลี่ยน PIN ไม่สำเร็จ ใช้ PIN เดิมต่อได้'); });
 }
 
 /* ---------------- auto-lock ---------------- */
 setInterval(function () { if (Cx.key && Date.now() - S.lastActive > (Store.state ? Store.state.settings.autolock : 5) * 60000) lockApp(); }, 15000);
 document.addEventListener('visibilitychange', function () {
-  if (document.hidden) { S.hiddenAt = Date.now(); if (S.call) S.callHidden = true; }
+  if (document.hidden) { S.hiddenAt = Date.now(); if (S.call) S.callHidden = true; saveDraftNow(); }
   else if (Cx.key && S.hiddenAt && Date.now() - S.hiddenAt > (Store.state ? Store.state.settings.autolock : 5) * 60000) lockApp();
   else if (Cx.key && S.call && S.callHidden && Date.now() - S.call.at < 7200000) setTimeout(openCall, 400);
 });

@@ -1,6 +1,6 @@
 /* Project Sales Tracker · service worker
    เมื่ออัปเดตแอป ให้เปลี่ยนเลข CACHE ทุกครั้ง (เช่น v1.0.1) */
-var CACHE = 'ps-tracker-v1.14.0';
+var CACHE = 'ps-tracker-v1.18.0';
 var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
@@ -21,20 +21,30 @@ self.addEventListener('fetch', function (e) {
   var isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (!sameOrigin && !isFont) return;
 
-  // หน้าแอป: ดึงเวอร์ชันใหม่จากเน็ตก่อน ถ้าไม่มีเน็ตใช้ฉบับในเครื่อง
+  // หน้าแอป: ดึงฉบับใหม่จากเน็ตก่อน ถ้าเน็ตช้าเกิน 3 วินาที ตอบผิดพลาด หรือไม่มีเน็ต ใช้ฉบับในเครื่อง
   if (req.mode === 'navigate' || (sameOrigin && /\.html$|\/$/.test(url.pathname))) {
-    e.respondWith(fetch(req, { cache: 'no-cache' }).then(function (res) {
-      var root = new URL(self.registration.scope).pathname;
+    var root = new URL(self.registration.scope).pathname;
+    var net = fetch(req, { cache: 'no-cache' }).then(function (res) {
       if (res && res.ok && res.type === 'basic' && (url.pathname === root || url.pathname === root + 'index.html')) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put('./index.html', copy); }); }
       return res;
-    }).catch(function () { return caches.match('./index.html'); }));
+    });
+    e.respondWith(new Promise(function (resolve) {
+      var done = false, timer;
+      function use(r) { if (!done && r) { done = true; clearTimeout(timer); resolve(r); } }
+      function cached(fallback) { return caches.match('./index.html').then(function (c) { use(c || fallback); }); }
+      timer = setTimeout(function () { caches.match('./index.html').then(function (c) { if (c) use(c); }); }, 3000);
+      net.then(function (res) { if (res && (res.ok || res.type === 'opaqueredirect')) use(res); else cached(res); }, function () { cached(Response.error()); });
+    }));
+    e.waitUntil(net.catch(function () { }));
     return;
   }
-  // ไฟล์อื่นและฟอนต์: ใช้ฉบับในเครื่องก่อน
+  // ไฟล์อื่นและฟอนต์: ใช้ฉบับในเครื่องทันที แล้วอัปเดตจากเน็ตเบื้องหลัง
   e.respondWith(caches.match(req).then(function (hit) {
-    return hit || fetch(req).then(function (res) {
+    var upd = fetch(req).then(function (res) {
       if (res && (res.ok || res.type === 'opaque')) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }
       return res;
     });
+    if (hit) { e.waitUntil(upd.catch(function () { })); return hit; }
+    return upd;
   }));
 });
